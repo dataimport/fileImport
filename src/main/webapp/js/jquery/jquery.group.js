@@ -1,0 +1,21 @@
+/**
+ * jQuery Group 
+ */
+KISSY.$Group({
+	dialog:['ui/core','ui/widget','ui/mouse','ui/draggable','ui/position','ui/resizable','ui/button','ui/dialog'],
+	tooltip:['ui/core','ui/widget','ui/position','ui/tooltip'],
+	button:['ui/core','ui/widget','ui/button'],
+	autocomplete:['ui/core','ui/widget','ui/position','ui/autocomplete'],
+	accordion:['ui/core','ui/widget','ui/accordion'],
+	datepicker:['ui/core','ui/datepicker'],
+	draggable:['ui/core','ui/widget','ui/mouse','ui/draggable'],
+	droppable:['ui/core','ui/widget','ui/mouse','ui/draggable','ui/droppable'],
+	menu:['ui/core','ui/widget','ui/position','ui/menu'],
+	mouse:['ui/widget','ui/mouse'],
+	progressbar:['ui/core','ui/widget','ui/progressbar'],
+	resizable:['ui/core','ui/mouse','ui/widget','ui/resizable'],
+	slider:['ui/core','ui/mouse','ui/widget','ui/slider'],
+	sortable:['ui/core','ui/mouse','ui/widget','ui/sortable'],
+	spinner:['ui/core','ui/widget','ui/button','ui/spinner'],
+	tabs:['ui/core','ui/widget']
+});

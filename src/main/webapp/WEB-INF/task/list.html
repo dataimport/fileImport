@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<!-- CSS goes in the document HEAD or added to your external stylesheet -->
+<style type="text/css">
+table.gridtable {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #666666;
+	border-collapse: collapse;
+}
+table.gridtable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #dedede;
+}
+table.gridtable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #ffffff;
+}
+</style>
+</head>
+<body>
+
+<#if (list?size>0)>
+
+<table class="gridtable">
+<tr>
+<th>Id</th><th>状态</th><th>计划时间</th><th>开始时间</th><th>结束时间</th><th>执行时长</th>	
+<th>标签</th><th>来源</th><th>分隔符</th><th>文件路径</th><th>字段</th><th>导入行号</th>
+</tr>
+
+<#list list as task>
+	<tr>
+	   <td>${task_index+1!}</td>
+	   <td>
+		 <#if task.taskStatus==0>
+		 未执行
+		  <#elseif task.taskStatus==1>
+		  执行中
+		  <#elseif task.taskStatus==2>
+		  已完成
+		  <#elseif task.taskStatus==-2>
+		  执行失败
+		 </#if>		 
+		</td>
+		<td>
+		 ${task.runTime!}
+		</td>
+		<td>
+		 ${task.startDate!}
+		</td>
+		<td>
+		 ${task.endDate!}
+		</td>
+		<td>
+		 ${task.timeUse!}
+		</td>
+		
+	   <td>${task.tags!}</td><td>${task.origin!}</td><td>${task.separator!}</td><td>${task.filePath!}</td>
+		<td>
+		<#list task.columnName as column>
+ 			${column}
+		</#list>
+		</td>
+		<td>
+		<#list task.columnIndex as index>
+ 			${index}
+		</#list>
+		</td>		
+	</tr> 			
+</#list>	
+</table>
+</#if>
+状态：
+<select onchange="setSeparator(this.options[this.options.selectedIndex].value)">
+			<option value=""></option>
+			<option value="0">未完成</option>
+			<option value="1">执行中</option>
+			<option value="2">已完成</option>
+			<option value="-2">失败</option>
+		</select>
+	
+<script>
+function setSeparator(status){
+	window.location.href="list.htm?status="+status;
+ 	 
+}
+</script>
+<script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
+</body>
+</html>

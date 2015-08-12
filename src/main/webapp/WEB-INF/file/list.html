@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<@p.table value=list;file,i,has_next><#rt/>			
+	<@p.column title="文件夹目录：${root!}" width="20">
+		<input type='text' id="aa"  width="50" name='file'  value='${file.name!}' title='${file.path!}'/>
+		<input type="button" value="预览" name="view" title='${file.path!}'/>		
+		&nbsp;|&nbsp;文件分隔符
+		<select onchange="setSeparator(this.options[this.options.selectedIndex].value)">
+			<option value=""></option>
+			<option value="#">#</option>
+			<option value="@">@</option>
+			<option value="&">&</option>
+		</select>
+		&nbsp;|&nbsp;
+		<input type="button" value="创建入库任务" name="task" title='${file.path!}'/>
+		<#t/>
+		
+	</@p.column><#t/>
+</@p.table>
+
+<div id="detail">
+
+</div>
+
+<div id="task">
+
+</div>
+
+<form id="taskForm" action="task.htm">
+<input id="url" type="hidden">
+<input id="separator" type="hidden">
+</form>
+
+<script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
+<script type="text/javascript" src="../js/My97DatePicker/WdatePicker.js" id="st-main"></script>
+
+<script>
+//预览
+$("input[name='view']").bind("click",function(){
+	var path=$(this).attr("title");
+	 $.ajax(  
+             {  
+                 url:'view.htm', 
+                 type:"post",  
+                 async:true,  
+                 data:{'filePath':path},  
+                 dataType:"html",  
+                 timeout:"100000",  
+                 error:function(){alert("服务加载出错");},  
+                 success:function(data)  
+                 {  
+                	$("#detail").html(data);  
+                	$("#task").html("");  
+                 }  
+             }  
+         );  
+	 
+	});  
+	
+//创建任务
+$("input[name='task']").bind("click",function(){
+	var path=$(this).attr("title");
+	var separator=$("#separator").val();
+	if(separator==""){
+		alert("请选择分隔符");
+		return;
+	}
+	 $.ajax(  
+             {  
+                 url:'../task/v_task.htm', 
+                 type:"post",  
+                 async:true,  
+                 data:{'filePath':path,'separator':separator},  
+                 dataType:"html",  
+                 timeout:"100000",  
+                 error:function(){alert("服务加载出错");},  
+                 success:function(data)  
+                 {  
+                	$("#detail").html(data);  
+                 }  
+             }  
+         );  
+ 	 
+}); 
+
+function setSeparator(value){	
+	$("#separator").val(value);	
+}
+</script>
+</body>
+</html>

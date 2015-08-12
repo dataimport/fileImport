@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>404</title>
+    <link href="http://tmisc.home.news.cn/cloudnews/res/dest/common/reset-min.css" rel="stylesheet">
+	<link href="http://tmisc.home.news.cn/cloudnews/res/dest/common/404-min.css" rel="stylesheet">
+    <script src="http://tmisc.home.news.cn/cloudnews/res/build/seed-min.js"></script>
+</head>
+<body>
+<div class="outer_wrap">
+	<!-- 头部信息 -->
+	<div class="header clearfix">
+		<a href="http://my.xuan.news.cn" class="logo" target="_blank"></a>
+		<ul class="head_nav" id="head_nav">
+			<li class="nav_item"><a href="http://www.xinhuanet.com/" target="_blank" class="nav_link">新华网首页</a></li>
+			<li class="nav_item"><a href="http://my.xuan.news.cn/main.do" target="_blank" class="nav_link">我的空间</a></li>
+			<li class="nav_item"><a href="http://my.xuan.news.cn/main.do" target="_blank"  class="nav_link" id="nav_link_my_home_page">我的主页</a></li>
+			<li class="nav_item">
+				<div href="#" class="nav_link application_btn" id="application_btn">
+					<span>应用中心</span>
+					<div class="header_application_list" id="header_application_list">
+						<a href="http://app.news.cn/yunpan.html" target="_blank"><img src="http://tmisc.home.news.cn/cloudnews/res/assets/img/right-bar/dazzle-application1.png"><span>云盘</span></a>
+			            <a href="http://app.news.cn/weibo.html" target="_blank"><img src="http://tmisc.home.news.cn/cloudnews/res/assets/img/right-bar/dazzle-application2.png"><span>微博</span></a>
+			            <a href="http://app.news.cn/xhnews.html" target="_blank"><img src="http://tmisc.home.news.cn/cloudnews/res/assets/img/right-bar/dazzle-application3.png"><span>新闻</span></a>			
+						<a href="http://app.news.cn/xuantu.html" target="_blank"><img src="http://tmisc.home.news.cn/cloudnews/res/assets/img/right-bar/dazzle-application4.png"><span>炫图</span></a>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+	<div class="inner_wrap">
+		<div class="container"></div>
+	</div>
+</div>
+<script>
+KISSY.use('dom, node, event, io',function(S, DOM, Node, Event, IO){
+	var $ = Node.all;
+	
+	Event.detach( '#application_btn', 'mouseover');
+	Event.on( '#application_btn', 'mouseover', function(e){
+		var _cur = e.currentTarget;
+		
+		$('#header_application_list').show();
+	});
+	Event.detach( '#application_btn', 'mouseleave');
+	Event.on('#application_btn', 'mouseleave', function(e){
+			$('#header_application_list').hide();
+	});
+	
+	IO.get('/cloudapi/loadUser.xhtm', function(json){
+		if(json.code == 200){
+			DOM.attr('#nav_link_my_home_page', 'href', 'http://'+json.data.name+'.home.news.cn/portal/');
+		}
+	},'json');
+});
+</script>
+</body>
+</html>
+

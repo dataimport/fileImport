@@ -1,0 +1,169 @@
+<#assign columnsSize=columns?size>
+
+<table width="100%"  class="gridtable">
+  <tr>
+    <th>标签组</th>    
+ 	<td colspan="${columnsSize}" >
+ 	 <input  id="tagName" value="" size="100"></input>
+ 	</td>
+  </tr>
+  
+  <tr>
+    <th>表名</th>    
+ 	<td colspan="${columnsSize}" >
+ 	 <input  id="tableName" value="" size="100"></input>
+ 	</td>
+  </tr>
+  
+  <tr>
+    <th>来源</th>    
+ 	<td colspan="${columnsSize}" >
+ 	 <input  id="origin" value="" size="100"></input>
+ 	</td>
+  </tr>
+  
+   <tr>
+    <th>字段名称</th>
+    <#list columns as column>
+ 	<td>
+ 	 <div align="center">  <input  name="columnName"  id="columnName_${(column_index+1)}" value="${column?trim}" ></input></div>
+ 	</td>
+	</#list>
+  </tr>
+  
+   <tr>
+    <th>是否导入</th>
+   	<#list 1..columnsSize as i>
+ 	<td>
+       <div align="center"> <input name="import" type="checkbox" id="isImport_${i}" checked=true value="${i}"> </div>
+ 	</td>
+	</#list>
+  </tr>
+  
+<#list text as a>
+  <#if a_index!=0>
+   <tr>
+    <th>${a_index}</th>
+ 		<#list a?split("${separator}") as value>
+ 		<td>
+ 		 ${value?trim}
+ 		</td>	
+ 	 </#list>
+  </tr>
+  </#if>
+</#list>
+
+</table>
+<div class="radioText">
+	<input id="run0" name="runType"  type="radio" value="0000-00-00 00:00:00"  onclick="runTypeChange('0')" />立即执行导入任务
+	<input id="run" name="runType"  type="radio" value="1"  onclick="runTypeChange('1')"/>计划执行时间
+	<input type="text" id="run1" value="" style="display:none" readonly="readonly" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-%d'})">
+	<input type="button" id="submit" value="提交任务">
+</div>
+<input type="hidden" id="filePath" value="${filePath!}">
+
+<style type="text/css">
+table.gridtable {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #666666;
+	border-collapse: collapse;
+}
+table.gridtable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #dedede;
+}
+table.gridtable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #ffffff;
+}
+
+.radioText {
+	font-size:11px;
+}
+</style>
+
+<script>
+//预览
+$("#submit").bind("click",function(){
+
+	var tableName = $("#tableName").val();
+	//if (tableName=="") return;
+	
+	var tagName = $("#tagName").val();
+	//if (tagName=="") return;
+	
+	var origin = $("#origin").val();
+	//if (origin=="") return;
+	
+	var tableName = $("#tableName").val();
+	//if (tableName=="") return;
+	
+	var runTime  = "";
+	
+	if($("#run1").val()!=""){
+		runTime = $("#run1").val();
+	}else{
+		if($("input[name='runType'][checked]").val()!=null){
+			runTime = $("#run0").val();
+		}
+		
+	}
+	
+	if(runTime==""){
+		alert("请选择执行时间")
+		return;
+	}
+	
+	var columnIndex = "";
+	
+	var columnName = "";
+	
+	var columnChecked = $('[name = "import"]:checkbox:checked');
+
+	for (var i = 0; i < columnChecked.length; i++) {
+		columnIndex = (columnIndex + columnChecked.get(i).value) + (((i + 1)== columnChecked.length) ? '':','); 
+		columnName = (columnName + $("#columnName_"+columnChecked.get(i).value).val()) + (((i + 1)== columnChecked.length) ? '':','); 
+	}
+
+	$.ajax(  
+            {  
+                url:'../task/o_task.htm', 
+                type:"post",  
+                async:true,  
+                data:{'tableName':tableName,'separator':"${separator}",'filePath':$("#filePath").val(),'tags':tagName,'origin':origin,'runTime':runTime,'columnName':columnName,'columnIndex':columnIndex},  
+                dataType:"html",  
+                timeout:"100000",  
+                error:function(){alert("服务加载出错");},  
+                success:function(data)  
+                {  
+              	 	$("#task").html(data);  
+                }  
+            }  
+        );  
+
+});  
+	
+	function runTypeChange(value){
+		if(value==0){
+			$("#run0").attr("checked","checked");
+			$("#run1").removeAttr("checked");
+			$("#run1").val("");
+			$("#run1").hide();
+		}else{
+			$("#run1").show();
+			//$("#run1").attr("checked","checked");
+			$("#run0").removeAttr("checked");
+		}
+	
+	}
+
+</script>

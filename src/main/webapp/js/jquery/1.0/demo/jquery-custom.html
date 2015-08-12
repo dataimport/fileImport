@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<link rel="stylesheet" href="css/jquery-ui.min.css"/>
+	</head>
+	<body>
+			<div id="dialog" title="The Dialog For Dynamic Load jQuery">
+				<p>Yahoo! We combine the jQuery and KISSY framework, that means you can use jQuery and KISSY at the same time.</p>
+				<p>问一声你可曾听见，我的心被什么触动，不知不觉中你已经，唤醒我温柔生命</p>
+				<p><input type="text" id="tooltip" title="Hi, I am jQuery Tooltip for show "/></p>
+			</div>
+			<script src="/js/build/seed-min.js"></script>
+			<script>
+				/**
+				 * 在KISSY中配置jQuery，否则默认jquery应该在build目录下 
+				 */
+				KISSY.config({
+					packages:[
+						{
+							name:'jquery',
+							path:'/js',
+							group:'/js/jquery/1.0/demo/jquery.custom.group.js'//jQuery组件配件配置，一旦配置必须是绝对地址，默认在jquery/jquery.group.js
+						}
+					]
+				});
+				/**
+				 * 开始使用jquery ，首先通过jquery中间件加载jQuery（这里小写为中间件，大写为原始jQuery）
+				 */
+				KISSY.use('jquery/1.0/',function(S,jquery){
+					/**
+					 *  通过jquery中间件，动态引入所需的jQuery
+					 */
+					jquery.use({
+						name:'ui/core,ui/widget',//jQuery单元加载，多个请使用逗号分隔，默认位置在jquery/plugins/文件夹下，ui/core-> jquery/plugins/ui/jquery.ui.core.min.js
+						group:'tooltip,dialog',//jQuery组件加载，group通过KISSY.$Group进行配置，默认位置在jquery/jquery.group.js
+						fn:function(){
+							/**
+							 * 至此可以使用jQuery 
+							 */
+							$("#dialog").dialog();
+							$("#tooltip").tooltip();
+						}
+					});
+				});
+			</script>
+	</body>
+</html>
