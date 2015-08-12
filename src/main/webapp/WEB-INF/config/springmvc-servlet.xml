@@ -67,6 +67,8 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 		</property>
 	</bean>
 	
+	<import resource="servlet-front-action.xml" />
+	
 </beans>
 
 

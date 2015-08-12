@@ -96,7 +96,6 @@ public class TaskManager {
 	public void taskQuartz() {
 		try{
 			List<Task> list = repository.getObjectsByRunTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-			//System.out.println("........."+list.size());
 			for(Task task:list){
 					taskUpdate(task, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),null, 1);//更新状态为正在执行
 				if(taskRun(task, getLines(task.getFilePath()))){//入库

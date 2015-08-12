@@ -9,6 +9,7 @@ import com.xxx.admin.manager.TaskManager;
 public class taskRunService {
 
 	public void taskRun() {		
+		System.out.println("......执行定时任务.....");
 		taskManager.taskQuartz();		
 	}
 	
