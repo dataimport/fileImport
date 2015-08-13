@@ -27,8 +27,8 @@ http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 		<list>
-		<value>classpath*:jdbc.properties</value>
 		<value>classpath*:log4j.properties</value>
+		<value>classpath*:mongoDB.properties</value>
 		</list>
 		</property>
 		<property name="ignoreUnresolvablePlaceholders" value="true"/>
@@ -37,13 +37,13 @@ http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd"
  
     <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
         <constructor-arg name="mongo" ref="mongo" />
-        <constructor-arg name="databaseName" value="fileImport" />
+        <constructor-arg name="databaseName" value="${dbName}" />
     </bean>
  
     <!-- Factory bean that creates the Mongo instance -->
     <bean id="mongo" class="org.springframework.data.mongodb.core.MongoFactoryBean">
-        <property name="host" value="127.0.0.1" />
-        <property name="port" value="27017" />
+        <property name="host" value="${dbHost}" />
+        <property name="port" value="${dbPort}" />
     </bean>
 </beans>
 
