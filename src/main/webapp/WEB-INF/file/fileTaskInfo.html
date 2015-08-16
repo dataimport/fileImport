@@ -1,0 +1,89 @@
+<#if (list?size>0)>
+
+<table class="gridtable">
+<tr>
+<th>文件名</th><th>入库状态</th><th>修改时间</th><th>文件大小</th>
+</tr>
+<#list list as task>
+	<tr>
+	   <td>${task.filePath}</td>
+	   <td>
+		 <#if task.taskStatus==0>
+		 未执行
+		  <#elseif task.taskStatus==1>
+		  执行中
+		  <#elseif task.taskStatus==2>
+		  已入库
+		  <#elseif task.taskStatus==-2>
+		  执行失败
+		 </#if>		 
+		</td>
+		<td>
+		 
+		</td>	
+		<td>
+		 ${task.fileSize!}
+		</td>	
+	</tr> 			
+
+</table>
+<br>
+<table class="gridtable">
+
+<tr>
+
+<td>
+		 文件信息
+状态： 
+<#if task.taskStatus==0>
+		 未执行
+		  <#elseif task.taskStatus==1>
+		  执行中
+		  <#elseif task.taskStatus==2>
+		  已入库
+		  <#elseif task.taskStatus==-2>
+		  执行失败
+</#if>		
+<br> 
+表名: ${task.tableName!}
+<br>
+<br>记录数：${task.totalCount!}
+<br>入库时间：${task.startDate!}
+<br>完成时间：${task.endDate!}
+<br>源文件名称：${task.filePath!}
+<br>数据时间：
+<br>标签组：${task.tags!}
+		</td>	
+	</tr>
+	
+
+</table>
+
+</#list>
+</#if>
+
+<style type="text/css">
+table.gridtable {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #666666;
+	border-collapse: collapse;
+}
+table.gridtable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #dedede;
+}
+table.gridtable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #ffffff;
+}
+</style>
+

@@ -126,6 +126,15 @@ public class TaskManager {
 		}
 		return  new ArrayList<Task>();
 	}
+	
+	public List<Task> getTaskByFilePath(String filePath) {
+		try{
+			return repository.getObjectsByFilePath(filePath);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return  new ArrayList<Task>();
+	}
 
 	private List<String> setTaskInfo(Task task){
 		File file  = new File(task.getFilePath());

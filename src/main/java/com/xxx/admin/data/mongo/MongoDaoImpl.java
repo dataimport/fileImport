@@ -6,15 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -77,6 +69,7 @@ public class MongoDaoImpl implements MongoDao {
 			DBCollection dbColleciton = getDBCollcetion("filePathInfo"); 
 			DBObject saveData = new BasicDBObject();
 			saveData.put("path", path);
+			saveData.put("createTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 			dbColleciton.insert(saveData);	
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -105,8 +98,7 @@ public class MongoDaoImpl implements MongoDao {
 		try{
 			DBCollection dbColleciton =getDBCollcetion("filePathInfo"); 
 			BasicDBObject query = new BasicDBObject();
-			//query.put("objId", nObjId);
-			DBCursor dbCursor = dbColleciton.find(query);
+			DBCursor dbCursor = dbColleciton.find(query).sort(new BasicDBObject("createTime", -1));
 			Iterator<DBObject> iterator = dbCursor.iterator();
 			DBObject dbObject = null;			
 			while (iterator.hasNext()) {

@@ -13,14 +13,16 @@
          <input id="addButton" type="button" value="添加">
          <input id="delButton" type="button" value="删除">
       </div>
-
-      <div>
-        <select id="filePathSelect" size="10" onchange="setSeparator(this.options[this.options.selectedIndex].value)">
-       	 <#list list as path>
-          <option value="${path}">${path}</option>
-          </#list>
-        </select>
-      </div>
+      
+  	  
+	      <div>    
+	        <select id="filePathSelect" size="10" onchange="setSeparator(this.options[this.options.selectedIndex].value)">    
+	       	 <#list list as path>
+	          <option value="${path}">${path}</option>
+	          </#list>
+	        </select>
+	      </div>
+      
     </div>
 </body>
 <script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>

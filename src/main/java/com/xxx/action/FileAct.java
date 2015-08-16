@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;  
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.xxx.admin.bean.Task;
 import com.xxx.admin.manager.FileManager;
 import com.xxx.admin.manager.TaskManager;
 import com.xxx.utils.ResponseUtils;
@@ -35,6 +36,37 @@ public class FileAct {
 	    fileRoot = rb.getString("fileRoot");
 	}
 	  
+	@RequestMapping(value = "rootInfo.htm")
+	public String allRoot(String root,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
+		List<String> rootList = fileManager.viewFilePath();		
+		String filePath =root;
+		if(StringUtils.isBlank(root)){
+			root="";
+			filePath = rootList.get(0);
+		}
+		if(rootList.size()>0){
+			model.put("rootFolder", rootList.get(0));
+			List<? extends File> fileList = fileManager.getChild(filePath);
+			model.put("fileList", fileList);
+		}
+		model.put("root", root);	
+		model.put("rootList", rootList);	
+		model.put("contextPath", request.getContextPath());
+		return "file/rootList";
+	}	
+	
+	@RequestMapping(value = "fileTaskInfo.htm")
+	public String fileInfo(String filePath,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
+		if (StringUtils.isBlank(filePath) ) {
+			return "file/fileTaskInfo";
+		} else {
+			List<Task> list = taskManager.getTaskByFilePath(filePath);
+			model.put("list", list);
+			return "file/fileTaskInfo";
+		}	
+		
+	}
+	
 	@RequestMapping(value = "tree.htm")
 	public String tree(ModelMap model,HttpServletRequest request,HttpServletResponse response) {
 		String root = request.getParameter("root");

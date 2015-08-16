@@ -25,5 +25,7 @@ public interface Repository<T> {
     public void createCollection(String collectionName);
  
     public void dropCollection();
+    
+    public List<T> getObjectsByFilePath(String filePath);
       
 }

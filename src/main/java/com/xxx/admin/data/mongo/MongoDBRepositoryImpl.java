@@ -102,4 +102,13 @@ public class MongoDBRepositoryImpl implements Repository<Task> {
 		return mongoTemplate.find(query, Task.class);
 	}
 
+	@Override
+	public List<Task> getObjectsByFilePath(String filePath) {
+		Query query = new Query();
+		Criteria criteriaStatus = Criteria.where("filePath").is(filePath);
+		query.addCriteria(criteriaStatus);
+		query.with(new Sort(Direction.DESC,"runTime"));
+		return mongoTemplate.find(query, Task.class);
+	}
+
 }
