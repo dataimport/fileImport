@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.xxx.admin.manager.FileManager;
 import com.xxx.admin.manager.TaskManager;
+import com.xxx.utils.ResponseUtils;
 
 
 
@@ -56,6 +57,36 @@ public class FileAct {
 		List<String> list = fileManager.view(filePath);
 		model.put("list", list);
 		return "file/view";
+	}
+	
+	@RequestMapping(value = "addPath.htm")
+	public String addPath(String filePath,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
+		boolean result = fileManager.addFilePath(filePath);		
+		if(result){
+			ResponseUtils.renderJson(response, "{\"code\":"+200+",\"msg\":\"添加成功\"}");
+		}else{
+			ResponseUtils.renderJson(response, "{\"code\":"+500+",\"msg\":\"添加失败\"}");
+		}
+		
+		return null;
+	}
+	
+	@RequestMapping(value = "delePath.htm")
+	public String delePath(String filePath,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
+		boolean result = fileManager.deleteFilePath(filePath);
+		if(result){
+			ResponseUtils.renderJson(response, "{\"code\":"+200+",\"msg\":\"删除成功\"}");
+		}else{
+			ResponseUtils.renderJson(response, "{\"code\":"+500+",\"msg\":\"删除失败\"}");
+		}
+		return null;
+	}
+	
+	@RequestMapping(value = "viewPath.htm")
+	public String viewPath(ModelMap model,HttpServletRequest request,HttpServletResponse response) {
+		List<String> list = fileManager.viewFilePath();
+		 model.put("list", list);
+		 return "file/root";
 	}
 	
 	@Autowired

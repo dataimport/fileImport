@@ -2,7 +2,9 @@ package com.xxx.admin.data.mongo;
 
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import net.sf.json.JSONArray;
@@ -15,6 +17,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 import com.xxx.admin.bean.Task;
@@ -28,7 +31,7 @@ public class MongoDaoImpl implements MongoDao {
 	@Override
 	public void taskRun(Task task,List<String> list)
 			throws MongoException, UnknownHostException {
-		DBCollection dbColleciton = MongoDBFactory.getDB().getCollection(task.getTableName());
+		DBCollection dbColleciton =getDBCollcetion(task.getTableName()); 
 		DBObject data = new BasicDBObject();
 		String[] columns = task.getColumnName();
 		Integer[] columnIndex = task.getColumnIndex();
@@ -54,7 +57,7 @@ public class MongoDaoImpl implements MongoDao {
 
 	@Override
 	public void updateTaskStatus(Task task) throws MongoException, UnknownHostException {
-		DBCollection dbColleciton = MongoDBFactory.getDB().getCollection("taskInfo");
+		DBCollection dbColleciton =getDBCollcetion("taskInfo"); 
 		BasicDBObject query = new BasicDBObject();
 		query.put("uid", task.getUid());
 		DBObject taskDB = dbColleciton.findOne(query);
@@ -67,4 +70,58 @@ public class MongoDaoImpl implements MongoDao {
 		}
 		
 	}
+
+	@Override
+	public boolean addFilePath(String path){
+		try{
+			DBCollection dbColleciton = getDBCollcetion("filePathInfo"); 
+			DBObject saveData = new BasicDBObject();
+			saveData.put("path", path);
+			dbColleciton.insert(saveData);	
+		}catch(Exception ex){
+			ex.printStackTrace();
+			return false;
+		}
+			return true;
+	}
+
+	@Override
+	public boolean deleteFilePath(String path){		
+		try{
+			DBCollection dbColleciton =getDBCollcetion("filePathInfo"); 
+			BasicDBObject del = new BasicDBObject();
+			del.put("path", path);
+			dbColleciton.remove(del);	
+		}catch(Exception ex){
+			ex.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public List<String> viewFilePath(){
+		List list = new ArrayList<String>();
+		try{
+			DBCollection dbColleciton =getDBCollcetion("filePathInfo"); 
+			BasicDBObject query = new BasicDBObject();
+			//query.put("objId", nObjId);
+			DBCursor dbCursor = dbColleciton.find(query);
+			Iterator<DBObject> iterator = dbCursor.iterator();
+			DBObject dbObject = null;			
+			while (iterator.hasNext()) {
+				dbObject = iterator.next();
+				list.add((String)dbObject.get("path"));
+			}
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return list;
+	}
+	
+	
+	private DBCollection getDBCollcetion(String collectionName){
+		return MongoDBFactory.getDB().getCollection("filePathInfo");
+	}
+	
 }

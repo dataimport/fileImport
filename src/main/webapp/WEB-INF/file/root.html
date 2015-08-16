@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+<div id="base" class="">
+
+      <div id="add" >
+        <input id=filePath type="text" value="" size="50">
+         <input id="addButton" type="button" value="添加">
+         <input id="delButton" type="button" value="删除">
+      </div>
+
+      <div>
+        <select id="filePathSelect" size="10" onchange="setSeparator(this.options[this.options.selectedIndex].value)">
+       	 <#list list as path>
+          <option value="${path}">${path}</option>
+          </#list>
+        </select>
+      </div>
+    </div>
+</body>
+<script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
+
+<script>
+//添加
+$("#addButton").bind("click",function(){
+	var addPath = $("#filePath").val();
+	if(addPath==""){
+		alert("请填写路径");
+		return;
+	}
+	
+	 $.ajax(  
+             {  
+                 url:'addPath.htm', 
+                 type:"post",  
+                 async:true,  
+                 data:{'filePath':addPath},  
+                 dataType:"html",  
+                 timeout:"100000",  
+                 error:function(){alert("服务出错");},  
+                 success:function(data)  
+                 {  
+                	 if(data.code=200){
+                		 jQuery("#filePathSelect").append("<option value='"+addPath+"'>"+addPath+"</option>");
+                	 }else{
+                		 alert(data.msg);
+                	 }
+           			
+                 }  
+             }  
+         );  
+	 
+	});
+
+//删除
+$("#delButton").bind("click",function(){
+	var addPath = $("#filePath").val();
+	if(addPath==""){
+		alert("请选择删除路径");
+		return;
+	}
+	
+	 $.ajax(  
+             {  
+                 url:'delePath.htm', 
+                 type:"post",  
+                 async:true,  
+                 data:{'filePath':addPath},  
+                 dataType:"html",  
+                 timeout:"100000",  
+                 error:function(){alert("服务出错");},  
+                 success:function(data)  
+                 {  
+                	 if(data.code=200){
+                		 jQuery("#filePathSelect option[value='"+addPath+"']").remove();
+                	 }else{
+                		 alert(data.msg);
+                	 }
+                	 
+                 }  
+             }  
+         );  
+	 
+	});  
+	
+function setSeparator(value){	
+	$("#filePath").val(value);	
+}
+</script>
+</html>
