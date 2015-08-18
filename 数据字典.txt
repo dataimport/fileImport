@@ -1,0 +1,39 @@
+========================================================
+###Task 任务表###
+
+private String id;  
+	private String uid;  //任务的唯一id
+	private String tableName; //入库的Collection名称
+	private String origin;
+	private String tags; //入库的任务标签
+	private String[] columnName;  //每一列的名称
+	private Integer[] columnIndex;//每一列所对应的原始文件中的列
+	private String separator; //分隔符
+	private String runTime;   
+	private String startDate=""; //任务的开始执行时间
+	private String endDate="";   //任务的执行完毕结束时间
+	private String filePath;     //原始文件路径 
+	private long fileSize;       //原始文件字节数
+	private String leftTime;     //入库剩余时间长度
+	private long totalCount= 0l; //原始文件的行数
+	private long executeCount;//已经处理过的行数
+	private int taskStatus;  // 0 未执行  1 执行中 2 已完成  -2 失败
+	private String timeUse;  //总共执行完毕所消耗的时间
+
+========================================================
+###filePathInfo 注册的文件路径表###
+id
+uid
+filepath
+
+
+========================================================
+###tableInfo 元数据表###
+
+tableName //Collection的名称
+
+
+========================================================
+###tableInfo 元数据表###
+
+

@@ -113,7 +113,7 @@ public class MongoDaoImpl implements MongoDao {
 	
 	
 	private DBCollection getDBCollcetion(String collectionName){
-		return MongoDBFactory.getDB().getCollection("filePathInfo");
+		return MongoDBFactory.getDB().getCollection(collectionName);
 	}
 	
 }
