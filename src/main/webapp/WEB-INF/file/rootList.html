@@ -12,7 +12,7 @@
 <body>
 <div id="base" class="">
       <div>
-        <select id="filePathSelect" onchange="getFileList(this.options[this.options.selectedIndex].value)">
+        <select id="filePathSelect" onchange="getFileList(this.options[this.options.selectedIndex].value)" style="width:400px">
        	 <#list rootList as path>
           <option value="${path!}" <#if (path??&&path==root)> selected="selected"</#if>>${path!}</option>
           </#list>
