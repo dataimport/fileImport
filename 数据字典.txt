@@ -1,47 +1,62 @@
 ========================================================
-###Task ÈÎÎñ±í###
+###Task ä»»åŠ¡è¡¨###ã€runningTaskï¼ŒfinishTaskã€‘
 
-String uid;  //ÈÎÎñµÄÎ¨Ò»id
-String md5 //ÎÄ¼şµÄmd5Öµ
-String tableName; //Èë¿âµÄCollectionÃû³Æ
-String origin;//À´Ô´
-String tags; //Èë¿âµÄÈÎÎñ±êÇ©
-String[] columnName;  //Ã¿Ò»ÁĞµÄÃû³Æ
-Integer[] columnIndex;//Ã¿Ò»ÁĞËù¶ÔÓ¦µÄÔ­Ê¼ÎÄ¼şÖĞµÄÁĞ
-String separator; //·Ö¸ô·û
-Date runTime;   //¶¨Ê±Ö´ĞĞÊ±¼ä
-Date startTime=""; //ÈÎÎñµÄ¿ªÊ¼Ö´ĞĞÊ±¼ä
-Date endTime="";   //ÈÎÎñµÄÖ´ĞĞÍê±Ï½áÊøÊ±¼ä
-Date createTime //¼ÇÂ¼´´½¨Ê±¼ä
-String filePath;     //Ô­Ê¼ÎÄ¼şÂ·¾¶ 
-long fileSize;       //Ô­Ê¼ÎÄ¼ş×Ö½ÚÊı
-String leftTime;     //Èë¿âÊ£ÓàÊ±¼ä³¤¶È
-long totalCount= 0l; //Ô­Ê¼ÎÄ¼şµÄĞĞÊı
-long executeCount;//ÒÑ¾­´¦Àí¹ıµÄĞĞÊı
-int taskStatus;  // 0 Î´Ö´ĞĞ  1 Ö´ĞĞÖĞ 2 ÒÑÍê³É  -2 Ê§°Ü
-String timeUse;  //×Ü¹²Ö´ĞĞÍê±ÏËùÏûºÄµÄÊ±¼ä
-int  updateOrAdd  //Èë¿â·½Ê½ÊÇ×·¼Ó»¹ÊÇÉ¾³ıÖØĞÂµ¼Èë
-int  lineNum //´ÓÎÄ¼şµÚ¼¸ĞĞ¼ÌĞø¿ªÊ¼µ¼Èë
-
-========================================================
-
-
-###filePathInfo ×¢²áµÄÎÄ¼şÂ·¾¶±í###
-id 
-String  uid //Î¨Ò»id
-String  filepath //ÎÄ¼şÂ·¾¶
-String  fileName //ÎÄ¼şÃû
-Date    createTime //¼ÇÂ¼´´½¨Ê±¼ä
-
+String uid;  //ä»»åŠ¡çš„å”¯ä¸€id
+String md5 //æ–‡ä»¶çš„md5å€¼
+String tableName; //å…¥åº“çš„Collectionåç§°
+String origin;//æ¥æº
+String tags; //å…¥åº“çš„ä»»åŠ¡æ ‡ç­¾
+String[] columnName;  //æ¯ä¸€åˆ—çš„åç§°
+Integer[] columnIndex;//æ¯ä¸€åˆ—æ‰€å¯¹åº”çš„åŸå§‹æ–‡ä»¶ä¸­çš„åˆ—
+String separator; //åˆ†éš”ç¬¦
+Date runTime;   //å®šæ—¶æ‰§è¡Œæ—¶é—´
+Date startTime=""; //ä»»åŠ¡çš„å¼€å§‹æ‰§è¡Œæ—¶é—´
+Date endTime="";   //ä»»åŠ¡çš„æ‰§è¡Œå®Œæ¯•ç»“æŸæ—¶é—´
+Date createTime //è®°å½•åˆ›å»ºæ—¶é—´
+String filePath;     //åŸå§‹æ–‡ä»¶è·¯å¾„ 
+long fileSize;       //åŸå§‹æ–‡ä»¶å­—èŠ‚æ•°
+String leftTime;     //å…¥åº“å‰©ä½™æ—¶é—´é•¿åº¦
+long totalCount= 0l; //åŸå§‹æ–‡ä»¶çš„è¡Œæ•°
+long executeCount;//å·²ç»å¤„ç†è¿‡çš„è¡Œæ•°
+int taskStatus;  // 0 æœªæ‰§è¡Œ  1 æ‰§è¡Œä¸­ 2 å·²å®Œæˆ  -2 å¤±è´¥
+String timeUse;  //æ€»å…±æ‰§è¡Œå®Œæ¯•æ‰€æ¶ˆè€—çš„æ—¶é—´
+int  updateOrAdd  //å…¥åº“æ–¹å¼æ˜¯è¿½åŠ è¿˜æ˜¯åˆ é™¤é‡æ–°å¯¼å…¥
+int  lineNum //ä»æ–‡ä»¶ç¬¬å‡ è¡Œç»§ç»­å¼€å§‹å¯¼å…¥
 
 ========================================================
-###fileInDBTable ÎÄ¼ş´æµ½ÄÇ¸ö±íÀï£¨Èëes¿âÊ±ÓÃ£©
 
-String uid;  //´Ë±íµÄÎ¨Ò»id
-String filePath  //ÎÄ¼şÂ·¾¶
-String md5 //ÎÄ¼şmd5
-String tableName //ÎÄ¼şËùÔÚ±íµÄÃû³Æ
-int status //Èçes¿â×´Ì¬   // 0 Î´Ö´ĞĞ  1 Ö´ĞĞÖĞ 2 ÒÑÍê³É  -2 Ê§°Ü
+
+###filePathInfo æ³¨å†Œçš„æ–‡ä»¶è·¯å¾„è¡¨###
+String  fid      //æ–‡ä»¶çš„å”¯ä¸€id
+String  uid      //ä»»åŠ¡å”¯ä¸€id
+String  md5      //æ–‡ä»¶çš„md5å€¼
+String  filepath //æ–‡ä»¶è·¯å¾„
+String  fileName //æ–‡ä»¶å
+Date    createTime //è®°å½•åˆ›å»ºæ—¶é—´
+Date    updateTime //è®°å½•æ›´æ–°æ—¶é—´
+
+========================================================
+###fileInDBTable æ–‡ä»¶å­˜åˆ°é‚£ä¸ªè¡¨é‡Œï¼ˆå…¥esåº“æ—¶ç”¨ï¼‰
+
+String id;      //æ­¤è¡¨çš„å”¯ä¸€id
+String filePath  //æ–‡ä»¶è·¯å¾„
+String md5 //æ–‡ä»¶md5
+String tableName //æ–‡ä»¶æ‰€åœ¨è¡¨çš„åç§°
+int status //å¦‚esåº“çŠ¶æ€   // 0 æœªæ‰§è¡Œ  1 æ‰§è¡Œä¸­ 2 å·²å®Œæˆ  -2 å¤±è´¥
+Date    createTime //è®°å½•åˆ›å»ºæ—¶é—´
+Date    updateTime //è®°å½•æ›´æ–°æ—¶é—´
+
+=========================================================
+### tableInfo åˆ›å»ºçš„Collection å…ƒæ•°æ®ä¿¡æ¯è¡¨
+
+String id;        //æ­¤è¡¨çš„å”¯ä¸€id
+String fid;       //å…¥åº“å¯¹åº”æ–‡ä»¶çš„fid
+String tableName; //å…¥åº“çš„Collectionåç§°
+String origin;//æ¥æº
+String tags; //å…¥åº“çš„ä»»åŠ¡æ ‡ç­¾
+String[] columnName;  //æ¯ä¸€åˆ—çš„åç§°
+Integer[] columnIndex;//æ¯ä¸€åˆ—æ‰€å¯¹åº”çš„åŸå§‹æ–‡ä»¶ä¸­çš„åˆ—
+ 
 
 
 
