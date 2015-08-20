@@ -26,6 +26,7 @@ public class TaskManager {
 		try{
 			List<String> lines = setTaskInfo(task);
 			repository.saveObject(task); //保存到任务表中
+			repository.saveObject(task,"documentInfo"); //保存到所有文档表中			
 			return lines;
 		}catch(Exception ex){
 			ex.printStackTrace();

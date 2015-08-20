@@ -13,6 +13,8 @@ public interface Repository<T> {
     public List<T> getObjectsByStatus(int status);
  
     public void saveObject(T object);
+    
+    public void saveObject(T object,String collectonName);
  
     public T getObjectByUid(String uid);
  

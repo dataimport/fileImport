@@ -34,6 +34,10 @@ public class MongoDBRepositoryImpl implements Repository<Task> {
         mongoTemplate.insert(task);
     }
  
+    public void saveObject(Task task,String collectionName) {
+        mongoTemplate.insert(task,collectionName);
+    }
+    
     /**
      * Gets a {<span class="referer">@link</span>  Task} for a particular id.
      */

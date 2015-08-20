@@ -12,8 +12,7 @@ public abstract class BaseTask implements Serializable {
 	 */
 	private static final long serialVersionUID = -5193521874045600482L;
 	
-	@Id  
-	private Integer id;
+	private String uid;
 	private String tableName;
 	private String origin;
 	private String tags;
@@ -21,17 +20,99 @@ public abstract class BaseTask implements Serializable {
 	private Integer[] columnIndex;
 	private String separator;
 	private String runTime;
-	private String startDate;
-	private String endDate;
+	private String startDate="";
+	private String endDate="";
 	private String filePath;
 	private long fileSize;
+	private String leftTime;
+	private long totalCount= 0l;
+	private int taskStatus;  // 0 未执行  1 执行中 2 已完成  -2 失败
+	private String timeUse;//耗时;
+	private int runNum;//当前插入的行数
+	private int  updateOrAdd;  //入库方式是追加还是删除重新导入
+	private int  beginLineNum; //从文件第几行继续开始导入
+	private String createUser; //任务的创建者
+	private boolean firstLineIgnore; //首行是否忽略
+
 	
-	
-	public Integer getId() {
-		return id;
+	public BaseTask(String uid, String tableName, String origin, String tags,
+			String[] columnName, Integer[] columnIndex, String separator,
+			String runTime, String startDate, String endDate, String filePath,
+			long fileSize, String leftTime, long totalCount, int taskStatus,
+			String timeUse, int runNum, int updateOrAdd, int beginLineNum,
+			String createUser, boolean firstLineIgnore) {
+		super();
+		this.uid = uid;
+		this.tableName = tableName;
+		this.origin = origin;
+		this.tags = tags;
+		this.columnName = columnName;
+		this.columnIndex = columnIndex;
+		this.separator = separator;
+		this.runTime = runTime;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.filePath = filePath;
+		this.fileSize = fileSize;
+		this.leftTime = leftTime;
+		this.totalCount = totalCount;
+		this.taskStatus = taskStatus;
+		this.timeUse = timeUse;
+		this.runNum = runNum;
+		this.updateOrAdd = updateOrAdd;
+		this.beginLineNum = beginLineNum;
+		this.createUser = createUser;
+		this.firstLineIgnore = firstLineIgnore;
 	}
-	public void setId(Integer id) {
-		this.id = id;
+	
+	public boolean isFirstLineIgnore() {
+		return firstLineIgnore;
+	}
+	public void setFirstLineIgnore(boolean firstLineIgnore) {
+		this.firstLineIgnore = firstLineIgnore;
+	}
+	public int getUpdateOrAdd() {
+		return updateOrAdd;
+	}
+	public void setUpdateOrAdd(int updateOrAdd) {
+		this.updateOrAdd = updateOrAdd;
+	}
+	public int getBeginLineNum() {
+		return beginLineNum;
+	}
+	public void setBeginLineNum(int beginLineNum) {
+		this.beginLineNum = beginLineNum;
+	}
+	public String getCreateUser() {
+		return createUser;
+	}
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
+	}
+	public String getTimeUse() {
+		return timeUse;
+	}
+	public void setTimeUse(String timeUse) {
+		this.timeUse = timeUse;
+	}
+		public int getTaskStatus() {
+		return taskStatus;
+	}
+	public void setTaskStatus(int taskStatus) {
+		this.taskStatus = taskStatus;
+	}
+
+	public String getLeftTime() {
+		return leftTime;
+	}
+	public void setLeftTime(String leftTime) {
+		this.leftTime = leftTime;
+	}
+	public long getTotalCount() {
+		return totalCount;
+	}
+	public void setTotalCount(long totalCount) {
+		this.totalCount = totalCount;
 	}
 	
 	public String getTableName() {
@@ -101,21 +182,21 @@ public abstract class BaseTask implements Serializable {
 	public void setFileSize(long fileSize) {
 		this.fileSize = fileSize;
 	}
-
-	 @PersistenceConstructor  
-	  public BaseTask(Integer id,String tableName,String origin,String tags,String[] columnName,Integer[] columnIndex,
-			  	   String separator,String runTime,String startDate,String endDate,String filePath,Integer fileSize) {  
-	    this.id = id;
-		this.tableName = tableName;  
-	    this.origin = origin;  
-	    this.tags = tags;  
-	    this.columnName = columnName;  
-	    this.columnIndex = columnIndex;  
-	    this.separator = separator;  
-	    this.runTime = runTime;  
-	    this.startDate = startDate;  
-	    this.endDate = endDate; 
-	    this.filePath = filePath;
-	    this.fileSize = fileSize;
-	  }  
+	public String getUid() {
+		return uid;
+	}
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+	
+	public int getRunNum() {
+		return runNum;
+	}
+	public void setRunNum(int runNum) {
+		this.runNum = runNum;
+	}
+	
+	public BaseTask(){
+		  
+	  }
 }
