@@ -62,26 +62,26 @@ public class TaskManager {
 			if(StringUtils.isNotBlank(endDate)){
 				task.setEndDate(endDate);
 			}			
-			if(StringUtils.isNotBlank(task.getStartDate())&&StringUtils.isNotBlank(task.getEndDate())){
-				String timeUse = "0 秒";
-				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				Date end = df.parse(task.getStartDate());
-				Date start=df.parse(task.getEndDate());
-				long l=end.getTime()-start.getTime();
-				long day=l/(24*60*60*1000);
-				long hour=(l/(60*60*1000)-day*24);
-				long min=((l/(60*1000))-day*24*60-hour*60);
-				long s=(l/1000-day*24*60*60-hour*60*60-min*60);
-				if(day>0){
-					timeUse = ""+day+"天"+hour+"小时"+min+"分"+s+"秒";	
-				}else if(hour>0){
-					timeUse = ""+hour+"小时"+min+"分"+s+"秒";
-				}else if(min>0){
-					timeUse = ""+min+"分"+s+"秒";
-				}
-				System.out.println(timeUse);
-				task.setTimeUse(timeUse);
-			}
+//			if(StringUtils.isNotBlank(task.getStartDate())&&StringUtils.isNotBlank(task.getEndDate())){
+//				String timeUse = "0 秒";
+//				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//				Date end = df.parse(task.getStartDate());
+//				Date start=df.parse(task.getEndDate());
+//				long l=end.getTime()-start.getTime();
+//				long day=l/(24*60*60*1000);
+//				long hour=(l/(60*60*1000)-day*24);
+//				long min=((l/(60*1000))-day*24*60-hour*60);
+//				long s=(l/1000-day*24*60*60-hour*60*60-min*60);
+//				if(day>0){
+//					timeUse = ""+day+"天"+hour+"小时"+min+"分"+s+"秒";	
+//				}else if(hour>0){
+//					timeUse = ""+hour+"小时"+min+"分"+s+"秒";
+//				}else if(min>0){
+//					timeUse = ""+min+"分"+s+"秒";
+//				}
+//				System.out.println(timeUse);
+//				task.setTimeUse(timeUse);
+//			}
 			task.setTaskStatus(status);
 			mongoDao.updateTaskStatus(task);
 		}catch(Exception ex){

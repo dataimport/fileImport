@@ -26,7 +26,8 @@ public class Task {
 	private long totalCount= 0l;
 	private long executeCount;//已经处理过的行数
 	private int taskStatus;  // 0 未执行  1 执行中 2 已完成  -2 失败
-	private String timeUse;
+	private String timeUse;//耗时;
+	private int runNum;//当前插入的行数
 	
 	public String getTimeUse() {
 		return timeUse;

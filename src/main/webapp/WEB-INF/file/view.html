@@ -5,7 +5,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<@p.table value=list;value,i,has_next><#rt/>
+<@p.table value=list[0..10];value,i,has_next><#rt/>
 		<@p.column title=" " width="20" align="center">${value!}</@p.column><#t/>
 </@p.table>
 </body>

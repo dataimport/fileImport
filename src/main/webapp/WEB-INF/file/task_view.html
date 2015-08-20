@@ -1,5 +1,5 @@
 <#assign columnsSize=columns?size>
-
+<#assign listSize=text?size>
 <table width="100%"  class="gridtable">
   <tr>
     <th>标签组</th>    
@@ -39,9 +39,19 @@
  	</td>
 	</#list>
   </tr>
-  
-<#list text as a>
-  <#if a_index!=0>
+ 
+ 
+<#list text[0..10] as a>
+<#if a_index==10>
+   <tr>
+    <th>${a_index}</th>
+ 		<#list a?split("${separator}") as value>
+ 		<td>
+ 		......
+ 		</td>	
+ 	 </#list>
+  </tr>
+  <#elseif a_index!=0>
    <tr>
     <th>${a_index}</th>
  		<#list a?split("${separator}") as value>
@@ -50,8 +60,10 @@
  		</td>	
  	 </#list>
   </tr>
-  </#if>
+</#if>
+  
 </#list>
+
 
 </table>
 <div class="radioText">

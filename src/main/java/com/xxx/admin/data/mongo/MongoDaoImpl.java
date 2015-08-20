@@ -27,26 +27,51 @@ public class MongoDaoImpl implements MongoDao {
 		DBObject data = new BasicDBObject();
 		String[] columns = task.getColumnName();
 		Integer[] columnIndex = task.getColumnIndex();
-		
-		int columnSize = columns.length;
+		long start = System.currentTimeMillis();
+		//int columnSize = columns.length;
 		int columnIndexSize = columnIndex.length;
 		list.remove(0);
 		int valuesSize = list.size();
 
 		String[] lineSeparator;
+		int nowNum =0;
+		String[] keys = new String[]{"runNum","timeUse"};
+		String[] values = new String[2];
+		String timeUse = "0 秒";
+		long l,day,hour,min,s;
 		for(int i=0;i<valuesSize;i++){
 			//dbColleciton = MongoDBFactory.getDB().getCollection(task.getTableName());
 			data = new BasicDBObject(); //处理只能保存一条数据的问题
-			lineSeparator = list.get(i).split(task.getSeparator());
-			
+			lineSeparator = list.get(i).split(task.getSeparator());			
 			for(int j=0;j<columnIndexSize;j++){
 				data.put(columns[j], lineSeparator[columnIndex[j]-1]);
-			}
-			
+			}			
 			dbColleciton.insert(data);
+			nowNum++;			
+			if(nowNum==valuesSize||nowNum%10==0){//每10条更新一次任务表进度
+				l=System.currentTimeMillis()-start;
+				s=(l/1000);
+				min=(s/60);
+				hour=(s/60);
+				day = (hour/24);			
+				if(day>0){
+					timeUse = ""+day+"天"+hour+"小时"+min+"分"+s+"秒";	
+				}else if(hour>0){
+					timeUse = ""+hour+"小时"+min+"分"+s+"秒";
+				}else if(min>0){
+					timeUse = ""+min+"分"+s+"秒";
+				}else if(s>0){
+					timeUse = s+"秒";
+				}else{
+					timeUse = l+"毫秒";
+				}
+				values[0]=String.valueOf(nowNum);
+				values[1]=timeUse;		
+				updateTaskByField(task.getUid(),keys,values);
+			}
 		}	
 	}
-
+	
 	@Override
 	public void updateTaskStatus(Task task) throws MongoException, UnknownHostException {
 		DBCollection dbColleciton =getDBCollcetion("taskInfo"); 
@@ -57,7 +82,6 @@ public class MongoDaoImpl implements MongoDao {
 			taskDB.put("taskStatus", task.getTaskStatus());
 			taskDB.put("startDate", task.getStartDate());
 			taskDB.put("endDate", task.getEndDate());
-			taskDB.put("timeUse", task.getTimeUse());
 			dbColleciton.update(query, taskDB);
 		}
 		
@@ -114,6 +138,21 @@ public class MongoDaoImpl implements MongoDao {
 	
 	private DBCollection getDBCollcetion(String collectionName){
 		return MongoDBFactory.getDB().getCollection(collectionName);
+	}
+
+	@Override
+	public void updateTaskByField(String uid, String[] key, String[] value)
+			throws MongoException, UnknownHostException {
+		DBCollection dbColleciton =getDBCollcetion("taskInfo"); 
+		BasicDBObject query = new BasicDBObject();
+		query.put("uid", uid);
+		DBObject taskDB = dbColleciton.findOne(query);
+		if (taskDB != null){			
+			for(int i=0;i<key.length;i++){
+				taskDB.put(key[i], value[i]);
+			}
+			dbColleciton.update(query, taskDB);
+		}		
 	}
 	
 }

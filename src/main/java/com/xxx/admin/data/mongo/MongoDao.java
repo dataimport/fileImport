@@ -12,6 +12,8 @@ public interface MongoDao {
 	
 	public void updateTaskStatus(Task task)throws MongoException, UnknownHostException;
 	
+	public void updateTaskByField(String uid,String[] key,String[] value)throws MongoException, UnknownHostException;
+	
 	public boolean  addFilePath(String path);
 	
 	public boolean  deleteFilePath(String path);
