@@ -1,4 +1,4 @@
-package com.xxx.admin.data;
+package com.xxx.admin.file.analysis;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -16,11 +16,12 @@ import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.stereotype.Component;
 
 import com.xxx.admin.data.base.BaseData;
 
-
-public class TxtData extends BaseData {
+@Component("fileAnalysis")
+public class FileAnalysis extends BaseData {
 
 	public static final int BUFFER_SIZE = 0x300000;//缓冲区大小为3M
 	
@@ -74,12 +75,9 @@ public class TxtData extends BaseData {
 		return null;
 	}
 	
-	public Map TaskView(String filePath,String separator){
+	public Map getContentBySeparator(String filePath,String separator){
 		List<String> lines = ReadFileByLine(filePath);//获取所有行
-		String[] columns = getColumn(lines,separator);//获取字段
-		for(String s:columns){
-			System.out.println(s);
-		}
+		String[] columns = getColumn(lines,separator);//获取表头字段,不管有没有
 		Map map = new HashMap();
 		map.put("text", lines);
 		map.put("columns", columns);
@@ -221,7 +219,7 @@ public class TxtData extends BaseData {
 	}
 	
 	public static void main(String[] args){
-		TxtData td = new TxtData();
+		FileAnalysis td = new FileAnalysis();
 		String filePath = "F:\\work2space\\测试数据\\test.txt";
 		String separator ="##";
 		//td.Parse("F:\\work2space\\测试数据\\test.txt", "##");

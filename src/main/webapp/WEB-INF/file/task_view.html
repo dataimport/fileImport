@@ -1,8 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>导入文档预览</title>
+<style type="text/css">
+table.gridtable {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #666666;
+	border-collapse: collapse;
+}
+table.gridtable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #dedede;
+}
+table.gridtable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #ffffff;
+}
+
+.radioText {
+	font-size:11px;
+}
+</style>
+</head>
+<BODY>
 <#assign columnsSize=columns?size>
 <#assign listSize=text?size>
 <table width="100%"  class="gridtable">
-  <tr>
-    <th>标签组</th>    
+
+	<tr>
+    <th>分隔符</th>    
+ 	<td colspan="${columnsSize}" >
+ 	 ${separator}
+ 	</td>
+ 	
+   <tr>
+    <th>首行为表头</th>    
+ 	<td colspan="${columnsSize}" >
+ 	 <input  id="firstLineIgnore" value="" type="checkbox" <#if (firstLineIgnore=="ture")>checked="checked" </#if> disabled="disabled"></input>
+ 	</td>
+   </tr>
+   
+   <tr>
+    <th>列名</th>
+    <#list columns as column>
+ 	<td>
+ 	 <div align="center">  <input  name="columnName"  id="columnName_${(column_index+1)}"  
+ 	 <#if (firstLineIgnore=="ture")> value="${column?trim}" > <#else> value="" </#if> 	 
+ 	 </input></div>
+ 	</td>
+	</#list>
+  </tr>
+  
+   <tr>
+    <th>导入</th>
+   	<#list 1..columnsSize as i>
+ 	<td>
+       <div align="center"> <input name="import" type="checkbox" id="isImport_${i}" checked=true  value="${i}"> </div>
+ 	</td>
+	</#list>
+  </tr>
+ 
+   <tr>
+    <th>标签</th>    
  	<td colspan="${columnsSize}" >
  	 <input  id="tagName" value="" size="100"></input>
  	</td>
@@ -21,25 +90,6 @@
  	 <input  id="origin" value="" size="100"></input>
  	</td>
   </tr>
-  
-   <tr>
-    <th>字段名称</th>
-    <#list columns as column>
- 	<td>
- 	 <div align="center">  <input  name="columnName"  id="columnName_${(column_index+1)}" value="${column?trim}" ></input></div>
- 	</td>
-	</#list>
-  </tr>
-  
-   <tr>
-    <th>是否导入</th>
-   	<#list 1..columnsSize as i>
- 	<td>
-       <div align="center"> <input name="import" type="checkbox" id="isImport_${i}" checked=true value="${i}"> </div>
- 	</td>
-	</#list>
-  </tr>
- 
  
 <#list text[0..10] as a>
 <#if a_index==10>
@@ -74,35 +124,8 @@
 </div>
 <input type="hidden" id="filePath" value="${filePath!}">
 
-<style type="text/css">
-table.gridtable {
-	font-family: verdana,arial,sans-serif;
-	font-size:11px;
-	color:#333333;
-	border-width: 1px;
-	border-color: #666666;
-	border-collapse: collapse;
-}
-table.gridtable th {
-	border-width: 1px;
-	padding: 8px;
-	border-style: solid;
-	border-color: #666666;
-	background-color: #dedede;
-}
-table.gridtable td {
-	border-width: 1px;
-	padding: 8px;
-	border-style: solid;
-	border-color: #666666;
-	background-color: #ffffff;
-}
 
-.radioText {
-	font-size:11px;
-}
-</style>
-
+<script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
 <script>
 //预览
 $("#submit").bind("click",function(){
@@ -151,7 +174,7 @@ $("#submit").bind("click",function(){
                 url:'../task/o_task.htm', 
                 type:"post",  
                 async:true,  
-                data:{'tableName':tableName,'separator':"${separator}",'filePath':$("#filePath").val(),'tags':tagName,'origin':origin,'runTime':runTime,'columnName':columnName,'columnIndex':columnIndex},  
+                data:{'tableName':tableName,'firstLineIgnore':'${firstLineIgnore}','separator':"${separator}",'filePath':$("#filePath").val(),'tags':tagName,'origin':origin,'runTime':runTime,'columnName':columnName,'columnIndex':columnIndex},  
                 dataType:"html",  
                 timeout:"100000",  
                 error:function(){alert("服务加载出错");},  
@@ -179,3 +202,5 @@ $("#submit").bind("click",function(){
 	}
 
 </script>
+</BODY>
+</HTML>

@@ -1,10 +1,10 @@
-<#if (list?size>0)>
+<#if task??>
 
 <table class="gridtable">
 <tr>
 <th>文件名</th><th>入库状态</th><th>修改时间</th><th>文件大小</th>
 </tr>
-<#list list as task>
+
 	<tr>
 	   <td>${task.filePath}</td>
 	   <td>
@@ -59,7 +59,6 @@
 
 </table>
 
-</#list>
 </#if>
 
 <style type="text/css">

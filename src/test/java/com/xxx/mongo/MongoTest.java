@@ -7,8 +7,8 @@ import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 import com.xxx.admin.bean.Task;
 import com.xxx.admin.bean.Tree;
-import com.xxx.admin.data.mongo.MongoDBRepositoryImpl;
-import com.xxx.admin.data.mongo.Repository;
+import com.xxx.admin.data.mongo.TaskRepository;
+import com.xxx.admin.file.analysis.mongo.BseRepository;
 
 public class MongoTest {
 	 
@@ -18,7 +18,7 @@ public class MongoTest {
         ConfigurableApplicationContext context =   new FileSystemXmlApplicationContext("F:/work2space/DataImport/src/main/webapp/WEB-INF/config/applicationContext.xml");
 
        
-        Repository repository = context.getBean(MongoDBRepositoryImpl.class);
+        BseRepository repository = context.getBean(TaskRepository.class);
  
         // cleanup collection before insertion
         repository.dropCollection();

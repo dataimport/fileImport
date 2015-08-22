@@ -2,23 +2,24 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>添加目录</title>
 </head>
 <body>
 
 <div id="base" class="">
 
       <div id="add" >
-        <input id=filePath type="text" value="" size="50">
+         <input id="folderPath" type="text" value="" size="50">
+         <input id="folderId" type="hidden" value="" >
          <input id="addButton" type="button" value="添加">
          <input id="delButton" type="button" value="删除">
       </div>
       
   	  
 	      <div>    
-	        <select id="filePathSelect" size="10" onchange="setSeparator(this.options[this.options.selectedIndex].value)">    
-	       	 <#list list as path>
-	          <option value="${path}">${path}</option>
+	        <select id="folderPathSelect" size="10" onchange="setSeparator(this.options[this.options.selectedIndex].value,this.options[this.options.selectedIndex].text)">    
+	       	  <#list list as folder>
+	         	 <option value="${folder.folderId!}">${folder.folderPath!}</option>
 	          </#list>
 	        </select>
 	      </div>
@@ -30,7 +31,7 @@
 <script>
 //添加
 $("#addButton").bind("click",function(){
-	var addPath = $("#filePath").val();
+	var addPath = $("#folderPath").val();
 	if(addPath==""){
 		alert("请填写路径");
 		return;
@@ -38,17 +39,17 @@ $("#addButton").bind("click",function(){
 	
 	 $.ajax(  
              {  
-                 url:'addFolderPath.htm', 
+                 url:'add.htm', 
                  type:"post",  
                  async:true,  
                  data:{'folderPath':addPath},  
-                 dataType:"html",  
+                 dataType:"json",  
                  timeout:"100000",  
                  error:function(){alert("服务出错");},  
                  success:function(data)  
-                 {  
-                	 if(data.code=200){
-                		 jQuery("#filePathSelect").append("<option value='"+addPath+"'>"+addPath+"</option>");
+                 { 
+                	 if(data.code==200){
+                		 jQuery("#folderPathSelect").append("<option value='"+addPath+"'>"+addPath+"</option>");
                 	 }else{
                 		 alert(data.msg);
                 	 }
@@ -61,25 +62,25 @@ $("#addButton").bind("click",function(){
 
 //删除
 $("#delButton").bind("click",function(){
-	var addPath = $("#filePath").val();
-	if(addPath==""){
+	var id = $("#folderId").val();
+	if(id==""){
 		alert("请选择删除路径");
 		return;
 	}
 	
 	 $.ajax(  
              {  
-                 url:'addFolderPath.htm', 
+                 url:'delete.htm', 
                  type:"post",  
                  async:true,  
-                 data:{'filePath':addPath},  
-                 dataType:"html",  
+                 data:{'id':id},  
+                 dataType:"json",  
                  timeout:"100000",  
                  error:function(){alert("服务出错");},  
                  success:function(data)  
                  {  
-                	 if(data.code=200){
-                		 jQuery("#filePathSelect option[value='"+addPath+"']").remove();
+                	 if(data.code==200){
+                		 jQuery("#folderPathSelect option[value='"+id+"']").remove();
                 	 }else{
                 		 alert(data.msg);
                 	 }
@@ -90,8 +91,9 @@ $("#delButton").bind("click",function(){
 	 
 	});  
 	
-function setSeparator(value){	
-	$("#filePath").val(value);	
+function setSeparator(id,text){	
+	$("#folderId").val(id);	
+	$("#folderPath").val(text);	
 }
 </script>
 </html>

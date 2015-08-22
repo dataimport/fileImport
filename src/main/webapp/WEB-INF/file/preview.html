@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBliC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+<TITLE>目录</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=utf-8">
+<liNK href="../resources/images/style.css" type=text/css rel=stylesheet>
+</HEAD>
+<BODY >
+<div align="center">
+导入文件：${filePath!}
+<br><br>
+文件预览：
+<br><br>
+<#if ((list?size)>5)>
+		<#list list[0..4] as file>
+			${file!}<br>		   	   
+		</#list>          
+<#else>
+		<#list list as file>
+			${file!}<br>
+		</#list>		   
+</#if>		   	   
+<br><br>
+<hr>
+分隔符&nbsp;&nbsp;
+<input id="fengefu_1" type="radio" name="fgf" value=""  checked="" >无分隔符
+<input id="fengefu_2" type="radio" name="fgf" value="," >逗号
+<input id="fengefu_3" type="radio" name="fgf" value="制表符"  >制表符
+<input id="fengefu_4" type="radio" name="fgf" value=";" >分号
+<input id="fengefu_5" type="radio" name="fgf" value=" "  >空格
+<input id="fengefu_6" type="radio" name="fgf" value="自定义" >自定义分隔符
+<input id="fengefu_7" type="text"  style='display:none;' size="8" >
+&nbsp;&nbsp;&nbsp;<input id="biaotou" type="checkbox" name="biaotou" value="true" >首行为表头
+
+<form  id="form" name="form" action="../task/v_task.htm"  method="post">
+<input type="hidden" id="filePath" name="filePath" value="${filePath!}">
+<input type="hidden" id="separator" name="separator" value="">
+<input type="hidden" id="firstLineIgnore" name="firstLineIgnore" value="false">
+<button>确定</button>
+</form>
+</div>
+<script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	 $("button").click(function(){
+		 var fgf = $('input[name="fgf"]:checked').val();
+			if(fgf=="自定义"){
+				fgf = $("#fengefu_7").val();
+			}			
+		$("#separator").val(fgf);
+		
+		var biaotou = $('input[name="biaotou"]:checked').val();
+
+		if(biaotou=="true"){
+			$("#firstLineIgnore").val("true");
+		}
+	  //  $("form").submit();
+	  });  
+	});
+	
+$(function(){
+	  $(":radio").click(function(){
+		  if($(this).val()=="自定义"){
+			  $("#fengefu_7").show();
+		  }	else{
+			  $("#fengefu_7").hide();
+		  }		
+	  });
+});
+
+
+
+
+	 
+</script>
+</BODY>
+</HTML>
