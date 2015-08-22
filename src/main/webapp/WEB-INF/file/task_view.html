@@ -122,9 +122,9 @@ table.gridtable td {
 	<input type="text" id="run1" value="" style="display:none" readonly="readonly" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-%d'})">
 	<input type="button" id="submit" value="提交任务">
 </div>
+
 <input type="hidden" id="filePath" value="${filePath!}">
-
-
+<script type="text/javascript" src="../js/My97DatePicker/WdatePicker.js" id="st-main"></script>
 <script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
 <script>
 //预览
@@ -175,12 +175,13 @@ $("#submit").bind("click",function(){
                 type:"post",  
                 async:true,  
                 data:{'tableName':tableName,'firstLineIgnore':'${firstLineIgnore}','separator':"${separator}",'filePath':$("#filePath").val(),'tags':tagName,'origin':origin,'runTime':runTime,'columnName':columnName,'columnIndex':columnIndex},  
-                dataType:"html",  
+                dataType:"json",  
                 timeout:"100000",  
                 error:function(){alert("服务加载出错");},  
                 success:function(data)  
                 {  
-              	 	$("#task").html(data);  
+                	alert(data.msg);
+              	 	
                 }  
             }  
         );  
