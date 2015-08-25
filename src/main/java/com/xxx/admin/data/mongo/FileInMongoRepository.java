@@ -1,5 +1,8 @@
 package com.xxx.admin.data.mongo;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -14,11 +17,12 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
+import com.xxx.admin.bean.Collection;
 import com.xxx.admin.bean.Task;
 import com.xxx.mongo.repository.base.BaseRepository;
 
-@Repository("task")
-public class TaskRepository implements BaseRepository<Task> {
+@Repository("fileMogo")
+public class FileInMongoRepository implements BaseRepository<Task> {
  
 	@Autowired
     MongoTemplate mongoTemplate;
@@ -146,60 +150,85 @@ public class TaskRepository implements BaseRepository<Task> {
 	}
 	
 	
-	public void taskRun(Task task,List<String> list){		
+	public void FilePushToMongo(Task task,List<String> list){	
+		FilePushToMongo(task,list,null,null,null);
+	}
+	
+	public void FilePushToMongo(Task task,List<String> list,Boolean isBigFile,Integer runNum,Long time){	
+		long start = System.currentTimeMillis();
+		int valuesSize = list.size();		
 		DBCollection dbColleciton =mongoTemplate.getCollection(task.getTableName()); 
 		DBObject data = new BasicDBObject();
 		String[] columns = task.getColumnName();
 		Integer[] columnIndex = task.getColumnIndex();
-		long start = System.currentTimeMillis();
-		//int columnSize = columns.length;
 		int columnIndexSize = columnIndex.length;
 		if(task.isFirstLineIgnore()){
 			list.remove(0);
 		}		
-		int valuesSize = list.size();
-
 		String[] lineSeparator;
-		int nowNum =0;
+		int nowNum = 0;
 		String[] keys = new String[]{"runNum","timeUse"};
-		String[] values = new String[2];
+		Object[] values = new Object[2];
 		String timeUse = "0 秒";
-		long l,day,hour,min,s;
+		long l=0l;
 		for(int i=0;i<valuesSize;i++){
-			//dbColleciton = MongoDBFactory.getDB().getCollection(task.getTableName());
-			data = new BasicDBObject(); //处理只能保存一条数据的问题
+			data = new BasicDBObject(); 
 			lineSeparator = list.get(i).split(task.getSeparator());			
 			for(int j=0;j<columnIndexSize;j++){
 				data.put(columns[j], lineSeparator[columnIndex[j]-1]);
 			}			
-			dbColleciton.insert(data);
-			nowNum++;			
-			if(nowNum==valuesSize||nowNum%10==0){//每10条更新一次任务表进度
-				l=System.currentTimeMillis()-start;
-				s=(l/1000);
-				min=(s/60);
-				hour=(s/60);
-				day = (hour/24);			
-				if(day>0){
-					timeUse = ""+day+"天"+hour+"小时"+min+"分"+s+"秒";	
-				}else if(hour>0){
-					timeUse = ""+hour+"小时"+min+"分"+s+"秒";
-				}else if(min>0){
-					timeUse = ""+min+"分"+s+"秒";
-				}else if(s>0){
-					timeUse = s+"秒";
-				}else{
-					timeUse = l+"毫秒";
-				}
-				values[0]=String.valueOf(nowNum);
-				values[1]=timeUse;		
-				updateTaskByField(task.getUid(),keys,values);
-			}
+			dbColleciton.insert(data);		
+			if(!isBigFile){//不是大文件 按行数更新
+				nowNum++;			
+				if(nowNum==valuesSize||nowNum%10==0){//每10条更新一次任务表进度
+					l=System.currentTimeMillis()-start;
+					timeUse = getTimeUse(l);
+					values[0]=String.valueOf(nowNum);
+					values[1]=timeUse;					
+					if(nowNum==valuesSize){
+						 keys = new String[]{"runNum","timeUse","endDate","taskStatus","totalCount"};
+						 values = new Object[5];
+						 values[0]=nowNum;
+						 values[1]=timeUse;	
+						 values[2]=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+						 values[3]=2;
+						 values[4]=valuesSize;
+					}
+					updateFileInfoByField(task.getUid(),keys,values);
+				}				
+			}	
 		}	
+		
+		if(isBigFile){//大文件 按buffer更新
+			timeUse = getTimeUse(time);		
+			values[0]=runNum;
+			values[1]=timeUse;	
+			updateFileInfoByField(task.getUid(),keys,values);
+		}		
 	}
 	
-	public void updateTaskByField(String uid, String[] key, Object[] value) {
-		DBCollection dbColleciton =mongoTemplate.getCollection("taskInfo"); 	
+	private String getTimeUse(long time){		
+		if(time/86400000>0){
+			return ""+time/86400000+"天"+time%86400000/3600000+"小时"+time%86400000%3600000/60000+"分"+time%86400000%3600000%60000/1000+"秒";	
+		}else if(time%86400000/3600000>0){
+			return  ""+time%86400000/3600000+"小时"+time%86400000%3600000/60000+"分"+time%86400000%3600000%60000/1000+"秒";
+		}else if(time%86400000%3600000/60000>0){
+			return  ""+time%86400000%3600000/60000+"分"+time%86400000%3600000%60000/1000+"秒";
+		}else if(time%86400000%3600000%60000/1000>0){
+			return   time%86400000%3600000%60000/1000+"秒";
+		}else{
+			return  time+"毫秒";
+		}			
+	}
+	
+	/**
+	* 根据指定的字段还有value 更新所有文件信息表
+	* @param uid
+	* @param key
+	* @param value
+	*/
+	public void updateFileInfoByField(String uid, String[] key, Object[] value) {
+		DBCollection dbColleciton =mongoTemplate.getCollection(Collection.ALLFILEINFO_COLLECTION_NAME); 	
 		BasicDBObject query = new BasicDBObject();
 		query.put("uid", uid);
 		DBObject taskDB = dbColleciton.findOne(query);

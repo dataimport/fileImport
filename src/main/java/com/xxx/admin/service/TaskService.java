@@ -9,9 +9,10 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
+import com.xxx.admin.bean.Collection;
 import com.xxx.admin.bean.Task;
 import com.xxx.admin.data.mongo.TaskRepository;
-import com.xxx.admin.file.analysis.FileAnalysis;
+import com.xxx.admin.file.analysis.TxtFileAnalysis;
 
 @Service("taskService")
 public class TaskService {
@@ -20,32 +21,23 @@ public class TaskService {
 	 * 创建任务
 	 * @param task
 	 */
-	public List<String> createTask(Task task) {
+	public boolean createTask(Task task,Boolean runNow) {
 		try{
-			List<String> lines = setTaskInfo(task);
-			taskRepository.saveObject(task); //保存到任务表中
-			taskRepository.saveObject(task,"documentInfo"); //保存到所有文档表中			
-			return lines;
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}
-		return null;
-	}
-	
-	
-	/**
-	 * 执行任务
-	 * @param task
-	 */
-	public boolean taskRun(Task task,List<String> lines) {
-		try{					
-			taskRepository.taskRun(task,lines);//开始执行导入文件任务		
+			setTaskInfo(task);
+			if(!runNow){//不是立即执行，放到任务表中
+				taskRepository.saveObject(task,Collection.TASKINFO_COLLECTION_NAME); //保存到任务表中
+			}			
+			taskRepository.saveObject(task,Collection.ALLFILEINFO_COLLECTION_NAME); //保存到所有文档表中			
 			return true;
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
 		return false;
 	}
+	
+	public boolean createTask(Task task) {
+		return createTask(task,true);
+	}	
 	
 	
 	/**
@@ -78,11 +70,11 @@ public class TaskService {
 			List<Task> list = taskRepository.getObjectsByRunTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 			for(Task task:list){
 					taskUpdate(task, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),null, 1);//更新状态为正在执行
-				if(taskRun(task, getLines(task.getFilePath()))){//入库
-					taskUpdate(task, null,new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()), 2);//更新状态为已经完成
-				}else{
-					taskUpdate(task, null, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),-2);//更新状态为失败
-				}
+//				if(taskRun(task, getLines(task.getFilePath()))){//入库
+//					taskUpdate(task, null,new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()), 2);//更新状态为已经完成
+//				}else{
+//					taskUpdate(task, null, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),-2);//更新状态为失败
+//				}
 			}
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -116,22 +108,15 @@ public class TaskService {
 		return  null;
 	}
 
-	private List<String> setTaskInfo(Task task){
+	private void setTaskInfo(Task task){
 		File file  = new File(task.getFilePath());
 		task.setFileSize(file.length());
-		List<String> lines = (List<String>)fileAnalysis.parse(task.getFilePath());
-		task.setTotalCount(lines.size()-1);	
-		return lines;
 	}
 	
-	private List<String> getLines(String filePath){
-		List<String> lines = (List<String>)fileAnalysis.parse(filePath);
-		return lines;
-	}
 	
     @Resource(name = "task")
     TaskRepository taskRepository;
     @Resource
-	private FileAnalysis fileAnalysis;
+	private TxtFileAnalysis fileAnalysis;
 	
 }

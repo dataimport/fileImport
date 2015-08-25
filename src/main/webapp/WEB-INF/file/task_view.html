@@ -40,13 +40,13 @@ table.gridtable td {
 	<tr>
     <th>分隔符</th>    
  	<td colspan="${columnsSize}" >
- 	 ${separator}
+ 	 ${separator!}
  	</td>
  	
    <tr>
     <th>首行为表头</th>    
  	<td colspan="${columnsSize}" >
- 	 <input  id="firstLineIgnore" value="" type="checkbox" <#if (firstLineIgnore=="ture")>checked="checked" </#if> disabled="disabled"></input>
+ 	 <input  id="firstLineIgnore" value="" type="checkbox" <#if (firstLineIgnore='true')> checked="checked" </#if> disabled="disabled"></input>
  	</td>
    </tr>
    
@@ -55,7 +55,7 @@ table.gridtable td {
     <#list columns as column>
  	<td>
  	 <div align="center">  <input  name="columnName"  id="columnName_${(column_index+1)}"  
- 	 <#if (firstLineIgnore=="ture")> value="${column?trim}" > <#else> value="" </#if> 	 
+ 	 <#if (firstLineIgnore=="true")> value="${column?trim}" > <#else> value="" </#if> 	 
  	 </input></div>
  	</td>
 	</#list>
@@ -91,28 +91,24 @@ table.gridtable td {
  	</td>
   </tr>
  
-<#list text[0..10] as a>
-<#if a_index==10>
+<#list text as a>
    <tr>
-    <th>${a_index}</th>
- 		<#list a?split("${separator}") as value>
- 		<td>
- 		......
- 		</td>	
- 	 </#list>
-  </tr>
-  <#elseif a_index!=0>
-   <tr>
-    <th>${a_index}</th>
- 		<#list a?split("${separator}") as value>
+    <th>${a_index+1}</th>
+ 		<#list a?split("${separator!}") as value>
  		<td>
  		 ${value?trim}
  		</td>	
  	 </#list>
-  </tr>
-</#if>
-  
+  </tr>  
 </#list>
+<tr>
+    <th>...</th> 	
+ 	 <#list columns as column>
+ 		<td>
+ 		......
+ 		</td>	
+ 		</#list>
+</tr>
 
 
 </table>
@@ -174,7 +170,7 @@ $("#submit").bind("click",function(){
                 url:'../task/o_task.htm', 
                 type:"post",  
                 async:true,  
-                data:{'tableName':tableName,'firstLineIgnore':'${firstLineIgnore}','separator':"${separator}",'filePath':$("#filePath").val(),'tags':tagName,'origin':origin,'runTime':runTime,'columnName':columnName,'columnIndex':columnIndex},  
+                data:{'tableName':tableName,'firstLineIgnore':'${firstLineIgnore}','separator':"${separator!}",'filePath':$("#filePath").val(),'tags':tagName,'origin':origin,'runTime':runTime,'columnName':columnName,'columnIndex':columnIndex},  
                 dataType:"json",  
                 timeout:"100000",  
                 error:function(){alert("服务加载出错");},  

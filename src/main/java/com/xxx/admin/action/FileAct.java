@@ -1,13 +1,8 @@
 package com.xxx.admin.action;
 
-import java.io.File;
 import java.util.List;
-import java.util.ResourceBundle;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,16 +49,16 @@ public class FileAct {
 //		return "file/list";
 //	}
 	
-	@RequestMapping(value = "view.htm")
-	public String view(String filePath,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
-		List<String> list = fileService.preview(filePath);
-		model.put("list", list);
-		return "file/view";
-	}
+//	@RequestMapping(value = "view.htm")
+//	public String view(String filePath,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
+//		List<String> list = fileService.previewTxtFile(filePath);
+//		model.put("list", list);
+//		return "file/view";
+//	}
 	
 	@RequestMapping(value = "preview.htm")
 	public String v_task(String filePath,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
-		List<String>  list =   fileService.preview(filePath);
+		List<String>  list =   fileService.previewTxtFile(filePath);
 		model.put("list", list);
 		model.put("filePath", filePath);
 		return "file/preview";
