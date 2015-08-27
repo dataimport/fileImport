@@ -47,9 +47,6 @@ public class TaskAct {
 		}
 		
 		if(lines.length>0){
-			System.out.println(lines[0]);
-			String[] s = lines[0].split(separator);
-			System.out.println(s);
 			model.put("columns", lines[0].split(separator));	
 		}else{
 			 model.put("columns", new String[]{});	
