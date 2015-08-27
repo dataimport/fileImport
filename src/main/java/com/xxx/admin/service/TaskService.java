@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.xxx.admin.bean.Collection;
@@ -70,11 +71,7 @@ public class TaskService {
 			List<Task> list = taskRepository.getObjectsByRunTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 			for(Task task:list){
 					taskUpdate(task, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),null, 1);//更新状态为正在执行
-//				if(taskRun(task, getLines(task.getFilePath()))){//入库
-//					taskUpdate(task, null,new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()), 2);//更新状态为已经完成
-//				}else{
-//					taskUpdate(task, null, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),-2);//更新状态为失败
-//				}
+					fileService.saveFileToMongo(task);
 			}
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -118,5 +115,7 @@ public class TaskService {
     TaskRepository taskRepository;
     @Resource
 	private TxtFileAnalysis fileAnalysis;
+	@Autowired
+	private FileService fileService;
 	
 }

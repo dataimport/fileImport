@@ -191,10 +191,14 @@
 			<version>1.4.1</version>
 		</dependency>
 				
+          <dependency>  
+               <groupId>junit</groupId>  
+               <artifactId>junit</artifactId>  
+               <version>4.10</version>  
+          </dependency>  
+          
 	 </dependencies>
-	 
-	 
-  	
+	   	
 	<properties>
 		<org.springframework.version>4.0.0.RELEASE</org.springframework.version>
 		<spring.data.jpa.version>1.4.1.RELEASE</spring.data.jpa.version>

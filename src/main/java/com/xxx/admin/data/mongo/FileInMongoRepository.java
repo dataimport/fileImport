@@ -151,7 +151,7 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 	
 	
 	public void FilePushToMongo(Task task,List<String> list){	
-		FilePushToMongo(task,list,null,null,null);
+		FilePushToMongo(task,list,false,null,null);
 	}
 	
 	public void FilePushToMongo(Task task,List<String> list,Boolean isBigFile,Integer runNum,Long time){	
@@ -178,7 +178,7 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 				data.put(columns[j], lineSeparator[columnIndex[j]-1]);
 			}			
 			dbColleciton.insert(data);		
-			if(!isBigFile){//不是大文件 按行数更新
+			if(isBigFile!=null&&!isBigFile){//不是大文件 按行数更新
 				nowNum++;			
 				if(nowNum==valuesSize||nowNum%10==0){//每10条更新一次任务表进度
 					l=System.currentTimeMillis()-start;
