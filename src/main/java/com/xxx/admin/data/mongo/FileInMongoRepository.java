@@ -172,9 +172,8 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 		Object[] values = new Object[2];
 		String timeUse = "0 秒";
 		long l=0l;
-		for(int i=0;i<valuesSize-1;i++){
+		for(int i=0;i<valuesSize;i++){
 			data = new BasicDBObject(); 
-			System.out.println(i+" ########## ");
 			lineSeparator = list.get(i).split(task.getSeparator());			
 			for(int j=0;j<columnIndexSize;j++){
 				data.put(columns[j], lineSeparator[columnIndex[j]-1]);
@@ -187,7 +186,7 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 					timeUse = getTimeUse(l);
 					values[0]=String.valueOf(nowNum);
 					values[1]=timeUse;					
-					if(nowNum==valuesSize){
+					if(nowNum==valuesSize){;
 						 keys = new String[]{"runNum","timeUse","endDate","taskStatus","totalCount"};
 						 values = new Object[5];
 						 values[0]=nowNum;

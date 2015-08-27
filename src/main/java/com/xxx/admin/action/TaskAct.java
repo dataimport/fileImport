@@ -38,11 +38,18 @@ public class TaskAct {
 	
 	@RequestMapping(value = "v_task.htm")
 	public String v_task(String filePath,String separator,boolean firstLineIgnore,String[] lines,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
-	
+			
 		if(StringUtils.isBlank(separator)){
-			separator="";
+			separator="wKhTglXeaGY";
+			model.put("separator", "");
+		}else{
+			model.put("separator", separator);
 		}
+		
 		if(lines.length>0){
+			System.out.println(lines[0]);
+			String[] s = lines[0].split(separator);
+			System.out.println(s);
 			model.put("columns", lines[0].split(separator));	
 		}else{
 			 model.put("columns", new String[]{});	
@@ -53,7 +60,7 @@ public class TaskAct {
 			model.put("text", lines);	
 		}
 		
-		model.put("separator", separator);
+	
 		model.put("filePath", filePath);
 		if(firstLineIgnore){
 			model.put("firstLineIgnore", "true");

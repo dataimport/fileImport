@@ -94,11 +94,19 @@ table.gridtable td {
 <#list text as a>
    <tr>
     <th>${a_index+1}</th>
- 		<#list a?split("${separator!}") as value>
- 		<td>
- 		 ${value?trim}
- 		</td>	
- 	 </#list>
+ 		 	 
+ 	  <#if separator=="">	  
+	 		<td>
+	 		 ${a?trim}
+	 		</td>	
+	  <#else>
+	     <#list a?split("${separator!}") as value>
+	 		<td>
+	 		 ${value?trim}
+	 		</td>	
+	 	 </#list>
+    </#if> 
+    
   </tr>  
 </#list>
 <tr>
