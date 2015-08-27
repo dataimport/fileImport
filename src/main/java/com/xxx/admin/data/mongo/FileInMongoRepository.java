@@ -156,23 +156,25 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 	
 	public void FilePushToMongo(Task task,List<String> list,Boolean isBigFile,Integer runNum,Long time){	
 		long start = System.currentTimeMillis();
+		if(task.isFirstLineIgnore()){
+			list.remove(0);
+		}		
 		int valuesSize = list.size();		
 		DBCollection dbColleciton =mongoTemplate.getCollection(task.getTableName()); 
 		DBObject data = new BasicDBObject();
 		String[] columns = task.getColumnName();
 		Integer[] columnIndex = task.getColumnIndex();
 		int columnIndexSize = columnIndex.length;
-		if(task.isFirstLineIgnore()){
-			list.remove(0);
-		}		
+		
 		String[] lineSeparator;
 		int nowNum = 0;
 		String[] keys = new String[]{"runNum","timeUse"};
 		Object[] values = new Object[2];
 		String timeUse = "0 秒";
 		long l=0l;
-		for(int i=0;i<valuesSize;i++){
+		for(int i=0;i<valuesSize-1;i++){
 			data = new BasicDBObject(); 
+			System.out.println(i+" ########## ");
 			lineSeparator = list.get(i).split(task.getSeparator());			
 			for(int j=0;j<columnIndexSize;j++){
 				data.put(columns[j], lineSeparator[columnIndex[j]-1]);
