@@ -5,7 +5,7 @@ import com.xxx.admin.service.TaskService;
 
 public class taskRun {
 
-	public void taskRun() {		
+	public void run() {		
 		System.out.println("......执行定时任务.....");
 		taskService.taskQuartz();		
 	}
