@@ -5,19 +5,22 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.xxx.admin.bean.MongoSolrInfo;
 import com.xxx.admin.bean.Task;
 import com.xxx.admin.data.mongo.FileInMongoRepository;
-import com.xxx.admin.data.mongo.TaskRepository;
+import com.xxx.admin.data.mongo.MongoToSolrRepository;
 import com.xxx.admin.file.analysis.TxtFileAnalysis;
 
 @Service("fileService")
@@ -66,7 +69,19 @@ public class FileService {
 								fcin,rBuffer,lines);	  
 					  runNum+=lines.size();
 					 fmRepository.FilePushToMongo(t, lines,true,runNum,System.currentTimeMillis()-start);					 
-					}					
+				  }					
+//				  MongoSolrInfo msi = new MongoSolrInfo();
+//				  msi.setUid(UUID.randomUUID().toString().replaceAll("-", ""));
+//				  msi.setCollectionName(t.getTableName());
+//				  msi.setFilePath(t.getFilePath());
+//				  msi.setFileInfoUid(t.getUid());
+//				  msi.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));				  
+//				  mongoToSolrRepository.saveObject(msi);
+				  
+				  //更新状态为导入完毕
+				  String[] keys = new String[]{"taskStatus"};
+				  Object[] values = new Object[]{2};			
+				  fmRepository.updateFileInfoByField(t.getUid(), keys, values);
 				  System.out.println(" 总共 "+runNum+" 条记录 ");
 				} catch (IOException e) {
 					e.printStackTrace();					
@@ -76,6 +91,11 @@ public class FileService {
 			  try{
 				  List<String> lines = txtFileAnalysis.readSmallFile(t.getFilePath());
 				  fmRepository.FilePushToMongo(t, lines);
+				  
+				  //更新状态为导入完毕
+				  String[] keys = new String[]{"taskStatus"};
+				  Object[] values = new Object[]{2};			
+				  fmRepository.updateFileInfoByField(t.getUid(), keys, values);
 				  return true;
 			  }catch(Exception ex){
 				  ex.printStackTrace();
@@ -92,6 +112,8 @@ public class FileService {
 
     @Resource
     FileInMongoRepository fmRepository;
+    @Resource
+    MongoToSolrRepository mongoToSolrRepository;
 	@Autowired
 	private TxtFileAnalysis txtFileAnalysis;
 	

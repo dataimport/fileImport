@@ -1,7 +1,6 @@
 package com.xxx.admin.data.mongo;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
-import com.xxx.admin.bean.Collection;
+import com.xxx.admin.bean.AllCollectionName;
 import com.xxx.admin.bean.Task;
 import com.xxx.mongo.repository.base.BaseRepository;
 
@@ -229,7 +228,7 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 	* @param value
 	*/
 	public void updateFileInfoByField(String uid, String[] key, Object[] value) {
-		DBCollection dbColleciton =mongoTemplate.getCollection(Collection.ALLFILEINFO_COLLECTION_NAME); 	
+		DBCollection dbColleciton =mongoTemplate.getCollection(AllCollectionName.ALLFILEINFO_COLLECTIONNAME); 	
 		BasicDBObject query = new BasicDBObject();
 		query.put("uid", uid);
 		DBObject taskDB = dbColleciton.findOne(query);

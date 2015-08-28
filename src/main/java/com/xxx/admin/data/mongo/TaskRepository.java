@@ -14,6 +14,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
+import com.xxx.admin.bean.AllCollectionName;
 import com.xxx.admin.bean.Task;
 import com.xxx.mongo.repository.base.BaseRepository;
 
@@ -31,7 +32,7 @@ public class TaskRepository implements BaseRepository<Task> {
      * Get all Tasks.
      */
     public List<Task> getAllObjects() {
-        return mongoTemplate.findAll(Task.class);
+        return mongoTemplate.findAll(Task.class,AllCollectionName.ALLFILEINFO_COLLECTIONNAME);
     }
  
     /**
@@ -124,7 +125,7 @@ public class TaskRepository implements BaseRepository<Task> {
 		Criteria criteriaStatus = Criteria.where("filePath").is(filePath);
 		query.addCriteria(criteriaStatus);
 		query.with(new Sort(Direction.DESC,"runTime"));
-		return mongoTemplate.findOne(query, Task.class);
+		return mongoTemplate.findOne(query, Task.class,AllCollectionName.ALLFILEINFO_COLLECTIONNAME);
 	}
 	
 	@Override

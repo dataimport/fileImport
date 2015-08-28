@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.xxx.admin.bean.base.BaseTask;
 
 
-@Document(collection = "taskInfo") 
+@Document(collection = AllCollectionName.TASKINFO_COLLECTIONNAME) 
 
 public class Task extends BaseTask{
 	
@@ -31,15 +31,15 @@ public class Task extends BaseTask{
 	public Task(String uid, String tableName, String origin, String tags,
 			String[] columnName, Integer[] columnIndex, String separator,
 			String runTime, String startDate, String endDate, String filePath,
-			long fileSize, String leftTime, long totalCount, int taskStatus,
-			String timeUse, int runNum, int updateOrAdd, int beginLineNum,
-			String createUser, boolean firstLineIgnore, String id) {
+			String fileName, long fileSize, String leftTime, long totalCount,
+			int taskStatus, String timeUse, int runNum, int updateOrAdd,
+			int beginLineNum, String createUser, boolean firstLineIgnore,
+			String id) {
 		super(uid, tableName, origin, tags, columnName, columnIndex, separator,
-				runTime, startDate, endDate, filePath, fileSize, leftTime,
-				totalCount, taskStatus, timeUse, runNum, updateOrAdd,
+				runTime, startDate, endDate, filePath, fileName, fileSize,
+				leftTime, totalCount, taskStatus, timeUse, runNum, updateOrAdd,
 				beginLineNum, createUser, firstLineIgnore);
 		this.id = id;
 	}
-	
 
 }

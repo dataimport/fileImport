@@ -10,7 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.xxx.admin.bean.Collection;
+import com.xxx.admin.bean.AllCollectionName;
 import com.xxx.admin.bean.Task;
 import com.xxx.admin.data.mongo.TaskRepository;
 import com.xxx.admin.file.analysis.TxtFileAnalysis;
@@ -26,9 +26,9 @@ public class TaskService {
 		try{
 			setTaskInfo(task);
 			if(!runNow){//不是立即执行，放到任务表中
-				taskRepository.saveObject(task,Collection.TASKINFO_COLLECTION_NAME); //保存到任务表中
+				taskRepository.saveObject(task,AllCollectionName.TASKINFO_COLLECTIONNAME); //保存到任务表中
 			}			
-			taskRepository.saveObject(task,Collection.ALLFILEINFO_COLLECTION_NAME); //保存到所有文档表中			
+			taskRepository.saveObject(task,AllCollectionName.ALLFILEINFO_COLLECTIONNAME); //保存到所有文档表中			
 			return true;
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -108,8 +108,8 @@ public class TaskService {
 	private void setTaskInfo(Task task){
 		File file  = new File(task.getFilePath());
 		task.setFileSize(file.length());
-	}
-	
+		task.setFileName(file.getName());
+	}	
 	
     @Resource(name = "task")
     TaskRepository taskRepository;

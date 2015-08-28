@@ -57,7 +57,6 @@ public class TaskAct {
 			model.put("text", lines);	
 		}
 		
-	
 		model.put("filePath", filePath);
 		if(firstLineIgnore){
 			model.put("firstLineIgnore", "true");
@@ -65,8 +64,7 @@ public class TaskAct {
 			model.put("firstLineIgnore", "false");
 		}		
 		return "file/task_view";
-	}
-	
+	}	
 
 	@RequestMapping(value = "o_task.htm")
 	public String o_task(Task task,ModelMap model,HttpServletRequest request,HttpServletResponse response) {	

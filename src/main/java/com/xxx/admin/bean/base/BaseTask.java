@@ -23,6 +23,7 @@ public abstract class BaseTask implements Serializable {
 	private String startDate="";
 	private String endDate="";
 	private String filePath;
+	private String fileName;
 	private long fileSize;
 	private String leftTime;
 	private long totalCount= 0l;
@@ -33,14 +34,13 @@ public abstract class BaseTask implements Serializable {
 	private int  beginLineNum; //从文件第几行继续开始导入
 	private String createUser; //任务的创建者
 	private boolean firstLineIgnore; //首行是否忽略
-
-	
+		
 	public BaseTask(String uid, String tableName, String origin, String tags,
 			String[] columnName, Integer[] columnIndex, String separator,
 			String runTime, String startDate, String endDate, String filePath,
-			long fileSize, String leftTime, long totalCount, int taskStatus,
-			String timeUse, int runNum, int updateOrAdd, int beginLineNum,
-			String createUser, boolean firstLineIgnore) {
+			String fileName, long fileSize, String leftTime, long totalCount,
+			int taskStatus, String timeUse, int runNum, int updateOrAdd,
+			int beginLineNum, String createUser, boolean firstLineIgnore) {
 		super();
 		this.uid = uid;
 		this.tableName = tableName;
@@ -53,6 +53,7 @@ public abstract class BaseTask implements Serializable {
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.filePath = filePath;
+		this.fileName = fileName;
 		this.fileSize = fileSize;
 		this.leftTime = leftTime;
 		this.totalCount = totalCount;
@@ -196,6 +197,14 @@ public abstract class BaseTask implements Serializable {
 		this.runNum = runNum;
 	}
 	
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
 	public BaseTask(){
 		  
 	  }
