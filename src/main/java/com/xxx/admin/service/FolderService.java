@@ -1,6 +1,7 @@
 package com.xxx.admin.service;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -45,6 +46,35 @@ public class FolderService {
 		}
 		
 	}
+	
+	public File[] getChildByLastModified(final Long lastModified,String folderPath) {			
+		File file = new File(folderPath);
+	
+		if(file.exists()){
+			//过滤文件找到最后修改时间相近，还不是文件夹的文件
+		    FileFilter filefilter = new FileFilter() {		    	
+		        public boolean accept(File file) {
+		        	if (!file.isDirectory()&&file.lastModified()<=lastModified) {
+		                return true;
+		            }
+		            return false;
+		        }
+		    };
+		   		    
+			File[] child = file.listFiles(filefilter);			
+			Arrays.sort(child, new Comparator<File>(){ 
+			public int compare(File f1, File f2) 
+			 { 
+			    return Long.valueOf(f2.lastModified()).compareTo(f1.lastModified()); 
+			 } 
+			}); 
+			return child;
+		}else{
+			return null;
+		}
+		
+	}
+
 	
 	@Resource(name = "folder")
 	FolderRepository folderRepository;

@@ -5,22 +5,14 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-
 import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.xxx.admin.bean.MongoSolrInfo;
 import com.xxx.admin.bean.Task;
 import com.xxx.admin.data.mongo.FileInMongoRepository;
-import com.xxx.admin.data.mongo.MongoToSolrRepository;
 import com.xxx.admin.file.analysis.TxtFileAnalysis;
 
 @Service("fileService")
@@ -125,7 +117,6 @@ public class FileService {
 		}
 		
 	}
-
 
     @Resource
     FileInMongoRepository fmRepository;

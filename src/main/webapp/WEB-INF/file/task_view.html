@@ -14,8 +14,15 @@
 <#assign columnsSize=columns?size>
 <#assign listSize=text?size>
 <table width="100%"  class="gridtable">
+   
+   <tr>
+    <th>当前文件</th>    
+ 	<td colspan="${columnsSize}" >
+ 	 ${filePath!}
+ 	</td> 	
+   <tr>
 
-	<tr>
+   <tr>
     <th>分隔符</th>    
  	<td colspan="${columnsSize}" >
  	 ${separator!}
@@ -60,8 +67,8 @@
   </div>
   <div class="investment_con">
     <div class="investment_con_list">
-      <P>
- 		表名<input  id="tableName" value="" size="20" onchange="tableNameChange(this.value)" ></input> <span id="tableInfo"></span>
+     <P>
+ 		表名<input  id="tableName" value="<#if task??>${task.tableName!}</#if>" size="20" onchange="tableNameChange(this.value)" ></input> <span id="tableInfo"></span>
 	  </P>
 	  <br>
       <P>
@@ -69,11 +76,11 @@
 	  </P>	  
 	  <br>
       <P>
- 		来源<input  id="origin" value="" size="20"></input>
+ 		来源<input  id="origin" value="<#if task??>${task.origin!}</#if>" size="20"></input>
 	  </P>
 	   <br>
 	  <P>
- 		标签<input  id="tagName" value="" size="20"></input>
+ 		标签<input  id="tagName" value="<#if task??>${task.tags!}</#if>" size="20"></input>
 	  </P>
     </div>
     
@@ -133,9 +140,13 @@
 	<input id="run0" name="runType"  type="radio" value="0000-00-00 00:00:00"  onclick="runTypeChange('0')" checked=''/>立即执行导入任务
 	<input id="run" name="runType"  type="radio" value="1"  onclick="runTypeChange('1')"/>计划执行时间
 	<input type="text" id="run1" value="" style="display:none" readonly="readonly" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-%d'})">
-	 <input name="sameRule" type="checkbox" id="sameRule" value="sameRule"> 以相同规则导入下一文件
-	<input type="button" id="submit" value="提交任务">
+	<input name="sameRule" type="checkbox" id="sameRule" value="sameRule"> 以相同规则导入下一文件
+	<input type="button" id="submit" value="提交任务"><span id="loading"></span>
 </div>
+
+<form  id="form" name="form" action="../task/v_taskBySameRule.htm"  method="post">
+<input type="hidden" id="preFilePath" name="preFilePath" value="${filePath!}">
+</form>
 
 <input type="hidden" id="filePath" value="${filePath!}">
 <script type="text/javascript" src="../js/My97DatePicker/WdatePicker.js" id="st-main"></script>
@@ -144,7 +155,6 @@
 <script>
 //预览
 $("#submit").bind("click",function(){
-
 	 var cleanOrAppend = $('input[name="cleanOrAppend"]:checked').val();
 	 
 	 if(cleanOrAppend==undefined){
@@ -199,7 +209,6 @@ $("#submit").bind("click",function(){
 	var columnChecked = $('[name = "import"]:checkbox:checked');
 	
 	var temp ="";
-
 	for (var i = 0; i < columnChecked.length; i++) {
 		columnIndex = (columnIndex + columnChecked.get(i).value) + (((i + 1)== columnChecked.length) ? '':','); 
 		
@@ -212,29 +221,35 @@ $("#submit").bind("click",function(){
 		columnName = (columnName + temp) + (((i + 1)== columnChecked.length) ? '':','); 
 	}
 	
-	var sameRule = $('[name = "sameRule"]:checkbox:checked');
+	$('#submit').attr('disabled','true');  
+	$('#loading').html("<img src='../resources/images/loading.gif'/>");
 	
-	if(sameRule!=undefined){
-		
-	}
-	 
-	$.ajax(  
+		$.ajax(  
 	            {  
 	                url:'../task/o_task.htm', 
 	                type:"post",  
 	                async:true,  
 	                data:{'tableName':tableName,'firstLineIgnore':'${firstLineIgnore}','separator':"${separator!}",'filePath':$("#filePath").val(),'tags':tagName,'origin':origin,'runTime':runTime,'columnName':columnName,'columnIndex':columnIndex,'cleanOrAppend':cleanOrAppend},  
 	                dataType:"json",  
-	                timeout:"1000000000",  
-	                error:function(){alert("服务加载出错");},  
+	                timeout:"1000000",  
+	                error:function(){
+	                	
+	                },  
 	                success:function(data)  
 	                {  
+	                	$('#submit').attr('disabled',false); ; 
+	                	$('#loading').html("");
 	                	alert(data.msg);
 	              	 	
 	                }  
 	            }  
 	        ); 
 
+			
+	if(document.getElementById("sameRule").checked){
+		$("#form").submit();
+	}
+	 
 });  
 	
 	function runTypeChange(value){
@@ -331,7 +346,6 @@ $("#submit").bind("click",function(){
 	}
 	
 	
-
 </script>
 </BODY>
 </HTML>

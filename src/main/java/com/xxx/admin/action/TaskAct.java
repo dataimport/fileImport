@@ -1,5 +1,6 @@
 package com.xxx.admin.action;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.xxx.admin.bean.Task;
 import com.xxx.admin.service.FileService;
+import com.xxx.admin.service.FolderService;
 import com.xxx.admin.service.TaskService;
 import com.xxx.utils.ResponseUtils;
 
@@ -36,6 +38,17 @@ public class TaskAct {
 		return "task/list";
 	}
 	
+	/**
+	 * 导入文件前任务预览效果
+	 * @param filePath
+	 * @param separator
+	 * @param firstLineIgnore
+	 * @param lines
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value = "v_task.htm")
 	public String v_task(String filePath,String separator,boolean firstLineIgnore,String[] lines,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
 			
@@ -64,6 +77,57 @@ public class TaskAct {
 			model.put("firstLineIgnore", "false");
 		}		
 		return "file/task_view";
+	}	
+	
+	/**
+	 *  根据相同规则导入下一个文档预览效果接口
+	 * @param preFilePath 上一个文件路径 用于建设规则
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "v_taskBySameRule.htm")
+	public String v_taskBySameRule(String preFilePath,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
+
+		if(StringUtils.isNotBlank(preFilePath)){
+			File file = new File(preFilePath);
+			if(file.exists()){
+				Task task = taskService.getTaskByFilePath(preFilePath);
+				if(task!=null){				
+					File[] childList = folderService.getChildByLastModified(file.lastModified(), preFilePath.substring(0, preFilePath.lastIndexOf("\\")));
+					if(childList!=null&&childList.length>1){
+						String thisFilePath = childList[1].getPath();
+						if(!new File(thisFilePath).isDirectory()){
+							List<String> list = fileService.previewTxtFile(thisFilePath);
+							String[] lines = new String[list.size()]; 
+							for(int i=0;i<list.size();i++){
+								lines[i] = list.get(i);
+							}
+							model.put("task", task);
+							return v_task(thisFilePath,task.getSeparator(),task.isFirstLineIgnore(),
+									lines,model,request,response);
+						}else{
+							return null;
+						}
+						
+					}else{
+						return null;
+					}
+					
+				}else{
+					return null;
+				}
+			}else{
+				return null;
+			}
+			
+			
+			
+			
+		}else{
+			return null;
+		}
 	}	
 
 	@RequestMapping(value = "o_task.htm")
@@ -100,4 +164,6 @@ public class TaskAct {
 	private FileService fileService;
 	@Autowired
 	private TaskService taskService;
+	@Autowired
+	private FolderService folderService;
 }
