@@ -65,7 +65,7 @@ public class FileService {
 					if(!fmRepository.collectionExists(t.getTableName())){
 						canBreak = true;
 					}
-					System.out.println(" dropCollection 第  " +i+" 次判断结果："+canBreak);
+					//System.out.println(" dropCollection 第  " +i+" 次判断结果："+canBreak);
 					i++;					
 				}
 			

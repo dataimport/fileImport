@@ -20,7 +20,7 @@ long totalCount= 0l; //原始文件的行数
 long runNum;//当前任务运行的行数
 int taskStatus;  // 0 未执行  1 执行中 2 已完成  -2 失败
 String timeUse;  //总共执行完毕所消耗的时间
-int  updateOrAdd  //入库方式是追加还是删除重新导入
+String  cleanOrAppend  //入库方式是追加还是删除重新导入
 int  beginLineNum //从文件第几行继续开始导入
 boolean firstLineIgnore//首行是否忽略
 String createUser //任务的创建者
