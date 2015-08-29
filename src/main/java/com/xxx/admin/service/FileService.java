@@ -50,6 +50,30 @@ public class FileService {
 	public boolean saveFileToMongo(Task t) {		
 		File file = new File(t.getFilePath());
 		if(file.exists()){
+		  if("clean".equals(t.getCleanOrAppend())){//清空后追加
+				fmRepository.dropCollection(t.getTableName());
+				//mongo 方法是异步的，需要等几秒，确认已经drop掉
+				int i=1;
+				boolean canBreak = false;
+				while(i<4&&!canBreak){//最多执行3次，					
+					try{
+						Thread.sleep(i*5000);						
+					}catch(Exception ex){
+						canBreak = true;
+						ex.printStackTrace();
+					}
+					if(!fmRepository.collectionExists(t.getTableName())){
+						canBreak = true;
+					}
+					System.out.println(" dropCollection 第  " +i+" 次判断结果："+canBreak);
+					i++;					
+				}
+			
+				if(!canBreak){
+					return false;
+				}				
+		  }
+		  
 		  if(file.length()/1048576>TxtFileAnalysis.FILESIZE_TIPPINGPOINT){//大文件			 
 			  try {
 				  FileChannel fcin = new RandomAccessFile(file, "r").getChannel();			
@@ -61,7 +85,7 @@ public class FileService {
 				  String line = "";
 				  List<String> lines = new ArrayList<String>();
 				  int runNum=0;
-				  long start = System.currentTimeMillis();			  
+				  long start = System.currentTimeMillis();					  
 				  while (fcin.read(rBuffer) != -1) {				
 					  lines.clear();
 					  lines = txtFileAnalysis.LoopBigFileByBuffer(fromIndex, endIndex, rSize,
@@ -70,14 +94,7 @@ public class FileService {
 					  runNum+=lines.size();
 					 fmRepository.FilePushToMongo(t, lines,true,runNum,System.currentTimeMillis()-start);					 
 				  }					
-//				  MongoSolrInfo msi = new MongoSolrInfo();
-//				  msi.setUid(UUID.randomUUID().toString().replaceAll("-", ""));
-//				  msi.setCollectionName(t.getTableName());
-//				  msi.setFilePath(t.getFilePath());
-//				  msi.setFileInfoUid(t.getUid());
-//				  msi.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));				  
-//				  mongoToSolrRepository.saveObject(msi);
-				  
+
 				  //更新状态为导入完毕
 				  String[] keys = new String[]{"taskStatus"};
 				  Object[] values = new Object[]{2};			
@@ -112,8 +129,6 @@ public class FileService {
 
     @Resource
     FileInMongoRepository fmRepository;
-    @Resource
-    MongoToSolrRepository mongoToSolrRepository;
 	@Autowired
 	private TxtFileAnalysis txtFileAnalysis;
 	

@@ -30,7 +30,7 @@ public abstract class BaseTask implements Serializable {
 	private int taskStatus;  // 0 未执行  1 执行中 2 已完成  -2 失败
 	private String timeUse;//耗时;
 	private int runNum;//当前插入的行数
-	private int  updateOrAdd;  //入库方式是追加还是删除重新导入
+	private String  cleanOrAppend;  //入库方式是追加还是删除重新导入
 	private int  beginLineNum; //从文件第几行继续开始导入
 	private String createUser; //任务的创建者
 	private boolean firstLineIgnore; //首行是否忽略
@@ -60,7 +60,7 @@ public abstract class BaseTask implements Serializable {
 		this.taskStatus = taskStatus;
 		this.timeUse = timeUse;
 		this.runNum = runNum;
-		this.updateOrAdd = updateOrAdd;
+		this.cleanOrAppend = cleanOrAppend;
 		this.beginLineNum = beginLineNum;
 		this.createUser = createUser;
 		this.firstLineIgnore = firstLineIgnore;
@@ -72,12 +72,15 @@ public abstract class BaseTask implements Serializable {
 	public void setFirstLineIgnore(boolean firstLineIgnore) {
 		this.firstLineIgnore = firstLineIgnore;
 	}
-	public int getUpdateOrAdd() {
-		return updateOrAdd;
+
+	public String getCleanOrAppend() {
+		return cleanOrAppend;
 	}
-	public void setUpdateOrAdd(int updateOrAdd) {
-		this.updateOrAdd = updateOrAdd;
+
+	public void setCleanOrAppend(String cleanOrAppend) {
+		this.cleanOrAppend = cleanOrAppend;
 	}
+
 	public int getBeginLineNum() {
 		return beginLineNum;
 	}

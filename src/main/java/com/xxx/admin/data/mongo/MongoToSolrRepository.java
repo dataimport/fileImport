@@ -1,8 +1,9 @@
 package com.xxx.admin.data.mongo;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -85,31 +86,7 @@ public class MongoToSolrRepository implements BaseRepository<MongoSolrInfo> {
         }
     }
     
-    public List<MongoSolrInfo> getObjectsByRunTime(String date){
-    	Query query = new Query();
-		Criteria criteria = Criteria.where("runTime").lte(date);
-		Criteria criteriaStatus = Criteria.where("FileCollectionInfoStatus").is(0);
-		query.addCriteria(criteria).addCriteria(criteriaStatus);
-		query.with(new Sort(Direction.ASC,"runTime"));
-		return mongoTemplate.find(query, MongoSolrInfo.class);
-    }
-
-	public List<MongoSolrInfo> getObjectsByStatus(int status) {
-		Query query = new Query();
-		Criteria criteriaStatus = Criteria.where("FileCollectionInfoStatus").is(status);
-		query.addCriteria(criteriaStatus);
-		query.with(new Sort(Direction.DESC,"runTime"));
-		return mongoTemplate.find(query, MongoSolrInfo.class);
-	}
-
-	public MongoSolrInfo getObjectsByFilePath(String filePath) {
-		Query query = new Query();
-		Criteria criteriaStatus = Criteria.where("filePath").is(filePath);
-		query.addCriteria(criteriaStatus);
-		query.with(new Sort(Direction.DESC,"runTime"));
-		return mongoTemplate.findOne(query, MongoSolrInfo.class);
-	}
-	
+ 	
 	@Override
 	public boolean deleteObject(MongoSolrInfo object) {
 		WriteResult result = mongoTemplate.remove(object);		
@@ -128,4 +105,62 @@ public class MongoToSolrRepository implements BaseRepository<MongoSolrInfo> {
 					  MongoSolrInfo.class);
 	}
 	
+	/**
+	* 根据指定的字段还有value 精确查询符合条件的数据
+	* @param uid
+	* @param key
+	* @param value
+	*/
+	public List<MongoSolrInfo> getByFields(String[] keys, String[] values) {
+		Query query = new Query();
+		for(int i=0;i<keys.length;i++){
+			if(StringUtils.isNotBlank(values[i])){	
+				query.addCriteria(Criteria.where(keys[i]).is(values[i]));				
+			}			
+		}		  
+		query.with(new Sort(Direction.DESC,"createTime"));	
+		return mongoTemplate.find(query, MongoSolrInfo.class);
+	}
+	
+	/**
+	* 根据指定的字段还有value 精确查询符合条件的数据
+	* @param uid
+	* @param key
+	* @param value
+	*/
+	public MongoSolrInfo getOneByFields(String[] keys, String[] values) {
+		Query query = new Query();
+		for(int i=0;i<keys.length;i++){
+			if(StringUtils.isNotBlank(values[i])){	
+				query.addCriteria(Criteria.where(keys[i]).is(values[i]));				
+			}			
+		}		  
+		query.with(new Sort(Direction.DESC,"createTime"));	
+		return mongoTemplate.findOne(query, MongoSolrInfo.class);
+	}
+	
+	
+	
+	/**
+	* 根据指定的字段还有value 查询符合条件的数据
+	* @param uid
+	* @param key
+	* @param value
+	*/
+	public List<MongoSolrInfo> getByNameOrTagOrOrgin(String keyWord) {
+		Query query = new Query();
+		Criteria criatira = new Criteria();
+		criatira.orOperator(
+				Criteria.where("collectionName").regex(Pattern.compile(
+				"^.*" + keyWord + ".*$", Pattern.CASE_INSENSITIVE)), 
+				Criteria.where("tags").regex(Pattern.compile(
+						"^.*" + keyWord + ".*$", Pattern.CASE_INSENSITIVE)),
+				Criteria.where("origin").regex(Pattern.compile(
+								"^.*" + keyWord + ".*$", Pattern.CASE_INSENSITIVE))
+							);			
+		query.addCriteria(criatira);
+		query.with(new Sort(Direction.DESC,"createTime"));	
+		return mongoTemplate.find(query, MongoSolrInfo.class);		
+	}
+
 }

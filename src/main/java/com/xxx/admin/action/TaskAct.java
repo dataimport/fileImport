@@ -77,8 +77,13 @@ public class TaskAct {
 			boolean result = taskService.createTask(task);//创建任务
 			
 			if(result){
-				fileService.saveFileToMongo(task);
-				ResponseUtils.renderJson(response, "{\"msg\":\"创建任务,并且入库成功\"}");
+				boolean saveResult = fileService.saveFileToMongo(task);
+				if(saveResult){
+					ResponseUtils.renderJson(response, "{\"code\":200,\"msg\":\"创建任务,并且入库成功\"}");
+				}else{
+					ResponseUtils.renderJson(response, "{\"code\":200,\"msg\":\"创建任务成功,入库失败功\"}");
+				}
+			
 			}else{
 				taskService.taskUpdate(task, null,new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),-2);
 				ResponseUtils.renderJson(response, "{\"msg\":\"创建任务失败\"}");
@@ -90,7 +95,7 @@ public class TaskAct {
 		}		
 		return null;
 	}
-
+	
 	@Autowired
 	private FileService fileService;
 	@Autowired

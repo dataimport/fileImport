@@ -2,31 +2,9 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link href="../resources/images/style.css" type=text/css rel=stylesheet>
 <title>导入文档预览</title>
 <style type="text/css">
-table.gridtable {
-	font-family: verdana,arial,sans-serif;
-	font-size:11px;
-	color:#333333;
-	border-width: 1px;
-	border-color: #666666;
-	border-collapse: collapse;
-}
-table.gridtable th {
-	border-width: 1px;
-	padding: 8px;
-	border-style: solid;
-	border-color: #666666;
-	background-color: #dedede;
-}
-table.gridtable td {
-	border-width: 1px;
-	padding: 8px;
-	border-style: solid;
-	border-color: #666666;
-	background-color: #ffffff;
-}
-
 .radioText {
 	font-size:11px;
 }
@@ -70,25 +48,56 @@ table.gridtable td {
 	</#list>
   </tr>
  
-   <tr>
-    <th>标签</th>    
- 	<td colspan="${columnsSize}" >
- 	 <input  id="tagName" value="" size="100"></input>
- 	</td>
-  </tr>
-  
+    
   <tr>
-    <th>表名</th>    
+    <th>表信息</th>    
  	<td colspan="${columnsSize}" >
- 	 <input  id="tableName" value="" size="100"></input>
+ 	
+<div class="investment_f">
+  <div class="investment_title">
+    <div class="on">导入到新建表</div>
+    <div>追加到现有表</div>  
+  </div>
+  <div class="investment_con">
+    <div class="investment_con_list">
+      <P>
+ 		表名<input  id="tableName" value="" size="20" onchange="tableNameChange(this.value)" ></input> <span id="tableInfo"></span>
+	  </P>
+	  <br>
+      <P>
+ 		目录<input  id="catalog" value="" size="20"></input>
+	  </P>	  
+	  <br>
+      <P>
+ 		来源<input  id="origin" value="" size="20"></input>
+	  </P>
+	   <br>
+	  <P>
+ 		标签<input  id="tagName" value="" size="20"></input>
+	  </P>
+    </div>
+    
+    <div class="investment_con_list">    
+      <P>      
+ 		<input  id="search" value="" size="20"></input>&nbsp;&nbsp;<input type="button" id="searchSubmit" value="查询" onclick="searchCollction()">
+        
+<table class="gridtable" id="gridtable" style="display:none">
+<tr id="searchCollectionInfo">
+<th>表名</th><th>目录</th><th>来源</th><th>标签</th><th>操作</th> 
+</tr>
+</table>
+        
+       
+      </P>
+ 
+    </div>
+    <div class="investment_con_list" >
+     <p>简单易用</p> 
+    </div>
+  </div>
+</div>
  	</td>
-  </tr>
-  
-  <tr>
-    <th>来源</th>    
- 	<td colspan="${columnsSize}" >
- 	 <input  id="origin" value="" size="100"></input>
- 	</td>
+
   </tr>
  
 <#list text as a>
@@ -121,21 +130,44 @@ table.gridtable td {
 
 </table>
 <div class="radioText">
-	<input id="run0" name="runType"  type="radio" value="0000-00-00 00:00:00"  onclick="runTypeChange('0')" />立即执行导入任务
+	<input id="run0" name="runType"  type="radio" value="0000-00-00 00:00:00"  onclick="runTypeChange('0')" checked=''/>立即执行导入任务
 	<input id="run" name="runType"  type="radio" value="1"  onclick="runTypeChange('1')"/>计划执行时间
 	<input type="text" id="run1" value="" style="display:none" readonly="readonly" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-%d'})">
+	 <input name="sameRule" type="checkbox" id="sameRule" value="sameRule"> 以相同规则导入下一文件
 	<input type="button" id="submit" value="提交任务">
 </div>
 
 <input type="hidden" id="filePath" value="${filePath!}">
 <script type="text/javascript" src="../js/My97DatePicker/WdatePicker.js" id="st-main"></script>
 <script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
+<script type="text/javascript" src="../js/common.js" id="st-main"></script>
 <script>
 //预览
 $("#submit").bind("click",function(){
 
+	 var cleanOrAppend = $('input[name="cleanOrAppend"]:checked').val();
+	 
+	 if(cleanOrAppend==undefined){
+		 cleanOrAppend="clean";
+	 }
+	 
 	var tableName = $("#tableName").val();
-	//if (tableName=="") return;
+	var dis = $("#gridtable").css("display");	
+	if (tableName.replace(/(^\s*)|(\s*$)/g,'')==""){		
+		if(dis=="none"){
+			alert("请输入表名");
+			return;
+		}else{
+			var tableName2 = $('input[name="selectThisCollection"]:checked').val();			
+			if(tableName2==undefined){
+				alert("请选则要追加的表");
+				return;
+			}else{				
+				tableName = tableName2;
+				cleanOrAppend="append";
+			}			
+		}
+	} 
 	
 	var tagName = $("#tagName").val();
 	//if (tagName=="") return;
@@ -143,8 +175,6 @@ $("#submit").bind("click",function(){
 	var origin = $("#origin").val();
 	//if (origin=="") return;
 	
-	var tableName = $("#tableName").val();
-	//if (tableName=="") return;
 	
 	var runTime  = "";
 	
@@ -167,28 +197,43 @@ $("#submit").bind("click",function(){
 	var columnName = "";
 	
 	var columnChecked = $('[name = "import"]:checkbox:checked');
+	
+	var temp ="";
 
 	for (var i = 0; i < columnChecked.length; i++) {
 		columnIndex = (columnIndex + columnChecked.get(i).value) + (((i + 1)== columnChecked.length) ? '':','); 
-		columnName = (columnName + $("#columnName_"+columnChecked.get(i).value).val()) + (((i + 1)== columnChecked.length) ? '':','); 
+		
+		temp =$("#columnName_"+columnChecked.get(i).value).val();
+		if(temp.replace(/(^\s*)|(\s*$)/g,'')==''){
+			alert("第 "+columnChecked.get(i).value+" 列列名不能为空")
+			return;
+		}	
+		
+		columnName = (columnName + temp) + (((i + 1)== columnChecked.length) ? '':','); 
 	}
-
+	
+	var sameRule = $('[name = "sameRule"]:checkbox:checked');
+	
+	if(sameRule!=undefined){
+		
+	}
+	 
 	$.ajax(  
-            {  
-                url:'../task/o_task.htm', 
-                type:"post",  
-                async:true,  
-                data:{'tableName':tableName,'firstLineIgnore':'${firstLineIgnore}','separator':"${separator!}",'filePath':$("#filePath").val(),'tags':tagName,'origin':origin,'runTime':runTime,'columnName':columnName,'columnIndex':columnIndex},  
-                dataType:"json",  
-                timeout:"100000",  
-                error:function(){alert("服务加载出错");},  
-                success:function(data)  
-                {  
-                	alert(data.msg);
-              	 	
-                }  
-            }  
-        );  
+	            {  
+	                url:'../task/o_task.htm', 
+	                type:"post",  
+	                async:true,  
+	                data:{'tableName':tableName,'firstLineIgnore':'${firstLineIgnore}','separator':"${separator!}",'filePath':$("#filePath").val(),'tags':tagName,'origin':origin,'runTime':runTime,'columnName':columnName,'columnIndex':columnIndex,'cleanOrAppend':cleanOrAppend},  
+	                dataType:"json",  
+	                timeout:"1000000000",  
+	                error:function(){alert("服务加载出错");},  
+	                success:function(data)  
+	                {  
+	                	alert(data.msg);
+	              	 	
+	                }  
+	            }  
+	        ); 
 
 });  
 	
@@ -205,6 +250,87 @@ $("#submit").bind("click",function(){
 		}
 	
 	}
+	
+	function tableNameChange(collectionName){
+	   if(collectionName.replace(/(^\s*)|(\s*$)/g,'')==""){
+		   //alert(" 请填写表名");
+		   return ;
+	   }
+	   
+		$.ajax(  
+	            {  
+	                url:'../mongo/getByCollectionName.htm', 
+	                type:"post",  
+	                async:true,  
+	                data:{'collectionName':collectionName,'likeSelect':true},  
+	                dataType:"json",  
+	                timeout:"100000",  
+	                error:function(){alert("服务加载出错");},  
+	                success:function(data)  
+	                {  
+	                	if(data[0].exist==true){
+	                		//$("#tableInfo")。text("存在"+collectionName);
+	                		$("#tableInfo").html("&nbsp;&nbsp; 已经存在表： "+collectionName+"&nbsp;&nbsp;  <a href='#'>浏览</a>"+
+	                				"&nbsp;&nbsp;  <input id='cleanOrAppend1' type='radio' name='cleanOrAppend' value='clean' checked=''>清空并追加"+
+	                				"&nbsp;&nbsp;  <input id='cleanOrAppend2' type='radio' name='cleanOrAppend' value='append'  >追加到此表 "
+	                				);  
+	                	}else{
+	                		$("#tableInfo").html("");
+	                	}               	
+	              	 	
+	                }  
+	            }  
+	        );
+	
+	}
+	
+	function searchCollction(){
+		var keyWord = $("#search").val();
+		if (keyWord.replace(/(^\s*)|(\s*$)/g,'')==""){
+			alert("请输入关键词")
+			return;
+		} 
+		
+		$.ajax(  
+	            {  
+	                url:'../mongo/getByKeyWord.htm', 
+	                type:"post",  
+	                async:true,  
+	                data:{'KeyWord':keyWord},  
+	                dataType:"json",  
+	                timeout:"100000",  
+	                error:function(){alert("服务加载出错");},  
+	                success:function(data)  
+	                {  
+	                	if(data[0].exist==true){
+	                		 $("#tableName").val("");
+	             	 		var tbody = "";  
+	                		$.each(data[0].content, function (n, value) {  	    
+	                            var trs = "";  
+	                            trs += "<tr>"+
+	                            "<td>" + value.collectionName + "</td>"+
+	                            "<td> </td>"+
+	                            "<td>" + value.origin + "</td>" +
+	                            "<td>" + value.tags + "</td>"+
+	                            "<td><input id='selectThisCollection"+n+"' type='radio' name='selectThisCollection' value='"+value.collectionName+"'>选用</td>"+ 
+	                            "</tr>";  
+	                            tbody += trs;  
+	                        });             		
+	                		
+	                		$("#gridtable").css("display", "block")
+	                		$("#searchCollectionInfo").after(tbody);  
+	                	}else{
+	                		$("#gridtable").css("display", "block")
+	                		$('#searchCollectionInfo').siblings().remove();	                		
+	                	}               	
+	              	 	
+	                }  
+	            }  
+	        );
+		
+	}
+	
+	
 
 </script>
 </BODY>

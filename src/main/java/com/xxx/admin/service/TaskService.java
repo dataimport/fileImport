@@ -5,13 +5,17 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+
 import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.xxx.admin.bean.AllCollectionName;
+import com.xxx.admin.bean.MongoSolrInfo;
 import com.xxx.admin.bean.Task;
+import com.xxx.admin.data.mongo.MongoToSolrRepository;
 import com.xxx.admin.data.mongo.TaskRepository;
 import com.xxx.admin.file.analysis.TxtFileAnalysis;
 
@@ -28,7 +32,28 @@ public class TaskService {
 			if(!runNow){//不是立即执行，放到任务表中
 				taskRepository.saveObject(task,AllCollectionName.TASKINFO_COLLECTIONNAME); //保存到任务表中
 			}			
-			taskRepository.saveObject(task,AllCollectionName.ALLFILEINFO_COLLECTIONNAME); //保存到所有文档表中			
+			
+			if("append".equals(task.getCleanOrAppend())){//追加
+				 MongoSolrInfo msi =  mongoToSolrRepository.getOneByFields(
+						  new String[]{"collectionName"},new String[]{task.getTableName()});
+				  if(msi!=null){
+					  task.setTags(msi.getTags());
+					  task.setOrigin(msi.getOrigin());
+				  }
+			}
+			
+			//保存到所有文档表中	
+			taskRepository.saveObject(task,AllCollectionName.ALLFILEINFO_COLLECTIONNAME); 	
+			//保存到表-文件信息表中			
+			MongoSolrInfo msi = new MongoSolrInfo();
+			msi.setUid(UUID.randomUUID().toString().replaceAll("-", ""));
+			msi.setCollectionName(task.getTableName());
+			msi.setFilePath(task.getFilePath());
+			msi.setFileInfoUid(task.getUid());
+			msi.setTags(task.getTags());
+			msi.setOrigin(task.getOrigin());
+			msi.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));				  
+			mongoToSolrRepository.saveObject(msi);			
 			return true;
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -117,5 +142,7 @@ public class TaskService {
 	private TxtFileAnalysis fileAnalysis;
 	@Autowired
 	private FileService fileService;
+    @Resource
+    MongoToSolrRepository mongoToSolrRepository;
 	
 }

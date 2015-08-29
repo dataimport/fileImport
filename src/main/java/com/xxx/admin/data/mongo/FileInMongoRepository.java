@@ -100,8 +100,16 @@ public class FileInMongoRepository implements BaseRepository<Task> {
      * Drops the {<span class="referer">@link</span>  Task} collection if the collection does already exists
      */
     public void dropCollection() {
-        if (mongoTemplate.collectionExists(Task.class)) {
-            mongoTemplate.dropCollection(Task.class);
+       
+    }
+    
+    public boolean collectionExists(String collectionName) {
+        return mongoTemplate.collectionExists(collectionName);
+    }
+    
+    public void dropCollection(String collectionName) {
+        if(mongoTemplate.collectionExists(collectionName)){
+        	mongoTemplate.dropCollection(collectionName);
         }
     }
     
