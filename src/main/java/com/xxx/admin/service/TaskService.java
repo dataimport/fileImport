@@ -18,6 +18,7 @@ import com.xxx.admin.bean.Task;
 import com.xxx.admin.data.mongo.MongoToSolrRepository;
 import com.xxx.admin.data.mongo.TaskRepository;
 import com.xxx.admin.file.analysis.TxtFileAnalysis;
+import com.xxx.utils.Pagination;
 
 @Service("taskService")
 public class TaskService {
@@ -112,13 +113,13 @@ public class TaskService {
 		return  new ArrayList<Task>();
 	}
 	
-	public List<Task> getTaskByStatus(int status) {
+	public Pagination getTaskByStatus(Integer pageNo, Integer pageSize,Integer status) {
 		try{
-			return taskRepository.getObjectsByStatus(status);
+			return taskRepository.getObjectsByStatus(pageNo, pageSize,status);
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
-		return  new ArrayList<Task>();
+		return  new Pagination(pageNo, pageSize, 0);
 	}
 	
 	public Task getTaskByFilePath(String filePath) {

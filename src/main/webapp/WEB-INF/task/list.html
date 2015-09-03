@@ -27,21 +27,88 @@ table.gridtable td {
 	border-color: #666666;
 	background-color: #ffffff;
 }
+
+			
+			
+			
+.jPaginate{
+    height:34px;
+    position:relative;
+    color:#a5a5a5;
+    font-size:small;   
+	width:100%;
+}
+.jPaginate a{
+    line-height:15px;
+    height:18px;
+    cursor:pointer;
+    padding:2px 5px;
+    margin:2px;
+    float:left;
+}
+.jPag-control-back{
+	position:absolute;
+	left:0px;
+}
+.jPag-control-front{
+	position:absolute;
+	top:0px;
+}
+.jPaginate span{
+    cursor:pointer;
+}
+ul.jPag-pages{
+    float:left;
+    list-style-type:none;
+    margin:0px 0px 0px 0px;
+    padding:0px;
+}
+ul.jPag-pages li{
+    display:inline;
+    float:left;
+    padding:0px;
+    margin:0px;
+}
+ul.jPag-pages li a{
+    float:left;
+    padding:2px 5px;
+}
+span.jPag-current{
+    cursor:default;
+    font-weight:normal;
+    line-height:15px;
+    height:18px;
+    padding:2px 5px;
+    margin:2px;
+    float:left;
+}
+
+
 </style>
 </head>
 <body>
-
+状态：
+<select onchange="setSeparator(this.options[this.options.selectedIndex].value)">
+			<option value=""></option>
+			<option value="0">未完成</option>
+			<option value="1">执行中</option>
+			<option value="2">已完成</option>
+			<option value="-2">失败</option>
+</select>
 <#if (list?size>0)>
 
 <table class="gridtable">
 <tr>
-<th>Id</th><th>状态</th><th>计划时间</th><th>开始时间</th><th>结束时间</th><th>执行时长</th>	
+<th>Id</th><th>导入的表名</th><th>状态</th><th>计划时间</th><th>开始时间</th><th>结束时间</th><th>执行时长</th>	
 <th>标签</th><th>来源</th><th>分隔符</th><th>文件路径</th><th>字段</th><th>导入行号</th>
 </tr>
 
 <#list list as task>
 	<tr>
 	   <td>${task_index+1!}</td>
+	   <td>
+		 ${task.tableName!}
+		</td>
 	   <td>
 		 <#if task.taskStatus==0>
 		 未执行
@@ -81,14 +148,9 @@ table.gridtable td {
 </#list>	
 </table>
 </#if>
-状态：
-<select onchange="setSeparator(this.options[this.options.selectedIndex].value)">
-			<option value=""></option>
-			<option value="0">未完成</option>
-			<option value="1">执行中</option>
-			<option value="2">已完成</option>
-			<option value="-2">失败</option>
-		</select>
+
+
+<div id="demo3">       </div>
 	
 <script>
 function setSeparator(status){
@@ -97,5 +159,34 @@ function setSeparator(status){
 }
 </script>
 <script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
+<script type="text/javascript" src="../js/jquery/jquery.paginate.js" id="st-main"></script>
+
+<script type="text/javascript">
+		$(function() {
+			$("#demo3").paginate({
+				count 		: ${page.totalPage!},
+				start 		: ${pageNo!},
+				display     : 12,
+				border					: false,
+				text_color  			: '#888',
+				background_color    	: '#EEE',	
+				text_hover_color  		: 'black',
+				background_hover_color	: '#CFCFCF',
+				mouse		: 'press',
+				onChange  : function(page){
+					<#if status??>
+						window.location.href="list.htm?status=${status}&pageNo="+page;
+					<#else>
+						window.location.href="list.htm?pageNo="+page;
+					</#if>
+					
+				  }
+					
+			});
+	
+		});
+		</script>
+		
+
 </body>
 </html>

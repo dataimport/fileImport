@@ -17,6 +17,7 @@ import com.mongodb.WriteResult;
 import com.xxx.admin.bean.AllCollectionName;
 import com.xxx.admin.bean.Task;
 import com.xxx.mongo.repository.base.BaseRepository;
+import com.xxx.utils.Pagination;
 
 @Repository("task")
 public class TaskRepository implements BaseRepository<Task> {
@@ -112,12 +113,25 @@ public class TaskRepository implements BaseRepository<Task> {
 		return mongoTemplate.find(query, Task.class);
     }
 
-	public List<Task> getObjectsByStatus(int status) {
+	public Pagination getObjectsByStatus(Integer pageNo, Integer pageSize,Integer status) {
 		Query query = new Query();
-		Criteria criteriaStatus = Criteria.where("taskStatus").is(status);
-		query.addCriteria(criteriaStatus);
+		if(pageNo==null){
+			pageNo =1;
+		}
+		if(pageSize==null){
+			pageSize=20;
+		}
+		if(status!=null){
+			Criteria criteriaStatus = Criteria.where("taskStatus").is(status);
+			query.addCriteria(criteriaStatus);	
+		}
+		long totalCount = this.mongoTemplate.count(query, Task.class,AllCollectionName.ALLFILEINFO_COLLECTIONNAME); 
+		Pagination page = new Pagination(pageNo, pageSize, totalCount);  
 		query.with(new Sort(Direction.DESC,"runTime"));
-		return mongoTemplate.find(query, Task.class);
+		query.skip(page.getFirstResult());  
+	    query.limit(pageSize);
+		page.setList(mongoTemplate.find(query, Task.class,AllCollectionName.ALLFILEINFO_COLLECTIONNAME));
+		return page;
 	}
 
 	public Task getObjectsByFilePath(String filePath) {

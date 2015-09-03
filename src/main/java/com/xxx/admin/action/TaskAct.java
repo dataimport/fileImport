@@ -20,6 +20,7 @@ import com.xxx.admin.bean.Task;
 import com.xxx.admin.service.FileService;
 import com.xxx.admin.service.FolderService;
 import com.xxx.admin.service.TaskService;
+import com.xxx.utils.Pagination;
 import com.xxx.utils.ResponseUtils;
 
 @Controller
@@ -27,14 +28,14 @@ import com.xxx.utils.ResponseUtils;
 public class TaskAct {
 	
 	@RequestMapping(value = "list.htm")
-	public String getAllTask(ModelMap model,Integer status,HttpServletRequest request,HttpServletResponse response) {
-		List<Task> list = null;
-		if(status!=null){
-		   list = taskService.getTaskByStatus(status);
-		}else{
-		   list = taskService.allTask();
-		}		
-		model.put("list", list);
+	public String getAllTask(ModelMap model,Integer status,Integer pageNo, Integer pageSize,HttpServletRequest request,HttpServletResponse response) {
+		Pagination page = taskService.getTaskByStatus(pageNo,pageSize,status);
+		System.out.println(page.getTotalPage()+" ######");
+		System.out.println( page.getList().size()+" ## page.getList()####");
+		model.put("list", page.getList());
+		model.put("page", page);
+		model.put("status", status);
+		model.put("pageNo", page.getPageNo());
 		return "task/list";
 	}
 	
@@ -133,7 +134,7 @@ public class TaskAct {
 	@RequestMapping(value = "o_task.htm")
 	public String o_task(Task task,ModelMap model,HttpServletRequest request,HttpServletResponse response) {	
 		task.setUid(UUID.randomUUID().toString().replaceAll("-", ""));
-		if(task.getRunTime().equals("0000-00-00 00:00:00"))//立即执行
+		if("0000-00-00 00:00:00".equals(task.getRunTime()))//立即执行
 		{	
 			task.setStartDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 			task.setRunTime(task.getStartDate());
