@@ -9,7 +9,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
- 
+
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -122,8 +123,15 @@ public class TaskRepository implements BaseRepository<Task> {
 			pageSize=20;
 		}
 		if(status!=null){
-			Criteria criteriaStatus = Criteria.where("taskStatus").is(status);
-			query.addCriteria(criteriaStatus);	
+			if(status==888){
+				//所有状态不是2的任务列表
+				//也就是所有运行中的任务状态
+				Criteria criteriaStatus = Criteria.where("taskStatus").ne(2);
+				query.addCriteria(criteriaStatus);
+			}else{
+				Criteria criteriaStatus = Criteria.where("taskStatus").is(status);
+				query.addCriteria(criteriaStatus);
+			}
 		}
 		long totalCount = this.mongoTemplate.count(query, Task.class,AllCollectionName.ALLFILEINFO_COLLECTIONNAME); 
 		Pagination page = new Pagination(pageNo, pageSize, totalCount);  

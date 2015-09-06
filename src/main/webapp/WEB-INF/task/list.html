@@ -132,8 +132,12 @@ span.jPag-current{
 		</td>
 		
 	   <td>
-	   
-	   ${((task.runNum!/task.totalCount!)*100)?string("0.#")}% / <b>${task.totalCount!}</b></td><td>${task.filePath!}</td>
+	   <#if task.totalCount!=0>
+		    ${((task.runNum!/task.totalCount!)*100)?string("0.#")}% / <b>${task.totalCount!}
+	   <#else>
+	   		0% / <b>${task.totalCount!}
+	   </#if>
+	   </b></td><td>${task.filePath!}</td>
 	   <td>删除已导入数据 | 变更启动时间</td>
 	</tr> 			
 </#list>	
