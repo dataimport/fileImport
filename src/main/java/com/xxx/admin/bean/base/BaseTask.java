@@ -32,7 +32,7 @@ public abstract class BaseTask implements Serializable {
 	private int runNum;//当前插入的行数
 	private String  cleanOrAppend;  //入库方式是追加还是删除重新导入
 	private int  beginLineNum; //从文件第几行继续开始导入
-	private String createUser; //任务的创建者
+	private String createUser="lxc_admin"; //任务的创建者
 	private boolean firstLineIgnore; //首行是否忽略
 		
 	public BaseTask(String uid, String tableName, String origin, String tags,

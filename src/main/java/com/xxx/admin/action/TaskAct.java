@@ -26,6 +26,8 @@ import com.xxx.utils.ResponseUtils;
 @Controller
 @RequestMapping("/task")
 public class TaskAct {
+	//增加任务的创建者
+	public String createUser="lxc_admin";
 	
 	@RequestMapping(value = "list.htm")
 	public String getAllTask(ModelMap model,Integer status,Integer pageNo, Integer pageSize,HttpServletRequest request,HttpServletResponse response) {
@@ -134,6 +136,7 @@ public class TaskAct {
 	@RequestMapping(value = "o_task.htm")
 	public String o_task(Task task,ModelMap model,HttpServletRequest request,HttpServletResponse response) {	
 		task.setUid(UUID.randomUUID().toString().replaceAll("-", ""));
+		task.setCreateUser(createUser);
 		if("0000-00-00 00:00:00".equals(task.getRunTime()))//立即执行
 		{	
 			task.setStartDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
