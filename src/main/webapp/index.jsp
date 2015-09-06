@@ -1,5 +1,9 @@
 <html>
-<body>
-<h2>Hello World!</h2>
-</body>
+<frameset cols="25%,75%">
+
+  <frame src="left.html">
+  <frame name="main" src="main.html">
+  
+
+</frameset>
 </html>
