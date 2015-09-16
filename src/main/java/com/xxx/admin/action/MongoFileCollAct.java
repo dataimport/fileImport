@@ -1,6 +1,8 @@
 package com.xxx.admin.action;
 
 import java.util.List;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.xxx.admin.bean.MongoSolrInfo;
+import com.xxx.admin.bean.NoRepeatColls;
 import com.xxx.admin.service.MongoFileService;
 import com.xxx.utils.ResponseUtils;
 
@@ -71,6 +74,18 @@ public class MongoFileCollAct {
 		return null;
 	}
 
+	@RequestMapping(value = "allCollections.htm")
+	public String allCollections(ModelMap model,HttpServletRequest request,HttpServletResponse response) {	
+		
+		try{
+		 List<NoRepeatColls>  list = mongoFileService.allCollectons();
+		 	model.put("list", list);		
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}		
+		 return "mongo/collList";
+	}
+	
 	@Autowired
 	private MongoFileService mongoFileService;
 }

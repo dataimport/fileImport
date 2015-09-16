@@ -3,6 +3,7 @@ package com.xxx.admin.data.mongo;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -247,5 +248,4 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 			dbColleciton.update(query, taskDB);
 		}		
 	}
-
 }

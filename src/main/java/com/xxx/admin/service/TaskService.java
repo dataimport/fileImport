@@ -45,6 +45,7 @@ public class TaskService {
 			
 			//保存到所有文档表中	
 			taskRepository.saveObject(task,AllCollectionName.ALLFILEINFO_COLLECTIONNAME); 	
+		
 			//保存到表-文件信息表中			
 			MongoSolrInfo msi = new MongoSolrInfo();
 			msi.setUid(UUID.randomUUID().toString().replaceAll("-", ""));
@@ -54,7 +55,8 @@ public class TaskService {
 			msi.setTags(task.getTags());
 			msi.setOrigin(task.getOrigin());
 			msi.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));				  
-			mongoToSolrRepository.saveObject(msi);			
+			mongoToSolrRepository.saveObject(msi);
+			
 			return true;
 		}catch(Exception ex){
 			ex.printStackTrace();

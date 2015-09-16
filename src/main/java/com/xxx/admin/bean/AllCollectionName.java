@@ -17,5 +17,6 @@ public class AllCollectionName implements Serializable{
 	
 	public static final String MONGOTOSOLR_COLLECTIONNAME = "mongoSolrInfo";//mongo导入到solr中的中间表
 	
+	public static final String NOREPEAT_COLLECTIONNAME = "noRepeatColls";//所有数据对应的不重复mongo Collection
 	
 }

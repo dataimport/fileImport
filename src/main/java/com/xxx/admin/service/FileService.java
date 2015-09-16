@@ -8,11 +8,18 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.xxx.admin.bean.AllCollectionName;
+import com.xxx.admin.bean.NoRepeatColls;
 import com.xxx.admin.bean.Task;
 import com.xxx.admin.data.mongo.FileInMongoRepository;
+import com.xxx.admin.data.mongo.MongoCollRepository;
 import com.xxx.admin.file.analysis.TxtFileAnalysis;
 
 @Service("fileService")
@@ -33,7 +40,7 @@ public class FileService {
 	public Map viewBySeparator(String filePath,String separator,Integer lineNum) {		
 		return txtFileAnalysis.previewFileBySeparator(filePath, separator,lineNum);
 	}
-	
+		
 	/**
 	 * 保存文件到mongodb中
 	 * @param t
@@ -105,6 +112,17 @@ public class FileService {
 				  String[] keys = new String[]{"taskStatus"};
 				  Object[] values = new Object[]{2};			
 				  fmRepository.updateFileInfoByField(t.getUid(), keys, values);
+				  
+				  
+				  //保存mongodb中存数据的collection的信息
+				  
+				  NoRepeatColls nrc =  mcRepository.getObjectsByName(t.getTableName());
+				  if(nrc==null){
+					  nrc = new NoRepeatColls();  						 
+					  nrc.setUid(UUID.randomUUID().toString().replaceAll("-", ""));
+					  nrc.setName(t.getTableName());
+					  mcRepository.saveObject(nrc);
+				  }				  
 				  return true;
 			  }catch(Exception ex){
 				  ex.printStackTrace();
@@ -120,6 +138,8 @@ public class FileService {
 
     @Resource
     FileInMongoRepository fmRepository;
+    @Resource
+    MongoCollRepository mcRepository;
 	@Autowired
 	private TxtFileAnalysis txtFileAnalysis;
 	

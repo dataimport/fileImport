@@ -1,6 +1,7 @@
 package com.xxx.mongo.repository.base;
 
 import java.util.List;
+import java.util.Set;
  
 public interface BaseRepository<T> {
  
@@ -19,7 +20,7 @@ public interface BaseRepository<T> {
     public void createCollection();
     
     public void createCollection(String collectionName);
- 
+    
     public void dropCollection();
           
 }
