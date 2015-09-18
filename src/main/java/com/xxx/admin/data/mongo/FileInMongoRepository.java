@@ -1,8 +1,12 @@
 package com.xxx.admin.data.mongo;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -15,11 +19,13 @@ import org.springframework.stereotype.Repository;
  
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 import com.xxx.admin.bean.AllCollectionName;
 import com.xxx.admin.bean.Task;
 import com.xxx.mongo.repository.base.BaseRepository;
+import com.xxx.utils.Pagination;
 
 @Repository("fileMogo")
 public class FileInMongoRepository implements BaseRepository<Task> {
@@ -247,5 +253,25 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 			}
 			dbColleciton.update(query, taskDB);
 		}		
+	}
+	
+	public Pagination getObjectsByCollectionName(Integer pageNo, Integer pageSize,String collectionName) {
+		if(pageNo==null){
+			pageNo =1;
+		}
+		if(pageSize==null){
+			pageSize=20;
+		}		
+		DBCollection dbColleciton =mongoTemplate.getCollection(collectionName); 	
+		long totalCount = dbColleciton.count();
+		Pagination page = new Pagination(pageNo, pageSize, totalCount); 		
+	    DBCursor cursor = dbColleciton.find().skip(page.getFirstResult()).limit(pageSize);
+	    Iterator<DBObject> it = cursor.iterator();
+		List list = new ArrayList();
+		while (it.hasNext()) {	
+			list.add(it.next().toString());
+		}
+		page.setList(list);
+		return page;
 	}
 }

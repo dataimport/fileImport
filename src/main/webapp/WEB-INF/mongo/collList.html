@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>列表</title>
+<style type="text/css">
+table.gridtable {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #666666;
+	border-collapse: collapse;
+}
+table.gridtable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #dedede;
+}
+table.gridtable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #ffffff;
+}
+</style>
+</head>
+<body>
+<table class="gridtable">
+<tr>
+<th>表名</th><th>操作</th>
+</tr>
+
+<#list list as noRepeatColl>
+	<tr>
+	  <td>${noRepeatColl.name}</td>
+	  <td><a href="list.htm?collectionName=${noRepeatColl.name}" target="_blank">看查</a></td>
+	</tr> 			
+</#list>	
+</table>
+</body>
+</html>
