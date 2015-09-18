@@ -20,14 +20,8 @@ public class MongoAct {
 		
 	@RequestMapping(value = "list.htm")
 	public String getAllTask(ModelMap model,String collectionName,Integer pageNo, Integer pageSize,HttpServletRequest request,HttpServletResponse response) {
-		Map<String,Object> map  = mongoFileService.getObjectsByCollectionName(pageNo, pageSize, collectionName);
-		List<Map<String,String>> list= (List<Map<String,String>>)map.get("value");
-		
-		for(Map<String,String> m :list){
-			System.out.println(m.size());
-			
-		}
-		model.put("list",list);
+		Map<String,Object> map  = mongoFileService.getObjectsByCollectionName(pageNo, pageSize, collectionName);	
+		model.put("list", (List<Map<String,String>>)map.get("value"));
 		model.put("page", (Pagination)map.get("page"));
 		model.put("collectionName", collectionName);
 		model.put("pageNo", ((Pagination)map.get("page")).getPageNo());
