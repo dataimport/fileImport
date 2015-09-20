@@ -44,7 +44,6 @@ public class MongoFileService {
 		return mongoCollRepository.allCollectons();
 	}
 	
-	
 	public Map<String,Object> getObjectsByCollectionName(Integer pageNo, Integer pageSize,String collectionName) {
 		Pagination page =  fileInMongoRepository.getObjectsByCollectionName(pageNo, pageSize, collectionName);
 		List<String> list = page.getList();
@@ -53,12 +52,7 @@ public class MongoFileService {
 		List<Map<String,String>> listVaule = new ArrayList<Map<String,String>>();	
 		Object[] object =null;
 		for(String s:list){
-			JSONObject jsonObj =JSONObject.fromObject(s);		
-//			object = jsonObj.values().toArray();
-//		
-//			for(int i=0;i<object.length;i++){
-//				
-//			}//			
+			JSONObject jsonObj =JSONObject.fromObject(s);			
 			Iterator it = jsonObj.keys();
 			Map<String,String> mapTemp =new HashMap<String,String>();
 			String objectNext = null;	
