@@ -99,8 +99,7 @@ public class TxtFileAnalysis  {
 	public List<String> readSmallFile(String filePath)
 			throws IOException {
 		try {
-			List<String> lines = Files.readAllLines(Paths.get(filePath),
-					Charset.defaultCharset());			
+			List<String> lines = Files.readAllLines(Paths.get(filePath),Charset.forName("UTF-8"));			
 			return lines;
 		} catch (IOException e) {
 			e.printStackTrace();
