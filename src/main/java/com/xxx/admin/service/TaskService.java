@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import com.xxx.admin.bean.Task;
 import com.xxx.admin.data.mongo.MongoToSolrRepository;
 import com.xxx.admin.data.mongo.TaskRepository;
 import com.xxx.admin.file.analysis.TxtFileAnalysis;
+import com.xxx.elasticsearch.data.mongo.SolrTaskRepository;
 import com.xxx.utils.Pagination;
 
 @Service("taskService")
@@ -46,6 +48,9 @@ public class TaskService {
 			//保存到所有文档表中	
 			taskRepository.saveObject(task,AllCollectionName.ALLFILEINFO_COLLECTIONNAME); 	
 		
+			//保存一份任务信息到solr入库的任务表中
+			solrTaskRepository.saveObject(task, AllCollectionName.SOLR_TASKINFO_COLLECTIONNAME);
+			
 			//保存到表-文件信息表中			
 			MongoSolrInfo msi = new MongoSolrInfo();
 			msi.setUid(UUID.randomUUID().toString().replaceAll("-", ""));
@@ -53,6 +58,7 @@ public class TaskService {
 			msi.setFilePath(task.getFilePath());
 			msi.setFileInfoUid(task.getUid());
 			msi.setTags(task.getTags());
+			msi.setStatus(0);
 			msi.setOrigin(task.getOrigin());
 			msi.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));				  
 			mongoToSolrRepository.saveObject(msi);
@@ -140,12 +146,15 @@ public class TaskService {
 	}	
 	
     @Resource(name = "task")
-    TaskRepository taskRepository;
+    TaskRepository taskRepository;    
     @Resource
 	private TxtFileAnalysis fileAnalysis;
 	@Autowired
 	private FileService fileService;
     @Resource
     MongoToSolrRepository mongoToSolrRepository;
+    
+    @Resource
+    SolrTaskRepository solrTaskRepository;
 	
 }

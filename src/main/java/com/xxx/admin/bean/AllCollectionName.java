@@ -19,4 +19,8 @@ public class AllCollectionName implements Serializable{
 	
 	public static final String NOREPEAT_COLLECTIONNAME = "noRepeatColls";//所有数据对应的不重复mongo Collection
 	
+	public static final String SOLR_TASKINFO_COLLECTIONNAME = "solrTaskInfo";//存solr入库任务信息的collection表名
+	
+	public static final String SOLR_FINISH_TASKINFO_COLLECTIONNAME = "solrFinishTaskInfo";//存solr入库成功的任务信息的collection表名
+	
 }
