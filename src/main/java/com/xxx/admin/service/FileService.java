@@ -89,7 +89,7 @@ public class FileService {
 					  lines.clear();
 					  lines = txtFileAnalysis.LoopBigFileByBuffer(fromIndex, endIndex, rSize,
 								bs,enterStr,line,strBuf,
-								fcin,rBuffer,lines);	  
+								fcin,rBuffer,lines,txtFileAnalysis.getCharset(t.getFilePath()));	  
 					  runNum+=lines.size();
 					 fmRepository.FilePushToMongo(t, lines,true,runNum,System.currentTimeMillis()-start);					 
 				  }					

@@ -1,6 +1,8 @@
 package com.xxx.admin.file.analysis;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -99,7 +101,7 @@ public class TxtFileAnalysis  {
 	public List<String> readSmallFile(String filePath)
 			throws IOException {
 		try {
-			List<String> lines = Files.readAllLines(Paths.get(filePath),Charset.forName("UTF-8"));			
+			List<String> lines = Files.readAllLines(Paths.get(filePath),Charset.forName(getCharset(filePath)));			
 			return lines;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -115,14 +117,14 @@ public class TxtFileAnalysis  {
 	*/
 	public List<String> LoopBigFileByBuffer(int fromIndex, int endIndex, int rSize,
 			byte[] bs,String enterStr,String line,StringBuffer strBuf,
-			FileChannel fcin,ByteBuffer rBuffer,List<String> lines)
+			FileChannel fcin,ByteBuffer rBuffer,List<String> lines,String charset)
 			throws IOException {
 
 				rSize = rBuffer.position();
 				rBuffer.rewind();
 				rBuffer.get(bs);
 				rBuffer.clear();
-				String tempString = new String(bs, 0, rSize,"UTF-8");
+				String tempString = new String(bs, 0, rSize,charset);
 				fromIndex = 0;
 				endIndex = 0;
 				while((endIndex = tempString.indexOf(enterStr, fromIndex)) != -1) {					
@@ -166,7 +168,7 @@ public class TxtFileAnalysis  {
 				rBuffer.rewind();
 				rBuffer.get(bs);
 				rBuffer.clear();
-				String tempString = new String(bs, 0, rSize,"UTF-8");
+				String tempString = new String(bs, 0, rSize,getCharset(file.getPath()));
 				fromIndex = 0;
 				endIndex = 0;
 				while ((endIndex = tempString.indexOf(enterStr, fromIndex)) != -1) {
@@ -253,6 +255,33 @@ public class TxtFileAnalysis  {
         e.printStackTrace(); 
         } 
 	}
+	
+	public String getCharset(String filePath) throws IOException{  
+        
+        BufferedInputStream bin = new BufferedInputStream(new FileInputStream(filePath));    
+        int p = (bin.read() << 8) + bin.read();    
+          
+        System.out.println(p);
+        String code = null;    
+          
+        switch (p) {    
+        	case 58791:    
+        		code = "UTF-8";      
+            	break;	
+            case 0xefbb:    
+                code = "UTF-8";    
+                break;    
+            case 0xfffe:    
+                code = "Unicode";    
+                break;    
+            case 0xfeff:    
+                code = "UTF-16BE";    
+                break;    
+            default:    
+                code = "GBK";    
+        }    
+        return code;  
+}  
 	
 //	private  BufferToLine(FileChannel fcin){
 //        while(fcin.read(rBuffer) != -1&&continueGo){		        
