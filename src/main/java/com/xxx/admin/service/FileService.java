@@ -84,12 +84,13 @@ public class FileService {
 				  String line = "";
 				  List<String> lines = new ArrayList<String>();
 				  int runNum=0;
-				  long start = System.currentTimeMillis();						  
+				  long start = System.currentTimeMillis();		
+				  String charset = txtFileAnalysis.getCharset(t.getFilePath());
 				  while (fcin.read(rBuffer) != -1) {				
 					  lines.clear();
 					  lines = txtFileAnalysis.LoopBigFileByBuffer(fromIndex, endIndex, rSize,
 								bs,enterStr,line,strBuf,
-								fcin,rBuffer,lines,txtFileAnalysis.getCharset(t.getFilePath()));	  
+								fcin,rBuffer,lines,charset);	  
 					  runNum+=lines.size();
 					 fmRepository.FilePushToMongo(t, lines,true,runNum,System.currentTimeMillis()-start);					 
 				  }					
