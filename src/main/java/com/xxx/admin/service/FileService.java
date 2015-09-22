@@ -105,7 +105,7 @@ public class FileService {
 			  return true;
 		  }else{
 			  try{
-				  List<String> lines = txtFileAnalysis.readSmallFile(t.getFilePath());
+				  List<String> lines = txtFileAnalysis.readSmallFile(t.getFilePath(),txtFileAnalysis.getCharset(t.getFilePath()));
 				  fmRepository.FilePushToMongo(t, lines);
 				  
 				  //更新状态为导入完毕
