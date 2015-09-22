@@ -84,7 +84,7 @@ public class FileService {
 				  String line = "";
 				  List<String> lines = new ArrayList<String>();
 				  int runNum=0;
-				  long start = System.currentTimeMillis();					  
+				  long start = System.currentTimeMillis();						  
 				  while (fcin.read(rBuffer) != -1) {				
 					  lines.clear();
 					  lines = txtFileAnalysis.LoopBigFileByBuffer(fromIndex, endIndex, rSize,

@@ -57,7 +57,7 @@ public class FileAct {
 //	}
 	
 	@RequestMapping(value = "preview.htm")
-	public String v_task(String filePath,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
+	public String v_task(String filePath,ModelMap model,HttpServletRequest request,HttpServletResponse response) { 
 		List<String>  list =   fileService.previewTxtFile(filePath);
 		model.put("list", list);
 		model.put("filePath", filePath);
