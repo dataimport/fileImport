@@ -280,12 +280,9 @@ public class TxtFileAnalysis  {
                 break;    
             case 0xfeff:    
                 code = "UTF-16BE";    
-                break;    
-           	case 27233:    
-        		code = "GBK";      
-        		break;	     
+                break;       
             default:    
-                code = "UTF-8";    
+                code = "GBK";    
         }    
         return code;  
 }  
