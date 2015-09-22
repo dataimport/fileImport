@@ -261,14 +261,18 @@ public class TxtFileAnalysis  {
         BufferedInputStream bin = new BufferedInputStream(new FileInputStream(filePath));    
         int p = (bin.read() << 8) + bin.read();    
           
-        System.out.println(p);
+//        System.out.println(p);
+//        System.out.println(Charset.defaultCharset().toString());
         String code = null;    
           
-        switch (p) {    
+        switch (p) {      
         	case 58791:    
         		code = "UTF-8";      
             	break;	
             case 0xefbb:    
+                  code = "UTF-8";    
+                  break;    
+            case 0xefbf:    
                 code = "UTF-8";    
                 break;    
             case 0xfffe:    
@@ -277,8 +281,11 @@ public class TxtFileAnalysis  {
             case 0xfeff:    
                 code = "UTF-16BE";    
                 break;    
+           	case 27233:    
+        		code = "GBK";      
+        		break;	     
             default:    
-                code = "GBK";    
+                code = "UTF-8";    
         }    
         return code;  
 }  
