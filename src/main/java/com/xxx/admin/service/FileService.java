@@ -101,6 +101,7 @@ public class FileService {
 				  String[] keys = new String[]{"taskStatus"};
 				  Object[] values = new Object[]{2};			
 				  fmRepository.updateFileInfoByField(t.getUid(), keys, values);
+				  saveToRepeatColls(t);
 				  System.out.println(" 总共 "+runNum+" 条记录 ");
 				} catch (IOException e) {
 					e.printStackTrace();					
@@ -116,16 +117,7 @@ public class FileService {
 				  Object[] values = new Object[]{2};			
 				  fmRepository.updateFileInfoByField(t.getUid(), keys, values);
 				  
-				  
-				  //保存mongodb中存数据的collection的信息
-				  
-				  NoRepeatColls nrc =  mcRepository.getObjectsByName(t.getTableName());
-				  if(nrc==null){
-					  nrc = new NoRepeatColls();  						 
-					  nrc.setUid(UUID.randomUUID().toString().replaceAll("-", ""));
-					  nrc.setName(t.getTableName());
-					  mcRepository.saveObject(nrc);
-				  }				  
+				  saveToRepeatColls(t);
 				  return true;
 			  }catch(Exception ex){
 				  ex.printStackTrace();
@@ -133,12 +125,24 @@ public class FileService {
 			  }			  
 		  }
 		  
+		
+		  
 		}else{
 			return false;
 		}
 		
 	}
 	
+	private void saveToRepeatColls(Task t){
+		 //保存mongodb中存数据的collection的信息				  
+		  NoRepeatColls nrc =  mcRepository.getObjectsByName(t.getTableName());
+		  if(nrc==null){
+			  nrc = new NoRepeatColls();  						 
+			  nrc.setUid(UUID.randomUUID().toString().replaceAll("-", ""));
+			  nrc.setName(t.getTableName());
+			  mcRepository.saveObject(nrc);
+		  }			
+	}
 	public int getFileLineNumber(String filePath){
 		return txtFileAnalysis.getBigFileLineNumByCommand(filePath);
 	}
