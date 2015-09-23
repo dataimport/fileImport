@@ -96,7 +96,10 @@ public class TaskService {
 			}			
 			task.setTaskStatus(status);						
 			taskRepository.updateTaskByField(task.getUid(), new String[]{"taskStatus","startDate","endDate"},
-					new Object[]{task.getTaskStatus(),task.getStartDate(),task.getEndDate()},AllCollectionName.TASKINFO_COLLECTIONNAME);			
+					new Object[]{task.getTaskStatus(),task.getStartDate(),task.getEndDate()},AllCollectionName.TASKINFO_COLLECTIONNAME);
+			taskRepository.updateTaskByField(task.getUid(), new String[]{"taskStatus","startDate","endDate"},
+					new Object[]{task.getTaskStatus(),task.getStartDate(),task.getEndDate()},AllCollectionName.ALLFILEINFO_COLLECTIONNAME);
+			
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
