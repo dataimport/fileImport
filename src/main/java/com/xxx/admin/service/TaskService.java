@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.xxx.admin.bean.AllCollectionName;
@@ -63,12 +64,17 @@ public class TaskService {
 			msi.setCreateTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));				  
 			mongoToSolrRepository.saveObject(msi);
 			
+			//更新文件总行数
+			fileService.getAndUpdateFileTotalCount(task.getUid(),task.getFilePath());
+			
 			return true;
 		}catch(Exception ex){
 			ex.printStackTrace();
-		}
+		}		
 		return false;
+	
 	}
+
 	
 	public boolean createTask(Task task) {
 		return createTask(task,true);
@@ -90,7 +96,7 @@ public class TaskService {
 			}			
 			task.setTaskStatus(status);						
 			taskRepository.updateTaskByField(task.getUid(), new String[]{"taskStatus","startDate","endDate"},
-					new Object[]{task.getTaskStatus(),task.getStartDate(),task.getEndDate()});			
+					new Object[]{task.getTaskStatus(),task.getStartDate(),task.getEndDate()},AllCollectionName.TASKINFO_COLLECTIONNAME);			
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}

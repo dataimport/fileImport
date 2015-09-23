@@ -1,8 +1,10 @@
 package com.xxx.admin.file.analysis;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -14,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -205,60 +208,101 @@ public class TxtFileAnalysis  {
 	
 	
 	/**
-	 * 返回指定行数的大文件
-	 * @param file
-	 * @param resultLineNum
+	 * 读取大文件的行数
+	 * @param filePath 文件路径
 	 * @throws FileNotFoundException
 	 */
-	private void ReadBigFileByLine(File file,Integer resultLineNum) throws FileNotFoundException{
-		FileChannel fcin = new RandomAccessFile(file, "r").getChannel(); 
-		ByteBuffer rBuffer = ByteBuffer.allocate(BUFFER_SIZE); 
+	public int getBigFileLineNum(String filePath) throws FileNotFoundException{
+		File file = new File (filePath);
+		if(file.exists()){
+			FileChannel fcin = new RandomAccessFile(file, "r").getChannel(); 
+			ByteBuffer rBuffer = ByteBuffer.allocate(BUFFER_SIZE); 
+			
+			String enterStr = "\n"; //换行符
+	        try{ 
+		        byte[] bs = new byte[BUFFER_SIZE]; 
+		        
+		        long start = System.currentTimeMillis();
+		        int i = 0,fromIndex=0,endIndex=0,rSize=0;
+		        StringBuffer strBuf = new StringBuffer(""); 
+		   
+		        while(fcin.read(rBuffer) != -1){		        
+		              rSize = rBuffer.position(); 
+		              rBuffer.rewind(); 
+		              rBuffer.get(bs); 
+		              rBuffer.clear(); 
+		              String tempString = new String(bs, 0, rSize); 
+		             // System.out.println("##### "+tempString); 
+		              fromIndex = 0; 
+		              endIndex = 0; 
+		              while((endIndex = tempString.indexOf(enterStr, fromIndex)) != -1){ 	              
+		               strBuf.delete(0, strBuf.length()); 
+		               fromIndex = endIndex + 1; 
+		               i++;
+		              } 
+		              if(rSize > tempString.length()){ 
+		            	  strBuf.append(tempString.substring(fromIndex, tempString.length())); 
+		              }else{ 
+		            	  strBuf.append(tempString.substring(fromIndex, rSize)); 
+		              }   
+		            
+		        	} 
+		        	long end = System.currentTimeMillis();	 
+			        System.out.println("读取文件内容耗时：" + (end - start) + "毫秒");
+			        return i;
+	        } catch (IOException e) { 	       
+		        e.printStackTrace(); 
+		        return 1;
+	        } 
+		}else{
+			return 1;
+		}
 		
-		String enterStr = "\n"; //换行符
-        try{ 
-	        byte[] bs = new byte[BUFFER_SIZE]; 
-	        
-	        long start = System.currentTimeMillis();
-	        int i = 0,fromIndex=0,endIndex=0,rSize=0;
-	        StringBuffer strBuf = new StringBuffer(""); 
-	        String line ="";
-	        boolean continueGo = true;
-	        
-	        while(fcin.read(rBuffer) != -1&&continueGo){		        
-	              rSize = rBuffer.position(); 
-	              rBuffer.rewind(); 
-	              rBuffer.get(bs); 
-	              rBuffer.clear(); 
-	              String tempString = new String(bs, 0, rSize); 
-	             // System.out.println("##### "+tempString); 
-	              fromIndex = 0; 
-	              endIndex = 0; 
-	              while((endIndex = tempString.indexOf(enterStr, fromIndex)) != -1){ 
-	               if(i>=resultLineNum){
-	            	   continueGo = false;
-	            	   break;
-	               }
-	               line = tempString.substring(fromIndex, endIndex); 
-	               line = new String(strBuf.toString() + line); 
-	               System.out.println("line ###### "+line); 
-	           
-	               strBuf.delete(0, strBuf.length()); 
-	               fromIndex = endIndex + 1; 
-	               i++;
-	              } 
-	              if(rSize > tempString.length()){ 
-	            	  strBuf.append(tempString.substring(fromIndex, tempString.length())); 
-	              }else{ 
-	            	  strBuf.append(tempString.substring(fromIndex, rSize)); 
-	              }   
-	            
-	        	} 
-	        	long end = System.currentTimeMillis();	 
-		        System.out.println("读取文件文件内容花费：" + (end - start) + "毫秒");
-        } catch (IOException e) { 
-        // TODO Auto-generated catch block 
-        e.printStackTrace(); 
-        } 
+	}
+	
+	/**
+	 * 用命令读取大文件的行数   linux下非常快
+	 * @param file
+	 * @throws FileNotFoundException
+	 */
+	public int getBigFileLineNumByCommand(String filePath){
+		long start = System.currentTimeMillis();
+		String command ="";
+		boolean isWindows = false;
+		if (System.getProperty("os.name").contains("Windows")) {
+			command = "find /V \"\" /C "+filePath;		
+			isWindows = true;
+		} else {
+			command="cat "+filePath+" |wc -l";			
+		}
+	
+		Runtime runtime=Runtime.getRuntime();
+		String temp;
+		int number=0;
+		try{
+			Process process  = runtime.exec(command);
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					process.getInputStream()));		
+			while ((temp = br.readLine()) != null) {
+				if(StringUtils.isNotBlank(temp)){					
+					//System.out.println(" result : " + temp.substring(temp.lastIndexOf(":")+1).trim());
+					if(isWindows){
+						number = Integer.valueOf(temp.substring(temp.lastIndexOf(":")+1).trim());
+					}else{
+						number = Integer.valueOf(temp);
+					}
+					
+					break;
+				}				
+			}
+		}catch(Exception e){
+			e.printStackTrace();	
+			return 1;
+		}
+		long end = System.currentTimeMillis();	 
+        System.out.println("读取文件行数耗时：" + (end - start) + "毫秒");
+
+        return number;
 	}
 
 	public String getCharset(String filePath){

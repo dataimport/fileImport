@@ -218,13 +218,13 @@ public class TaskRepository implements BaseRepository<Task> {
 				}
 				values[0]=String.valueOf(nowNum);
 				values[1]=timeUse;		
-				updateTaskByField(task.getUid(),keys,values);
+				updateTaskByField(task.getUid(),keys,values,AllCollectionName.TASKINFO_COLLECTIONNAME);
 			}
 		}	
 	}
 	
-	public void updateTaskByField(String uid, String[] key, Object[] value) {
-		DBCollection dbColleciton =mongoTemplate.getCollection("taskInfo"); 	
+	public void updateTaskByField(String uid, String[] key, Object[] value,String collctionName) {
+		DBCollection dbColleciton =mongoTemplate.getCollection(collctionName); 	
 		BasicDBObject query = new BasicDBObject();
 		query.put("uid", uid);
 		DBObject taskDB = dbColleciton.findOne(query);

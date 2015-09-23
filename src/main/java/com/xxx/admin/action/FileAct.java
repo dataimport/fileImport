@@ -63,7 +63,7 @@ public class FileAct {
 		model.put("filePath", filePath);
 		return "file/preview";
 	}
-
+ 
 	@Autowired
 	private FileService fileService;
 	@Autowired

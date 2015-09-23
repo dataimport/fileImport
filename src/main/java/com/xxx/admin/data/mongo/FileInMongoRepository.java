@@ -201,13 +201,13 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 					values[0]=String.valueOf(nowNum);
 					values[1]=timeUse;					
 					if(nowNum==valuesSize){;
-						 keys = new String[]{"runNum","timeUse","endDate","taskStatus","totalCount"};
+						 keys = new String[]{"runNum","timeUse","endDate","taskStatus"};
 						 values = new Object[5];
 						 values[0]=nowNum;
 						 values[1]=timeUse;	
 						 values[2]=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 						 values[3]=2;
-						 values[4]=valuesSize;
+						 //values[4]=valuesSize;
 					}
 					updateFileInfoByField(task.getUid(),keys,values);
 				}				

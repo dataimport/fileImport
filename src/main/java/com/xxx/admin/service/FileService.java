@@ -1,6 +1,7 @@
 package com.xxx.admin.service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.xxx.admin.bean.AllCollectionName;
@@ -135,6 +137,18 @@ public class FileService {
 			return false;
 		}
 		
+	}
+	
+	public int getFileLineNumber(String filePath){
+		return txtFileAnalysis.getBigFileLineNumByCommand(filePath);
+	}
+	
+	
+	@Async
+	public void getAndUpdateFileTotalCount(String uid,String filePath){
+		int count = getFileLineNumber(filePath);
+		fmRepository.updateFileInfoByField(uid, new String[]{"totalCount"},
+				new Object[]{count});		
 	}
 
     @Resource
