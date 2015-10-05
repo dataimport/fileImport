@@ -142,6 +142,9 @@ public class SolrImportService {
 						}
 						//				long duration= (System.currentTimeMillis()-start)/1000;
 						long duration= (System.currentTimeMillis()-start);
+						key = new String[]{"timeUse"};
+						value = new Object[]{duration};
+						solrTaskRepository.updateTaskByField(taskId, key, value);
 						
 						System.out.println("入库到索引"+indexName+",总耗时:"+duration+"ms,totalCount:"+totalCount);
 					}
