@@ -12,6 +12,12 @@ public abstract class BaseTask implements Serializable {
 	 */
 	private static final long serialVersionUID = -5193521874045600482L;
 	
+	public static final int TASK_STATUS_WAITING = 0; //0 未执行
+	public static final int TASK_STATUS_RUNNING = 1; // 1 执行中 
+	public static final int TASK_STATUS_SUCCESS = 2; //  2 已完成
+	public static final int TASK_STATUS_FAILED = -2; // -2 失败
+	public static final int TASK_STATUS_EXCEPTION = -200; // -200 执行过程中有异常发生
+	
 	private String uid;
 	private String tableName;
 	private String origin;
