@@ -20,9 +20,11 @@ import org.springframework.stereotype.Service;
 import com.xxx.admin.bean.AllCollectionName;
 import com.xxx.admin.bean.NoRepeatColls;
 import com.xxx.admin.bean.Task;
+import com.xxx.admin.bean.base.BaseTask;
 import com.xxx.admin.data.mongo.FileInMongoRepository;
 import com.xxx.admin.data.mongo.MongoCollRepository;
 import com.xxx.admin.file.analysis.TxtFileAnalysis;
+import com.xxx.elasticsearch.data.mongo.SolrTaskRepository;
 
 @Service("fileService")
 public class FileService {
@@ -99,8 +101,14 @@ public class FileService {
 
 				  //更新状态为导入完毕
 				  String[] keys = new String[]{"taskStatus"};
-				  Object[] values = new Object[]{2};			
+				  Object[] values = new Object[]{BaseTask.TASK_STATUS_SUCCESS};			
 				  fmRepository.updateFileInfoByField(t.getUid(), keys, values);
+				  
+				  //更新solrTask为等待状态
+				  solrTaskRepository.updateTaskByField(t.getUid(), 
+						  new String[]{"taskStatus","totalCount"},
+						  new Object[]{BaseTask.TASK_STATUS_WAITING,runNum});
+					
 				  saveToRepeatColls(t);
 				  System.out.println(" 总共 "+runNum+" 条记录 ");
 				} catch (IOException e) {
@@ -114,8 +122,13 @@ public class FileService {
 				  
 				  //更新状态为导入完毕
 				  String[] keys = new String[]{"taskStatus"};
-				  Object[] values = new Object[]{2};			
+				  Object[] values = new Object[]{BaseTask.TASK_STATUS_SUCCESS};			
 				  fmRepository.updateFileInfoByField(t.getUid(), keys, values);
+				  
+				//更新solrTask为等待状态
+				  solrTaskRepository.updateTaskByField(t.getUid(), 
+						    new String[]{"taskStatus","totalCount"},
+							new Object[]{BaseTask.TASK_STATUS_WAITING,lines.size()});
 				  
 				  saveToRepeatColls(t);
 				  return true;
@@ -149,11 +162,10 @@ public class FileService {
 	
 	
 	@Async
-	public int getAndUpdateFileTotalCount(String uid,String filePath){
+	public void getAndUpdateFileTotalCount(String uid,String filePath){
 		int count = getFileLineNumber(filePath);
 		fmRepository.updateFileInfoByField(uid, new String[]{"totalCount"},
 				new Object[]{count});
-		return count;
 	}
 
     @Resource
@@ -162,5 +174,6 @@ public class FileService {
     MongoCollRepository mcRepository;
 	@Autowired
 	private TxtFileAnalysis txtFileAnalysis;
-	
+	@Resource
+	SolrTaskRepository solrTaskRepository;
 }
