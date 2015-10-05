@@ -18,6 +18,7 @@ import com.xxx.admin.bean.AllCollectionName;
 import com.xxx.admin.bean.MongoSolrInfo;
 import com.xxx.admin.bean.SolrTask;
 import com.xxx.admin.bean.Task;
+import com.xxx.admin.bean.base.BaseTask;
 import com.xxx.admin.data.mongo.MongoToSolrRepository;
 import com.xxx.admin.data.mongo.TaskRepository;
 import com.xxx.admin.file.analysis.TxtFileAnalysis;
@@ -64,15 +65,19 @@ public class TaskService {
 			mongoToSolrRepository.saveObject(msi);
 			
 			//更新文件总行数
-			int totalCount = fileService.getAndUpdateFileTotalCount(task.getUid(),task.getFilePath());
+			//不能直接这么用，异步调用，会报异常org.springframework.aop.AopInvocationException: Null return value from advice does not match primitive return type for: public int com.xxx.admin.service.FileService.getAndUpdateFileTotalCount(java.lang.String,java.lang.String)
+
+//			int totalCount = fileService.getAndUpdateFileTotalCount(task.getUid(),task.getFilePath());
+			fileService.getAndUpdateFileTotalCount(task.getUid(),task.getFilePath());
 			
 			//保存一份任务信息到solr入库的任务表中
-			//TODO 其实在这个环节，写入，有些不妥，应该在入mongo任务完成后写入
+			//TODO 其实在这个环节，写入，有些不妥，应该在入mongo任务完成后
 			SolrTask slorTask = new SolrTask(task.getUid(), task.getTableName(), task.getOrigin(), task.getTags(),
 					task.getColumnName(), task.getColumnIndex(), task.getSeparator(),
 					task.getRunTime(), task.getStartDate(), task.getEndDate(), task.getFilePath(),
-					task.getFileName(), task.getFileSize(), task.getLeftTime(),totalCount,
-					0, task.getTimeUse(), task.getRunNum(), 0,
+					task.getFileName(), task.getFileSize(), task.getLeftTime(),task.getTotalCount(),
+					BaseTask.TASK_STATUS_SOLR_WAITING,
+					task.getTimeUse(), task.getRunNum(), 0,
 					task.getBeginLineNum(), task.getCreateUser(), false,
 					task.getId());
 			solrTaskRepository.saveObject(slorTask, AllCollectionName.SOLR_TASKINFO_COLLECTIONNAME);

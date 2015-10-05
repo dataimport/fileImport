@@ -12,6 +12,7 @@ public abstract class BaseTask implements Serializable {
 	 */
 	private static final long serialVersionUID = -5193521874045600482L;
 	
+	public static final int TASK_STATUS_SOLR_WAITING = -100; // -100 solr初始状态，等待mongo任务完成后，变为0
 	public static final int TASK_STATUS_WAITING = 0; //0 未执行
 	public static final int TASK_STATUS_RUNNING = 1; // 1 执行中 
 	public static final int TASK_STATUS_SUCCESS = 2; //  2 已完成
