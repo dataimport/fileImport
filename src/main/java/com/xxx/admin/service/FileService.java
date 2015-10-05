@@ -149,10 +149,11 @@ public class FileService {
 	
 	
 	@Async
-	public void getAndUpdateFileTotalCount(String uid,String filePath){
+	public int getAndUpdateFileTotalCount(String uid,String filePath){
 		int count = getFileLineNumber(filePath);
 		fmRepository.updateFileInfoByField(uid, new String[]{"totalCount"},
-				new Object[]{count});		
+				new Object[]{count});
+		return count;
 	}
 
     @Resource

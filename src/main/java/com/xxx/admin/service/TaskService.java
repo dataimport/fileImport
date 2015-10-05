@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.xxx.admin.bean.AllCollectionName;
 import com.xxx.admin.bean.MongoSolrInfo;
+import com.xxx.admin.bean.SolrTask;
 import com.xxx.admin.bean.Task;
 import com.xxx.admin.data.mongo.MongoToSolrRepository;
 import com.xxx.admin.data.mongo.TaskRepository;
@@ -49,8 +50,6 @@ public class TaskService {
 			//保存到所有文档表中	
 			taskRepository.saveObject(task,AllCollectionName.ALLFILEINFO_COLLECTIONNAME); 	
 		
-			//保存一份任务信息到solr入库的任务表中
-			solrTaskRepository.saveObject(task, AllCollectionName.SOLR_TASKINFO_COLLECTIONNAME);
 			
 			//保存到表-文件信息表中			
 			MongoSolrInfo msi = new MongoSolrInfo();
@@ -65,8 +64,18 @@ public class TaskService {
 			mongoToSolrRepository.saveObject(msi);
 			
 			//更新文件总行数
-			fileService.getAndUpdateFileTotalCount(task.getUid(),task.getFilePath());
+			int totalCount = fileService.getAndUpdateFileTotalCount(task.getUid(),task.getFilePath());
 			
+			//保存一份任务信息到solr入库的任务表中
+			//TODO 其实在这个环节，写入，有些不妥，应该在入mongo任务完成后写入
+			SolrTask slorTask = new SolrTask(task.getUid(), task.getTableName(), task.getOrigin(), task.getTags(),
+					task.getColumnName(), task.getColumnIndex(), task.getSeparator(),
+					task.getRunTime(), task.getStartDate(), task.getEndDate(), task.getFilePath(),
+					task.getFileName(), task.getFileSize(), task.getLeftTime(),totalCount,
+					0, task.getTimeUse(), task.getRunNum(), 0,
+					task.getBeginLineNum(), task.getCreateUser(), false,
+					task.getId());
+			solrTaskRepository.saveObject(slorTask, AllCollectionName.SOLR_TASKINFO_COLLECTIONNAME);
 			return true;
 		}catch(Exception ex){
 			ex.printStackTrace();
