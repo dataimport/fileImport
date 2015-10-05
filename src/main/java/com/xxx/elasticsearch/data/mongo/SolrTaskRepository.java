@@ -18,12 +18,13 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 import com.xxx.admin.bean.AllCollectionName;
+import com.xxx.admin.bean.SolrTask;
 import com.xxx.admin.bean.Task;
 import com.xxx.mongo.repository.base.BaseRepository;
 import com.xxx.utils.Pagination;
 
 @Repository("solrTask")
-public class SolrTaskRepository implements BaseRepository<Task> {
+public class SolrTaskRepository implements BaseRepository<SolrTask> {
  
 	@Autowired
     MongoTemplate mongoTemplate;
@@ -35,44 +36,44 @@ public class SolrTaskRepository implements BaseRepository<Task> {
     /**
      * Get all Tasks.
      */
-    public List<Task> getAllObjects() {
-        return mongoTemplate.findAll(Task.class,AllCollectionName.ALLFILEINFO_COLLECTIONNAME);
+    public List<SolrTask> getAllObjects() {
+        return mongoTemplate.findAll(SolrTask.class,AllCollectionName.SOLR_TASKINFO_COLLECTIONNAME);
     }
  
     /**
-     * Saves a {<span class="referer">@link</span>  Task}.
+     * Saves a {<span class="referer">@link</span>  SolrTask}.
      */
-    public void saveObject(Task task) {
+    public void saveObject(SolrTask task) {
         mongoTemplate.insert(task);
     }
  
-    public void saveObject(Task task,String collectionName) {
+    public void saveObject(SolrTask task,String collectionName) {
         mongoTemplate.insert(task,collectionName);
     }
     
     /**
-     * Gets a {<span class="referer">@link</span>  Task} for a particular id.
+     * Gets a {<span class="referer">@link</span>  SolrTask} for a particular id.
      */
-    public Task getObjectByUid(String uid) {
+    public SolrTask getObjectByUid(String uid) {
         return mongoTemplate.findOne(new Query(Criteria.where("uid").is(uid)),
-        		Task.class);
+        		SolrTask.class);
     }
  
     /**
-     * Updates a {<span class="referer">@link</span>  Task} name for a particular id.
+     * Updates a {<span class="referer">@link</span>  SolrTask} name for a particular id.
      */
     public WriteResult updateObject(String id, String name) {
         return mongoTemplate.updateFirst(
                 new Query(Criteria.where("id").is(id)),
-                Update.update("name", name), Task.class);
+                Update.update("name", name), SolrTask.class);
     }
  
     /**
-     * Delete a {<span class="referer">@link</span>  Task} for a particular id.
+     * Delete a {<span class="referer">@link</span>  SolrTask} for a particular id.
      */
     public boolean deleteObjectById(String id) {
     	 WriteResult result =   mongoTemplate
-                .remove(new Query(Criteria.where("uid").is(id)), Task.class);
+                .remove(new Query(Criteria.where("uid").is(id)), SolrTask.class);
     	 result.getLastError();
 		 if (null != result) {
              if (result.getN() > 0) {
@@ -83,37 +84,37 @@ public class SolrTaskRepository implements BaseRepository<Task> {
     }
  
     /**
-     * Create a {<span class="referer">@link</span>  Task} collection if the collection does not already
+     * Create a {<span class="referer">@link</span>  SolrTask} collection if the collection does not already
      * exists
      */
     public void createCollection() {
-        if (!mongoTemplate.collectionExists(Task.class)) {
-            mongoTemplate.createCollection(Task.class);
+        if (!mongoTemplate.collectionExists(SolrTask.class)) {
+            mongoTemplate.createCollection(SolrTask.class);
         }
     }
     
     public void createCollection(String name) {
-        if (!mongoTemplate.collectionExists(Task.class)) {
+        if (!mongoTemplate.collectionExists(SolrTask.class)) {
             mongoTemplate.createCollection(name);
         }
     }
  
     /**
-     * Drops the {<span class="referer">@link</span>  Task} collection if the collection does already exists
+     * Drops the {<span class="referer">@link</span>  SolrTask} collection if the collection does already exists
      */
     public void dropCollection() {
-        if (mongoTemplate.collectionExists(Task.class)) {
-            mongoTemplate.dropCollection(Task.class);
+        if (mongoTemplate.collectionExists(SolrTask.class)) {
+            mongoTemplate.dropCollection(SolrTask.class);
         }
     }
     
-    public List<Task> getObjectsByRunTime(String date){
+    public List<SolrTask> getObjectsByRunTime(String date){
     	Query query = new Query();
 		Criteria criteria = Criteria.where("runTime").lte(date);
 		Criteria criteriaStatus = Criteria.where("taskStatus").is(0);
 		query.addCriteria(criteria).addCriteria(criteriaStatus);
 		query.with(new Sort(Direction.ASC,"runTime"));
-		return mongoTemplate.find(query, Task.class);
+		return mongoTemplate.find(query, SolrTask.class);
     }
 
 	public Pagination getObjectsByStatus(Integer pageNo, Integer pageSize,Integer status) {
@@ -135,25 +136,25 @@ public class SolrTaskRepository implements BaseRepository<Task> {
 				query.addCriteria(criteriaStatus);
 			}
 		}
-		long totalCount = this.mongoTemplate.count(query, Task.class,AllCollectionName.ALLFILEINFO_COLLECTIONNAME); 
+		long totalCount = this.mongoTemplate.count(query, SolrTask.class,AllCollectionName.SOLR_TASKINFO_COLLECTIONNAME); 
 		Pagination page = new Pagination(pageNo, pageSize, totalCount);  
 		query.with(new Sort(Direction.DESC,"runTime"));
 		query.skip(page.getFirstResult());  
 	    query.limit(pageSize);
-		page.setList(mongoTemplate.find(query, Task.class,AllCollectionName.ALLFILEINFO_COLLECTIONNAME));
+		page.setList(mongoTemplate.find(query, SolrTask.class,AllCollectionName.SOLR_TASKINFO_COLLECTIONNAME));
 		return page;
 	}
 
-	public Task getObjectsByFilePath(String filePath) {
+	public SolrTask getObjectsByFilePath(String filePath) {
 		Query query = new Query();
 		Criteria criteriaStatus = Criteria.where("filePath").is(filePath);
 		query.addCriteria(criteriaStatus);
 		query.with(new Sort(Direction.DESC,"runTime"));
-		return mongoTemplate.findOne(query, Task.class,AllCollectionName.ALLFILEINFO_COLLECTIONNAME);
+		return mongoTemplate.findOne(query, SolrTask.class,AllCollectionName.SOLR_TASKINFO_COLLECTIONNAME);
 	}
 	
 	@Override
-	public boolean deleteObject(Task object) {
+	public boolean deleteObject(SolrTask object) {
 		WriteResult result = mongoTemplate.remove(object);		
 		result.getLastError();
 		 if (null != result) {
@@ -165,13 +166,13 @@ public class SolrTaskRepository implements BaseRepository<Task> {
 	}
 
 	@Override
-	public Task getObjectById(String uid) {
+	public SolrTask getObjectById(String uid) {
 		 return mongoTemplate.findOne(new Query(Criteria.where("uid").is(uid)),
-					  Task.class);
+					  SolrTask.class);
 	}
 	
 	
-	public void taskRun(Task task,List<String> list){		
+	public void taskRun(SolrTask task,List<String> list){		
 		DBCollection dbColleciton =mongoTemplate.getCollection(task.getTableName()); 
 		DBObject data = new BasicDBObject();
 		String[] columns = task.getColumnName();
@@ -224,7 +225,7 @@ public class SolrTaskRepository implements BaseRepository<Task> {
 	}
 	
 	public void updateTaskByField(String uid, String[] key, Object[] value) {
-		DBCollection dbColleciton =mongoTemplate.getCollection("taskInfo"); 	
+		DBCollection dbColleciton =mongoTemplate.getCollection(AllCollectionName.SOLR_TASKINFO_COLLECTIONNAME); 	
 		BasicDBObject query = new BasicDBObject();
 		query.put("uid", uid);
 		DBObject taskDB = dbColleciton.findOne(query);
