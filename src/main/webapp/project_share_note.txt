@@ -1,0 +1,16 @@
+
+mongodb的几个web管理工具：
+1.ruby写的
+https://github.com/karlseguin/Mongo-Web-Admin
+
+2.php写的
+https://github.com/CraryPrimitiveMan/phpMongoAdmin
+
+3.Python写的
+https://github.com/Fiedzia/Fang-of-Mongo
+
+4..Net写的
+https://github.com/freshlogic/MongoDB.Web
+
+5..Net写的，中国人开发
+https://github.com/leexsoft/.net-MongoDB.WebIDE
