@@ -9,7 +9,7 @@
 					class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="./">天眼数据系统</a>
+			<a class="navbar-brand" href="./">天眼数据系统 Beta1.0</a>
 		</div>
 		<div id="navbar" class="navbar-collapse collapse">
 
