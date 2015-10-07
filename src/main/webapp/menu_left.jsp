@@ -1,6 +1,6 @@
 <%@page contentType="text/html; charset=UTF-8"%>
 <ul class="nav nav-sidebar">
-	<li class="active"><a href="./">系统总览 <span
+	<li class="active"><a href="index.jsp">系统总览 <span
 			class="sr-only">(current)</span></a></li>
 	<li><a href="data_frame.jsp?t=task_list.htm_not_finish">|--入库任务监控</a></li>
 	<li><a href="data_frame.jsp?t=task_list.htm">|--入库任务日志</a></li>
