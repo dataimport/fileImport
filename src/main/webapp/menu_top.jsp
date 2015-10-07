@@ -20,7 +20,7 @@
 			</ul>
 
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="./">系统总览</a></li>
+				<li><a href="index.jsp">系统总览</a></li>
 				<li><a href="data_frame.jsp?t=task_list.htm_not_finish">入库任务监控</a></li>
 				<li><a href="elastic.jsp?t=0">入索引任务监控</a></li>
 				<li><a href="data_frame.jsp?t=mongo_allCollections.htm">Mongo数据维护</a></li>

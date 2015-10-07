@@ -43,17 +43,17 @@
             <% String type = request.getParameter("t");
     		   if(type!=null && type.trim().equals("task_list.htm_not_finish")){
     		%>       
-    		    <iframe src="task/list.htm?status=888" frameborder="0" scrolling="auto" width="100%" height="550"></iframe>
+    		    <iframe src="task/list.htm?status=888" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
     		<%}else if(type!=null && type.trim().equals("task_list.htm")){ %>
-    			<iframe src="task/list.htm" frameborder="0" scrolling="auto" width="100%" height="550"></iframe>
+    			<iframe src="task/list.htm" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
     		<%}else if(type!=null && type.trim().equals("folder_list.htm")){ %>
-    			<iframe src="folder/list.htm" frameborder="0" scrolling="auto" width="100%" height="550"></iframe>
+    			<iframe src="folder/list.htm" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
     		<%}else if(type!=null && type.trim().equals("folder_child.htm")){ %>
-    			<iframe src="folder/child.htm" frameborder="0" scrolling="auto" width="100%" height="550"></iframe>
+    			<iframe src="folder/child.htm" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
     		<%}else if(type!=null && type.trim().equals("mongo_allCollections.htm")){ %>
-    			<iframe src="mongo/allCollections.htm" frameborder="0" scrolling="auto" width="100%" height="550"></iframe>
+    			<iframe src="mongo/allCollections.htm" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
     		<%}else{ %>
-            	<iframe src="task/list.htm?status=888" frameborder="0" scrolling="auto" width="100%" height="550"></iframe>
+            	<iframe src="task/list.htm?status=888" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
             <%} %>
         </div>
       </div>
