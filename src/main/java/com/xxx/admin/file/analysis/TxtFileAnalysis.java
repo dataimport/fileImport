@@ -21,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.xxx.core.exception.BaseException;
+import com.xxx.core.exception.ReadFileException;
 import com.xxx.utils.FileCharsetDetector;
 
 
@@ -43,7 +45,7 @@ public class TxtFileAnalysis  {
 	 * @param separator
 	 * @return
 	 */
-	public Map previewFileBySeparator(String filePath,String separator,Integer lineNum){
+	public Map previewFileBySeparator(String filePath,String separator,Integer lineNum)throws ReadFileException{
 		List<String> lines = previewFileByLineNum(filePath,lineNum);//预览指定行数
 		String[] columns = getColumns(lines,separator);//获取表头字段,不管有没有
 		Map map = new HashMap();
@@ -57,7 +59,7 @@ public class TxtFileAnalysis  {
 	 * @param filePath
 	 * @return
 	 */
-	public  List<String> previewFileByLineNum(String filePath){	
+	public  List<String> previewFileByLineNum(String filePath)throws ReadFileException{	
 		return previewFileByLineNum(filePath,null);
 	}
 	
@@ -67,9 +69,9 @@ public class TxtFileAnalysis  {
 	 * @param viewNum   预览的文件行数
 	 * @return
 	 */
-	public  List<String> previewFileByLineNum(String filePath,Integer viewNum){		      
-		  try {  
-		 	    File file = new File(filePath);
+	public  List<String> previewFileByLineNum(String filePath,Integer viewNum) throws ReadFileException{    
+		  
+		 	   File file = new File(filePath);
                if(file.exists()){
             	String charSet = getCharset(filePath);
             	   if (viewNum==null || viewNum > MAX_LINENUM) {
@@ -77,7 +79,12 @@ public class TxtFileAnalysis  {
 				   }
             	   if(file.length()/1048576>FILESIZE_TIPPINGPOINT){//大文件
             		  log.debug("按大文件解析");
-            		  return  previewBigFileByLineNum(file,viewNum,charSet);
+            		  try {   
+            			  return  previewBigFileByLineNum(file,viewNum,charSet);
+            		  }catch (ReadFileException e) {  
+           		       e.printStackTrace(); 
+           		       throw e;
+           		   }  	
             	   }else{//小文件
             		  log.debug("按小文件解析");
             		  List<String> lines = readSmallFile(filePath,charSet);
@@ -87,12 +94,9 @@ public class TxtFileAnalysis  {
             		  return lines;
             	   }
                }else{//文件不存在
-            	   return new ArrayList<String>();   
+            	throw new ReadFileException(BaseException.PREVIEW_FILE_CODE,"文件不存在");
                }             
-		   } catch (IOException e) {  
-		       e.printStackTrace();  
-		   }  
-		   return new ArrayList<String>();
+		 	  
 		}
 	
 	
@@ -102,14 +106,13 @@ public class TxtFileAnalysis  {
 	* @param viewNum
 	* @return
 	*/
-	public List<String> readSmallFile(String filePath,String charset)
-			throws IOException {
+	public List<String> readSmallFile(String filePath,String charset)throws ReadFileException {
 		try {
 			List<String> lines = Files.readAllLines(Paths.get(filePath),Charset.forName(charset));			
 			return lines;
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw e;
+			throw new ReadFileException(BaseException.READSMALL_FILE_CODE,e.getMessage());
 		}
 	}
 	
@@ -122,12 +125,12 @@ public class TxtFileAnalysis  {
 	public List<String> LoopBigFileByBuffer(int fromIndex, int endIndex, int rSize,
 			byte[] bs,String enterStr,String line,StringBuffer strBuf,
 			FileChannel fcin,ByteBuffer rBuffer,List<String> lines,String charset)
-			throws IOException {
-
+			throws ReadFileException {
+		  try{
 				rSize = rBuffer.position();
 				rBuffer.rewind();
 				rBuffer.get(bs);
-				rBuffer.clear();
+				rBuffer.clear();				
 				String tempString = new String(bs, 0, rSize,charset);
 				fromIndex = 0;
 				endIndex = 0;
@@ -145,7 +148,12 @@ public class TxtFileAnalysis  {
 				} else {
 					strBuf.append(tempString.substring(fromIndex, rSize));
 				}	
-			return lines;		
+				return lines;	 
+		  }catch(Exception ex){
+			  ex.printStackTrace();
+			  throw new ReadFileException(BaseException.READBIG_FILE_CODE,ex.getMessage());
+		  }
+	
 	}
 	
     /**
@@ -155,13 +163,12 @@ public class TxtFileAnalysis  {
      * @return
      * @throws FileNotFoundException
      */
-	private List<String> previewBigFileByLineNum(File file, Integer viewNum,String charSet)
-			throws IOException {
-		FileChannel fcin = new RandomAccessFile(file, "r").getChannel();
-		ByteBuffer rBuffer = ByteBuffer.allocate(BUFFER_SIZE);
-		String enterStr = "\n"; // 换行符        
-        //long start = System.currentTimeMillis();
+	private List<String> previewBigFileByLineNum(File file, Integer viewNum,String charSet)	throws ReadFileException {
 		try {
+			FileChannel fcin = new RandomAccessFile(file, "r").getChannel();
+			ByteBuffer rBuffer = ByteBuffer.allocate(BUFFER_SIZE);
+			String enterStr = "\n"; // 换行符        
+			//long start = System.currentTimeMillis();		
 			byte[] bs = new byte[BUFFER_SIZE];
 			int i = 0, fromIndex, endIndex, rSize;
 			StringBuffer strBuf = new StringBuffer("");
@@ -201,7 +208,7 @@ public class TxtFileAnalysis  {
 			return lines;
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw e;
+			throw new ReadFileException(BaseException.PREVIEW_FILE_CODE,e.getMessage());
 		}
 	}
 

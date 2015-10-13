@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.xxx.admin.bean.Task;
 import com.xxx.admin.service.FileService;
 import com.xxx.admin.service.TaskService;
+import com.xxx.core.exception.ReadFileException;
 
 
 @Controller
@@ -57,7 +58,7 @@ public class FileAct {
 //	}
 	
 	@RequestMapping(value = "preview.htm")
-	public String v_task(String filePath,ModelMap model,HttpServletRequest request,HttpServletResponse response) { 
+	public String v_task(String filePath,ModelMap model,HttpServletRequest request,HttpServletResponse response) throws ReadFileException{ 
 		List<String>  list =   fileService.previewTxtFile(filePath);
 		model.put("list", list);
 		model.put("filePath", filePath);

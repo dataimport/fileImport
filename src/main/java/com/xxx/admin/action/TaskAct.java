@@ -20,6 +20,7 @@ import com.xxx.admin.bean.Task;
 import com.xxx.admin.service.FileService;
 import com.xxx.admin.service.FolderService;
 import com.xxx.admin.service.TaskService;
+import com.xxx.core.exception.ReadFileException;
 import com.xxx.utils.Pagination;
 import com.xxx.utils.ResponseUtils;
 
@@ -91,7 +92,7 @@ public class TaskAct {
 	 * @return
 	 */
 	@RequestMapping(value = "v_taskBySameRule.htm")
-	public String v_taskBySameRule(String preFilePath,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
+	public String v_taskBySameRule(String preFilePath,ModelMap model,HttpServletRequest request,HttpServletResponse response)throws ReadFileException {
 
 		if(StringUtils.isNotBlank(preFilePath)){
 			File file = new File(preFilePath);

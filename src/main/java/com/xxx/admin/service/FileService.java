@@ -1,15 +1,12 @@
 package com.xxx.admin.service;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -17,31 +14,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.xxx.admin.bean.AllCollectionName;
 import com.xxx.admin.bean.NoRepeatColls;
 import com.xxx.admin.bean.Task;
 import com.xxx.admin.bean.base.BaseTask;
 import com.xxx.admin.data.mongo.FileInMongoRepository;
 import com.xxx.admin.data.mongo.MongoCollRepository;
 import com.xxx.admin.file.analysis.TxtFileAnalysis;
+import com.xxx.core.exception.ReadFileException;
 import com.xxx.elasticsearch.data.mongo.SolrTaskRepository;
 
 @Service("fileService")
 public class FileService {
 	
-	public List<String> previewTxtFile(String filePath) {		
+	public List<String> previewTxtFile(String filePath) throws ReadFileException{		
 		return previewTxtFile(filePath,null);
 	}
 	
-	public List<String> previewTxtFile(String filePath,Integer lineNum) {		
+	public List<String> previewTxtFile(String filePath,Integer lineNum) throws ReadFileException{		
 		return (List<String>)txtFileAnalysis.previewFileByLineNum(filePath,lineNum);
 	}
 	
-	public Map viewBySeparator(String filePath,String separator) {		
+	public Map viewBySeparator(String filePath,String separator) throws ReadFileException{		
 		return viewBySeparator(filePath, separator,null);
 	}
 	
-	public Map viewBySeparator(String filePath,String separator,Integer lineNum) {		
+	public Map viewBySeparator(String filePath,String separator,Integer lineNum) throws ReadFileException{		
 		return txtFileAnalysis.previewFileBySeparator(filePath, separator,lineNum);
 	}
 		
@@ -111,7 +108,7 @@ public class FileService {
 					
 				  saveToRepeatColls(t);
 				  System.out.println(" 总共 "+runNum+" 条记录 ");
-				} catch (IOException e) {
+				} catch (Exception e) {
 					e.printStackTrace();					
 				}			  
 			  return true;
