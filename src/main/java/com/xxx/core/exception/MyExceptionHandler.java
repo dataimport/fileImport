@@ -1,8 +1,5 @@
 package com.xxx.core.exception;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,18 +12,21 @@ public class MyExceptionHandler implements HandlerExceptionResolver {
 	  
     public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler,  
             Exception ex) {  
-        Map<String, Object> model = new HashMap<String, Object>();  
-        model.put("ex", ex);  
+        ModelAndView mv = new ModelAndView("common/error");  
+        mv.addObject("ex", ex);  
         //根据不同的异常 处理不同的情况  
-        if(ex instanceof FileImportException) {//导入数据异常
+        if(ex instanceof MongoDBException) {//MongoDB异常
         	//异常处理
-        	
-        	//跳转到相应的提示页面
-            return new ModelAndView("redirect:/error.html", model);  
+//        	if(((MongoDBException)ex).getId()==BaseException.MONGODB_FOLDER_CODE){//操作文件夹相关异常
+//        		
+//        	}
+        	//跳转到相应的提示页面 
+            return mv;
         }else if(ex instanceof ReadFileException) {//读文件异常
-        	return new ModelAndView("redirect:/error.html",model);          
-        } else {  
-            return new ModelAndView("redirect:/error.html", model);  
+        	 return mv;
+        } else {          	
+        	 mv.addObject("ex", new MongoDBException(10000,"请求异常"));  
+        	 return mv;
         }  
     }  
 }  

@@ -20,6 +20,7 @@ import com.xxx.admin.bean.Folder;
 import com.xxx.admin.bean.Task;
 import com.xxx.admin.service.FolderService;
 import com.xxx.admin.service.TaskService;
+import com.xxx.core.exception.MongoDBException;
 import com.xxx.utils.ResponseUtils;
 
 
@@ -30,7 +31,7 @@ public class FolderAct {
 	private static final Logger log = LoggerFactory.getLogger(FolderAct.class);
 
 	@RequestMapping(value = "add.htm")
-	public String addPath(Folder folder,ModelMap model,HttpServletRequest request,HttpServletResponse response) {		
+	public String addPath(Folder folder,ModelMap model,HttpServletRequest request,HttpServletResponse response) throws MongoDBException{		
 		List<Folder> list = folderService.findByFields(new String[]{"folderPath"}, new String[]{folder.getFolderPath()});
 		if(list.size()==0){
 			folder.setFolderId(UUID.randomUUID().toString().replaceAll("-", ""));
@@ -44,7 +45,7 @@ public class FolderAct {
 	}
 	
 	@RequestMapping(value = "delete.htm")
-	public String deletePath(String id,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
+	public String deletePath(String id,ModelMap model,HttpServletRequest request,HttpServletResponse response) throws MongoDBException {
 		boolean result = folderService.deleteById(id);
 		if(result){
 			ResponseUtils.renderJson(response, "{\"code\":"+200+",\"msg\":\"删除成功\"}");
@@ -55,14 +56,14 @@ public class FolderAct {
 	}
 	
 	@RequestMapping(value = "list.htm")
-	public String list(ModelMap model,HttpServletRequest request,HttpServletResponse response) {
+	public String list(ModelMap model,HttpServletRequest request,HttpServletResponse response)throws MongoDBException {
 		List<Folder> list = folderService.list();
 		model.put("list", list);
 		return "folder/list";
 	}
 	
 	@RequestMapping(value = "child.htm")
-	public String child(String folderPath,Boolean append,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
+	public String child(String folderPath,Boolean append,ModelMap model,HttpServletRequest request,HttpServletResponse response)throws MongoDBException {
 		List<Folder> folderList = folderService.list();	
 		String defaultPath = "";
 		if(StringUtils.isNotBlank(folderPath)){

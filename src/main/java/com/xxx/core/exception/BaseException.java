@@ -11,8 +11,23 @@ public abstract class BaseException  extends Exception {
 	public static final int READSMALL_FILE_CODE = 2;
 	public static final int READBIG_FILE_CODE = 3;
 	public static final int GET_FILE_LINENUMBER_CODE = 4;
+	public static final int MONGODB_FOLDER_CODE = 4;
 	
 	public Integer id;
 	public String message;
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
+	
 	
 }

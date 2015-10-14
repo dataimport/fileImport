@@ -10,23 +10,24 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import com.xxx.admin.bean.Folder;
 import com.xxx.admin.data.mongo.FolderRepository;
+import com.xxx.core.exception.MongoDBException;
 
 @Service("folderService")
 public class FolderService {
 
-	public void add(Folder folder) {		
+	public void add(Folder folder)throws MongoDBException {		
 		folderRepository.saveObject(folder);
 	}
 	
-	public boolean deleteById(String id) {		
+	public boolean deleteById(String id) throws MongoDBException {		
 		return	folderRepository.deleteObjectById(id);
 	}
 	
-	public List<Folder> findByFields(String[] fields,String[] values) {		
+	public List<Folder> findByFields(String[] fields,String[] values)throws MongoDBException {		
 		return	folderRepository.getObjectByFields(fields,values);
 	}
 	
-	public List<Folder> list() {		
+	public List<Folder> list()throws MongoDBException {		
 		return folderRepository.getAllObjects();
 	}
 	
