@@ -33,24 +33,26 @@ body{ background:#0066A8 no-repeat center 0px;}
 <body>
 <div class="tit"><img src="static/images/login/title_pic.png" alt="" /></div>
 <div class="login-wrap">
+<form action="login.htm" method="post">
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
     <tr>
       <td height="25" valign="bottom">用户名：</td>
     </tr>
     <tr>
-      <td><input type="text" class="login_input login_user" value="admin" /></td>
+      <td><input type="text" name="username" class="login_input login_user" /></td>
     </tr>
     <tr>
       <td height="35" valign="bottom">密  码：</td>
     </tr>
     <tr>
-      <td><input type="password"  class="login_input login_password" value="12345678" /></td>
+      <td><input type="password" name="password"  class="login_input login_password" /></td>
     </tr>
     <tr>
-      <td height="60" valign="bottom"><a href="index.jsp" class="btn btn-block btn-login">登录</a></td>
+      <td height="60" valign="bottom"><input type="submit" class="btn btn-block btn-login" value="登录"></td>
     </tr>
    
   </table>
+  </form>
 </div>
 <div class="copyright">建议使用IE8以上版本或谷歌浏览器</div>
     
