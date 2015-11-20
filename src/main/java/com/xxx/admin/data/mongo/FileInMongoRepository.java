@@ -190,8 +190,8 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 		for(int i=0;i<valuesSize;i++){
 			try{//加上异常处理，这样个别数据有问题，不会影响整体数据的导入
 				data = new BasicDBObject(); 
-				lineSeparator = list.get(i).split(task.getSeparator());			
-				if(lineSeparator.length==columnIndexSize){//处理虽然有换行但是没有数据的情况，或者数据分割后，总数跟填写的字段数不匹配。
+				lineSeparator = list.get(i).split(task.getSeparator(),-1);		
+				if(lineSeparator.length>=columnIndexSize){//处理虽然有换行但是没有数据的情况，或者数据分割后，总数跟填写的字段数不匹配。
 					for(int j=0;j<columnIndexSize;j++){
 						data.put(columns[j], lineSeparator[columnIndex[j]-1]);
 					}			

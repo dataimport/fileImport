@@ -57,14 +57,15 @@ public class TaskAct {
 	public String v_task(String filePath,String separator,boolean firstLineIgnore,String[] lines,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
 			
 		if(StringUtils.isBlank(separator)){
-			separator="wKhTglXeaGY";
-			model.put("separator", "");
+			separator=" ";
+			//separator="wKhTglXeaGY";
+			model.put("separator", " ");
 		}else{
 			model.put("separator", separator);
 		}
 		
 		if(lines.length>0){
-			model.put("columns", lines[0].split(separator));	
+			model.put("columns", lines[0].split(separator,-1));	
 		}else{
 			 model.put("columns", new String[]{});	
 		}		 

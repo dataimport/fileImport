@@ -76,9 +76,11 @@
 	 		</td>	
 	  <#else>
 	     <#list a?split("${separator!}") as value>
+	     
 	 		<td>
 	 		 ${value?trim?replace('<', '&lt;' )?replace(">","&gt;")?replace('\n', '' )?replace('\\', '\\\\' )}
 	 		</td>	
+	
 	 	 </#list>
     </#if> 
     
