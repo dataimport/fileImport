@@ -34,7 +34,11 @@ public class FolderService {
 	public File[] getChild(String folderPath) {			
 		File file = new File(folderPath);
 		if(file.exists()){
-			File[] child = file.listFiles();		
+			File[] child = file.listFiles();	
+//			File[] child = file.listFiles(new FileFilter(){
+//				   public boolean accept(File file){
+//				          return file.isDirectory();
+//				   }});
 			Arrays.sort(child, new Comparator<File>(){ 
 			public int compare(File f1, File f2) 
 			 { 

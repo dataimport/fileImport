@@ -98,7 +98,7 @@ public class FolderAct {
 		}
 				
 		if(append!=null&&append){
-			return "folder/childAppend";
+			return "folder/files";
 		}else{
 			return "folder/child";			
 		}

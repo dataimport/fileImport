@@ -35,7 +35,7 @@
 			           	 	<a href="#" onclick="getChild(this.id)" id='${file.absolutePath}'>${file.name?trim}</a>            	 	
 			            </b>
 			             <#else>
-			              <h2><a href="#" onclick="getFileTaskInfo(this.id)" id='${file.absolutePath}'>${file.name?trim}</a></h2>
+			             <!--  <h2><a href="#" onclick="getFileTaskInfo(this.id)" id='${file.absolutePath}'>${file.name?trim}</a></h2> -->
 			            </#if>             
 			                
 			            </li>
@@ -49,7 +49,7 @@
 			           	 	<a href="#" onclick="getChild(this.id)" id='${file.absolutePath}'>${file.name?trim}</a>            	 	
 			            </b>
 			             <#else>
-			              <h2><a href="#" onclick="getFileTaskInfo(this.id)" id='${file.absolutePath}'>${file.name?trim}</a></h2>
+			              <!--   <h2><a href="#" onclick="getFileTaskInfo(this.id)" id='${file.absolutePath}'>${file.name?trim}</a></h2>-->
 			            </#if>        
 			            </li>
 			      </#list>        
@@ -63,7 +63,8 @@
 			        </ul>
 			 </div>
 			</div>  
-            <div id="content">
+
+<div id="content">
     
 <table class="gridtable">
 <tr>
@@ -72,7 +73,7 @@
 <#list fileTaskList as task>
 <#if !(folderChild[task_index].isDirectory())>
 	<tr>
-	   <td onclick="showTaskDetail(${task_index})" >${folderChild[task_index].name}</td>
+	   <td style= "cursor:pointer; " onclick="showTaskDetail(${task_index})" >${folderChild[task_index].name}</td>
 		<td>
 		 ${(folderChild[task_index].lastModified())?number_to_datetime?string('yyyy-MM-dd HH:mm')}
 		</td>	
@@ -183,13 +184,13 @@ function getChild(folderPath){
                  url:'child.htm', 
                  type:"post",  
                  async:true,  
-                 data:{'folderPath':folderPath,'json':true},  
-                 dataType:"json",  
+                 data:{'folderPath':folderPath,'append':true},  
+                 dataType:"html",  
                  timeout:"100000",  
-                 error:function(){alert("鏈嶅姟鍔犺浇鍑洪敊");},  
+                 error:function(){alert("获取文件失败");},  
                  success:function(data)  
                  {  
-                	$("#fileTaskInfo").html(data);  
+                	$("#content").html(data);  
                  }  
              }  
          );  
@@ -207,7 +208,7 @@ function getFileTaskInfo(filePath){
                  data:{'filePath':filePath},  
                  dataType:"html",  
                  timeout:"100000",  
-                 error:function(){alert("鏈嶅姟鍔犺浇鍑洪敊");},  
+                 error:function(){alert("获取文件失败");},  
                  success:function(data)  
                  {  
                 	$("#content").html(data);  

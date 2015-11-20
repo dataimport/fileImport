@@ -1,0 +1,62 @@
+<#if folderChild??>
+<#assign folderChildSize  = folderChild?size>
+
+<table class="gridtable">
+<tr>
+<th>文件名</th><th>修改时间</th><th>文件大小</th><th>入库状态</th><th>操作</th>
+</tr>
+<#list fileTaskList as task>
+<#if !(folderChild[task_index].isDirectory())>
+	<tr>
+	   <td style= "cursor:pointer; " onclick="showTaskDetail(${task_index})" >${folderChild[task_index].name}</td>
+		<td>
+		 ${(folderChild[task_index].lastModified())?number_to_datetime?string('yyyy-MM-dd HH:mm')}
+		</td>	
+		<td>
+		<#assign size =folderChild[task_index].length()?number]		
+		 <#if ((size/1073741824)>1)>
+		  ${(size/1073741824)?string("0.##")} G		
+		 <#elseif ((size/1048576)>1)>
+		  ${(size/1048576)?string("0.##")} M
+		 <#elseif ((size/1024)>1)>
+		  ${(size/1024)?string("0.##")} KB		
+		 <#else>
+		   ${size?string("0.##")} B	
+		 </#if>		 
+		</td>	
+		
+	   <#if task.filePath??>
+	      <#if task.taskStatus==0>
+		<td> <font color="#FF0000">未执行</font></td>
+		<td> 执行</td>
+		  <#elseif task.taskStatus==1>
+		 <td><font color="#0066CC">  执行中</font></td>
+		 <td> </td>
+		  <#elseif task.taskStatus==2>
+		 <td><font color="#2520EF">  已入库</font></td>
+		  <td><a href="../file/preview.htm?filePath=${folderChild[task_index].path!}">重新导入</a> </td>
+		  <#elseif task.taskStatus==-2>
+		<td>  <font color="#26FA79">执行失败</font></td>
+		<td>重新导入 </td>
+		 </#if>		 
+	   <#else>
+	     <td> <font color="#FF990">	未添加到计划任务中</font></td>
+	     <td><a href="../file/preview.htm?filePath=${folderChild[task_index].path!}">添加到任务</a> </td>
+	   </#if>	
+		
+		
+	</tr> 	
+</#if>     		
+</#list>
+
+	<#if (folderChildSize>20)>
+		<tr>
+		   <td>......</td>
+		   <td>......</td>
+		   <td>......</td>
+		   <td>......</td>
+		   <td>......</td>
+		</tr> 
+	</#if>
+</table>
+</#if>

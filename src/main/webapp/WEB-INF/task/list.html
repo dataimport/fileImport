@@ -90,10 +90,10 @@ span.jPag-current{
 状态：
 <select onchange="setSeparator(this.options[this.options.selectedIndex].value)">
 			<option value=""></option>
-			<option value="0">未完成</option>
-			<option value="1">执行中</option>
-			<option value="2">已完成</option>
-			<option value="-2">失败</option>
+			<option value="0" <#if status??&&status==0 >selected="selected"</#if>>未完成</option>
+			<option value="1" <#if status??&&status==1 >selected="selected"</#if>>执行中</option>
+			<option value="2" <#if status??&&status==2>selected="selected"</#if>>已完成</option>
+			<option value="-2" <#if status??&&status==-2 >selected="selected"</#if>>失败</option>
 </select>
 <#if (list?size>0)>
 

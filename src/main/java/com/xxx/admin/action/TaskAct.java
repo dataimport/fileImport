@@ -33,8 +33,8 @@ public class TaskAct {
 	@RequestMapping(value = "list.htm")
 	public String getAllTask(ModelMap model,Integer status,Integer pageNo, Integer pageSize,HttpServletRequest request,HttpServletResponse response) {
 		Pagination page = taskService.getTaskByStatus(pageNo,pageSize,status);
-		System.out.println(page.getTotalPage()+" ######");
-		System.out.println( page.getList().size()+" ## page.getList()####");
+		//System.out.println(page.getTotalPage()+" ######");
+		//System.out.println( page.getList().size()+" ## page.getList()####");
 		model.put("list", page.getList());
 		model.put("page", page);
 		model.put("status", status);
