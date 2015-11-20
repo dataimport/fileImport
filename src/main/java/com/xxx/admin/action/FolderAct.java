@@ -64,7 +64,9 @@ public class FolderAct {
 	
 	@RequestMapping(value = "child.htm")
 	public String child(String folderPath,Boolean append,ModelMap model,HttpServletRequest request,HttpServletResponse response)throws MongoDBException {
+		long start = System.currentTimeMillis();	
 		List<Folder> folderList = folderService.list();	
+		log.debug(" 从mongodb中加载文件列表耗时："+(System.currentTimeMillis()-start)+" 毫秒");
 		String defaultPath = "";
 		if(StringUtils.isNotBlank(folderPath)){
 			defaultPath	= folderPath;
@@ -75,7 +77,10 @@ public class FolderAct {
 		model.put("folderPath",defaultPath);		
 		if(StringUtils.isNotBlank(defaultPath)){
 			List fileTaskInfo =  new ArrayList<File>();
+			long start2 = System.currentTimeMillis();	
 			File[] childList = folderService.getChild(defaultPath);
+			log.debug(" 根据文件路径加载文件列表耗时："+(System.currentTimeMillis()-start2)+" 毫秒");
+			long start3 = System.currentTimeMillis();	
 			if(childList!=null){
 				int i=0;
 				for(File file : childList){
@@ -90,6 +95,7 @@ public class FolderAct {
 					i++;
 				}
 			}			
+			log.debug(" 从mongodb中获取每个文件的任务信息耗时："+(System.currentTimeMillis()-start3)+" 毫秒");
 			model.put("fileTaskList", fileTaskInfo);
 			model.put("folderChild", childList);
 		}else{
