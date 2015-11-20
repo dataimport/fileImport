@@ -18,6 +18,7 @@ public class NoRepeatColls  implements Serializable{
  
 	private String uid;
     private String name;
+    private String nameAlias;
 
 	public String getId() {
 		return id;
@@ -33,6 +34,14 @@ public class NoRepeatColls  implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getNameAlias() {
+		return nameAlias;
+	}
+
+	public void setNameAlias(String nameAlias) {
+		this.nameAlias = nameAlias;
 	}
 
 	public String getUid() {

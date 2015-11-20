@@ -53,7 +53,7 @@ public class FileService {
 		 int successNum=-1;
 			  
 		  if("clean".equals(t.getCleanOrAppend())){//清空后追加
-				fmRepository.dropCollection(t.getTableName());
+				fmRepository.dropCollection(t.getTableNameAlias());
 				//mongo 方法是异步的，需要等几秒，确认已经drop掉
 				int i=1;
 				boolean canBreak = false;
@@ -64,7 +64,7 @@ public class FileService {
 						canBreak = true;
 						ex.printStackTrace();
 					}
-					if(!fmRepository.collectionExists(t.getTableName())){
+					if(!fmRepository.collectionExists(t.getTableNameAlias())){
 						canBreak = true;
 					}
 					//System.out.println(" dropCollection 第  " +i+" 次判断结果："+canBreak);
@@ -154,6 +154,7 @@ public class FileService {
 			  nrc = new NoRepeatColls();  						 
 			  nrc.setUid(UUID.randomUUID().toString().replaceAll("-", ""));
 			  nrc.setName(t.getTableName());
+			  nrc.setNameAlias(t.getTableNameAlias());
 			  mcRepository.saveObject(nrc);
 		  }			
 	}

@@ -24,6 +24,7 @@ public class MongoSolrInfo implements Serializable{
 	private String  createTime;//创建时间
 	private String  createUser;//目录的创建者
 	private String  collectionName;
+	private String  collectionNameAlias;
 	private String tags;
 	private Integer status;
 	public Integer getStatus() {
@@ -102,12 +103,21 @@ public class MongoSolrInfo implements Serializable{
 	public void setOrigin(String origin) {
 		this.origin = origin;
 	}
+		
+	public String getCollectionNameAlias() {
+		return collectionNameAlias;
+	}
+	public void setCollectionNameAlias(String collectionNameAlias) {
+		this.collectionNameAlias = collectionNameAlias;
+	}
+	
 	public MongoSolrInfo(){
 		
 	}
+	
 	public MongoSolrInfo(String id, String uid, String filePath,
 			String fileName, String fileInfoUid, String updateTime,
-			String createTime, String createUser, String collectionName,
+			String createTime, String createUser, String collectionName, String collectionNameAlias,
 			String tags, String origin) {
 		super();
 		this.id = id;
@@ -119,6 +129,7 @@ public class MongoSolrInfo implements Serializable{
 		this.createTime = createTime;
 		this.createUser = createUser;
 		this.collectionName = collectionName;
+		this.collectionNameAlias = collectionNameAlias;
 		this.tags = tags;
 		this.origin = origin;
 	}

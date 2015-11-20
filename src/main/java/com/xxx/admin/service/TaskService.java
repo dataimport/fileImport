@@ -34,6 +34,7 @@ public class TaskService {
 	 */
 	public boolean createTask(Task task,Boolean runNow) {
 		try{
+			
 			setTaskInfo(task);
 			if(!runNow){//不是立即执行，放到任务表中
 				taskRepository.saveObject(task,AllCollectionName.TASKINFO_COLLECTIONNAME); //保存到任务表中
@@ -56,6 +57,7 @@ public class TaskService {
 			MongoSolrInfo msi = new MongoSolrInfo();
 			msi.setUid(UUID.randomUUID().toString().replaceAll("-", ""));
 			msi.setCollectionName(task.getTableName());
+			msi.setCollectionNameAlias(task.getTableNameAlias());
 			msi.setFilePath(task.getFilePath());
 			msi.setFileInfoUid(task.getUid());
 			msi.setTags(task.getTags());
@@ -72,7 +74,8 @@ public class TaskService {
 			
 			//保存一份任务信息到solr入库的任务表中
 			//TODO 其实在这个环节，写入，有些不妥，应该在入mongo任务完成后
-			SolrTask slorTask = new SolrTask(task.getUid(), task.getTableName(), task.getOrigin(), task.getTags(),
+			
+			SolrTask slorTask = new SolrTask(task.getUid(), task.getTableName(),task.getTableNameAlias(), task.getOrigin(), task.getTags(),
 					task.getColumnName(), task.getColumnIndex(), task.getSeparator(),
 					task.getRunTime(), task.getStartDate(), task.getEndDate(), task.getFilePath(),
 					task.getFileName(), task.getFileSize(), task.getLeftTime(),task.getTotalCount(),
@@ -163,6 +166,7 @@ public class TaskService {
 	}
 
 	private void setTaskInfo(Task task){
+		task.setTableNameAlias(UUID.randomUUID().toString().replaceAll("-", ""));//设置mongodb的collection 别名
 		File file  = new File(task.getFilePath());
 		task.setFileSize(file.length());
 		task.setFileName(file.getName());

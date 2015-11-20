@@ -21,6 +21,7 @@ public abstract class BaseTask implements Serializable {
 	
 	private String uid;
 	private String tableName;
+	private String tableNameAlias;
 	private String origin;
 	private String tags;
 	private String[] columnName;
@@ -42,7 +43,7 @@ public abstract class BaseTask implements Serializable {
 	private String createUser="lxc_admin"; //任务的创建者
 	private boolean firstLineIgnore; //首行是否忽略
 		
-	public BaseTask(String uid, String tableName, String origin, String tags,
+	public BaseTask(String uid, String tableName, String tableNameAlias, String origin, String tags,
 			String[] columnName, Integer[] columnIndex, String separator,
 			String runTime, String startDate, String endDate, String filePath,
 			String fileName, long fileSize, String leftTime, long totalCount,
@@ -51,6 +52,7 @@ public abstract class BaseTask implements Serializable {
 		super();
 		this.uid = uid;
 		this.tableName = tableName;
+		this.tableNameAlias = tableNameAlias;
 		this.origin = origin;
 		this.tags = tags;
 		this.columnName = columnName;
@@ -73,6 +75,16 @@ public abstract class BaseTask implements Serializable {
 		this.firstLineIgnore = firstLineIgnore;
 	}
 	
+	
+	public String getTableNameAlias() {
+		return tableNameAlias;
+	}
+
+	public void setTableNameAlias(String tableNameAlias) {
+		this.tableNameAlias = tableNameAlias;
+	}
+
+
 	public boolean isFirstLineIgnore() {
 		return firstLineIgnore;
 	}

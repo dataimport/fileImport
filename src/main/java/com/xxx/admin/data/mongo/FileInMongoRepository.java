@@ -174,7 +174,7 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 			list.remove(0);
 		}		
 		int valuesSize = list.size();		
-		DBCollection dbColleciton =mongoTemplate.getCollection(task.getTableName()); 
+		DBCollection dbColleciton =mongoTemplate.getCollection(task.getTableNameAlias()); 
 		DBObject data = new BasicDBObject();
 		String[] columns = task.getColumnName();
 		Integer[] columnIndex = task.getColumnIndex();
