@@ -24,7 +24,10 @@ public class MyExceptionHandler implements HandlerExceptionResolver {
             return mv;
         }else if(ex instanceof ReadFileException) {//读文件异常
         	 return mv;
-        } else {          	
+        }else if(ex instanceof DataToMongoDBException) {//读文件异常
+        	
+       	 return mv;
+       } else {          	
         	 mv.addObject("ex", new MongoDBException(10000,"请求异常"));  
         	 return mv;
         }  

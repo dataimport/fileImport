@@ -47,9 +47,11 @@ public class FileService {
 	 * @param t
 	 * @return
 	 */
-	public boolean saveFileToMongo(Task t) {		
+	public int saveFileToMongo(Task t) {		
 		File file = new File(t.getFilePath());
 		if(file.exists()){
+		 int successNum=-1;
+			  
 		  if("clean".equals(t.getCleanOrAppend())){//清空后追加
 				fmRepository.dropCollection(t.getTableName());
 				//mongo 方法是异步的，需要等几秒，确认已经drop掉
@@ -70,7 +72,7 @@ public class FileService {
 				}
 			
 				if(!canBreak){
-					return false;
+					return -1;
 				}				
 		  }
 		  
@@ -92,8 +94,8 @@ public class FileService {
 					  lines = txtFileAnalysis.LoopBigFileByBuffer(fromIndex, endIndex, rSize,
 								bs,enterStr,line,strBuf,
 								fcin,rBuffer,lines,charset);	  
-					  runNum+=lines.size();
-					 fmRepository.FilePushToMongo(t, lines,true,runNum,System.currentTimeMillis()-start);					 
+					 runNum+=lines.size();
+					 successNum+=fmRepository.FilePushToMongo(t, lines,true,runNum,System.currentTimeMillis()-start);					 
 				  }					
 
 				  //更新状态为导入完毕
@@ -109,13 +111,14 @@ public class FileService {
 				  saveToRepeatColls(t);
 				  System.out.println(" 总共 "+runNum+" 条记录 ");
 				} catch (Exception e) {
-					e.printStackTrace();					
+					e.printStackTrace();	
+					return -1;
 				}			  
-			  return true;
+			  return successNum;
 		  }else{
 			  try{
 				  List<String> lines = txtFileAnalysis.readSmallFile(t.getFilePath(),txtFileAnalysis.getCharset(t.getFilePath()));
-				  fmRepository.FilePushToMongo(t, lines);
+				  successNum = fmRepository.FilePushToMongo(t, lines);
 				  
 				  //更新状态为导入完毕
 				  String[] keys = new String[]{"taskStatus"};
@@ -128,17 +131,18 @@ public class FileService {
 							new Object[]{BaseTask.TASK_STATUS_WAITING,lines.size()});
 				  
 				  saveToRepeatColls(t);
-				  return true;
+				  return successNum;
 			  }catch(Exception ex){
 				  ex.printStackTrace();
-				  return false;
+				  //更新状态为导入失败
+				  String[] keys = new String[]{"taskStatus"};
+				  Object[] values = new Object[]{BaseTask.TASK_STATUS_FAILED};			
+				  fmRepository.updateFileInfoByField(t.getUid(), keys, values);
+				  return -1;
 			  }			  
 		  }
-		  
-		
-		  
 		}else{
-			return false;
+			return -1;
 		}
 		
 	}

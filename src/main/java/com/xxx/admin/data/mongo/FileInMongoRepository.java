@@ -164,11 +164,11 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 	}
 	
 	
-	public void FilePushToMongo(Task task,List<String> list){	
-		FilePushToMongo(task,list,false,null,null);
+	public int FilePushToMongo(Task task,List<String> list){	
+		return FilePushToMongo(task,list,false,null,null);
 	}
 	
-	public void FilePushToMongo(Task task,List<String> list,Boolean isBigFile,Integer runNum,Long time){	
+	public int FilePushToMongo(Task task,List<String> list,Boolean isBigFile,Integer runNum,Long time){	
 		long start = System.currentTimeMillis();
 		if(task.isFirstLineIgnore()){
 			list.remove(0);
@@ -181,37 +181,45 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 		int columnIndexSize = columnIndex.length;
 		
 		String[] lineSeparator;
-		int nowNum = 0;
+		int nowNum = 0,successNum=0;
 		String[] keys = new String[]{"runNum","timeUse"};
 		Object[] values = new Object[2];
 		String timeUse = "0 秒";
 		long l=0l;
+		
 		for(int i=0;i<valuesSize;i++){
-			data = new BasicDBObject(); 
-			lineSeparator = list.get(i).split(task.getSeparator());			
-			for(int j=0;j<columnIndexSize;j++){
-				data.put(columns[j], lineSeparator[columnIndex[j]-1]);
-			}			
-			dbColleciton.insert(data);		
-			if(isBigFile!=null&&!isBigFile){//不是大文件 按行数更新
-				nowNum++;			
-				if(nowNum==valuesSize||nowNum%10==0){//每10条更新一次任务表进度
-					l=System.currentTimeMillis()-start;
-					timeUse = getTimeUse(l);
-					values[0]=String.valueOf(nowNum);
-					values[1]=timeUse;					
-					if(nowNum==valuesSize){;
-						 keys = new String[]{"runNum","timeUse","endDate","taskStatus"};
-						 values = new Object[5];
-						 values[0]=nowNum;
-						 values[1]=timeUse;	
-						 values[2]=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-						 values[3]=2;
-						 //values[4]=valuesSize;
-					}
-					updateFileInfoByField(task.getUid(),keys,values);
+			try{//加上异常处理，这样个别数据有问题，不会影响整体数据的导入
+				data = new BasicDBObject(); 
+				lineSeparator = list.get(i).split(task.getSeparator());			
+				if(lineSeparator.length==columnIndexSize){//处理虽然有换行但是没有数据的情况，或者数据分割后，总数跟填写的字段数不匹配。
+					for(int j=0;j<columnIndexSize;j++){
+						data.put(columns[j], lineSeparator[columnIndex[j]-1]);
+					}			
+					dbColleciton.insert(data);		
+					if(isBigFile!=null&&!isBigFile){//不是大文件 按行数更新
+						nowNum++;			
+						if(nowNum==valuesSize||nowNum%10==0){//每10条更新一次任务表进度
+							l=System.currentTimeMillis()-start;
+							timeUse = getTimeUse(l);
+							values[0]=String.valueOf(nowNum);
+							values[1]=timeUse;					
+							if(nowNum==valuesSize){;
+								 keys = new String[]{"runNum","timeUse","endDate","taskStatus"};
+								 values = new Object[5];
+								 values[0]=nowNum;
+								 values[1]=timeUse;	
+								 values[2]=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+								 values[3]=2;
+								 //values[4]=valuesSize;
+							}
+							updateFileInfoByField(task.getUid(),keys,values);
+						}				
+					}	
+					successNum++;
 				}				
-			}	
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}			
 		}	
 		
 		if(isBigFile){//大文件 按buffer更新
@@ -219,7 +227,9 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 			values[0]=runNum;
 			values[1]=timeUse;	
 			updateFileInfoByField(task.getUid(),keys,values);
-		}		
+		}	
+		
+		return successNum;
 	}
 	
 	private String getTimeUse(long time){		

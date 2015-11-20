@@ -21,7 +21,8 @@ http://www.springframework.org/schema/data/mongo
 http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd"
 	default-autowire="byName">
 	
-
+    <aop:aspectj-autoproxy/>  
+    
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">

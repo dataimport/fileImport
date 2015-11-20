@@ -25,7 +25,7 @@
    <tr>
     <th>分隔符</th>    
  	<td colspan="${columnsSize}" >
- 	 ${separator!}
+ 	 ${separator?replace('<', '&lt;' )?replace(">","&gt;")?replace('\n', '' )?replace('\\', '\\\\' )}
  	</td>
  	
    <tr>
@@ -66,23 +66,27 @@
     
   
 <#list text as a>
+<#if a??&&a?trim!="">
    <tr>
     <th>${a_index+1}</th>
  		 	 
  	  <#if separator=="">	  
 	 		<td>
-	 		 ${a?trim}
+	 		 ${a?trim?replace('<', '&lt;' )?replace(">","&gt;")?replace('\n', '' )?replace('\\', '\\\\' )}
 	 		</td>	
 	  <#else>
 	     <#list a?split("${separator!}") as value>
 	 		<td>
-	 		 ${value?trim}
+	 		 ${value?trim?replace('<', '&lt;' )?replace(">","&gt;")?replace('\n', '' )?replace('\\', '\\\\' )}
 	 		</td>	
 	 	 </#list>
     </#if> 
     
   </tr>  
+</#if>
 </#list>
+
+<#if (listSize>10)>
 <tr>
     <th>...</th> 	
  	 <#list columns as column>
@@ -91,6 +95,7 @@
  		</td>	
  		</#list>
 </tr>
+</#if>
 <tr>
     <th>表信息</th>    
  	<td colspan="${columnsSize}" >
