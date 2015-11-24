@@ -10,7 +10,7 @@
 <ul class="nav nav-sidebar">
 	<li class="active"><a href="data_frame.jsp?t=mongo_allCollections.htm">数据维护</a></li>
 	<li><a href="data_frame.jsp?t=folder_list.htm">|--注册路径管理</a></li>
-	<li><a href="data_frame.jsp?t=folder_child.htm">|--查看目录树</a></li>
+	<li><a href="data_frame.jsp?t=folder_child.htm">|--数据入库</a></li>
     <li><a href="data_frame.jsp?t=mongo_allCollections.htm">|--Mongo数据维护</a></li>
 </ul>
 <hr>
