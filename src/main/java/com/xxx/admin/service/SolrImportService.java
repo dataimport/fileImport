@@ -4,7 +4,9 @@ import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -51,7 +53,9 @@ public class SolrImportService {
 		//读取mongo中的Collection信息和字段信息
 		task.getColumnIndex();
 		
-		String indexName = task.getTableName();
+		//ES的索引名称不支持中文
+		String indexName = task.getTableNameAlias();
+		String indexAliasName = task.getTableName();
 		String tags = task.getTags();
 		
 		//创建solr库
@@ -61,7 +65,7 @@ public class SolrImportService {
 		
 		
 		//完成solr库的导入
-		batchImport(uid,tags,indexName,task.getColumnName());
+		batchImport(uid,tags,indexName,indexAliasName,task);
 		
 		//更新task的状态
 		Date now = new Date();
@@ -77,8 +81,9 @@ public class SolrImportService {
 	}
 	
 	
-	public void batchImport(String taskId,String tags,String indexName,String[] fieldNames ){
+	public void batchImport(String taskId,String tags,String indexName,String indexAliasName,SolrTask task ){
 		long start =System.currentTimeMillis();
+		String[] fieldNames = task.getColumnName();
 		Client client = new TransportClient()
 						.addTransportAddress(
 						new InetSocketTransportAddress("localhost", 9300)
@@ -114,7 +119,8 @@ public class SolrImportService {
 								xcb.endObject();
 								bulkRequest.add(client.prepareIndex(indexName, "tuser", i+"")
 										.setSource(xcb)
-										);  
+										);
+								
 								if(i%100==0 || i==totalCount){
 									batchNo++;
 									BulkResponse bulkResponse = bulkRequest.execute().actionGet();   
@@ -141,6 +147,21 @@ public class SolrImportService {
 								}
 						}
 						//				long duration= (System.currentTimeMillis()-start)/1000;
+						Map<String,Object> dbInfo = new HashMap<String,Object>();
+						dbInfo.put("filePath", task.getFilePath());
+						dbInfo.put("fileName", task.getFileName());
+						dbInfo.put("fileSize", task.getFileSize());
+						dbInfo.put("taskTag", task.getTags());
+						dbInfo.put("taskOrigin", task.getOrigin());
+						dbInfo.put("totalCount", task.getTotalCount());
+						dbInfo.put("taskId"  , taskId);
+						
+//						client.admin().indices().prepareAliases().addAlias(indexName,"indexAliasName",indexAliasName)
+//						.addAlias(indexName, "dbInfo", dbInfo)
+//						.execute().actionGet();
+						
+						client.admin().indices().prepareAliases().addAlias(indexName,indexAliasName).execute().actionGet();
+						
 						long duration= (System.currentTimeMillis()-start);
 						key = new String[]{"timeUse"};
 						value = new Object[]{duration};

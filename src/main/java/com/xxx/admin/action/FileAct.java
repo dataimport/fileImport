@@ -70,4 +70,13 @@ public class FileAct {
 	@Autowired
 	private TaskService taskService;
 	
+	public static void main(String[] args) {
+		String str="164 gudei f2f76cdbd3972231a603094a0605b69b gudei@126.com 119.131.169.76";
+//		String str="12 34";
+		String[] a=str.split("\\b");
+		for(String m:a){
+		System.out.println(m+"kkk");
+		}
+	}
+	
 }
