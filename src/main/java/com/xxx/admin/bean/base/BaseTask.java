@@ -169,6 +169,9 @@ public abstract class BaseTask implements Serializable {
 		this.columnIndex = columnIndex;
 	}
 	public String getSeparator() {
+		if(" ".equals(separator)){
+			separator="\\s+";
+		}
 		return separator;
 	}
 	public void setSeparator(String separator) {

@@ -1,6 +1,10 @@
 package com.xxx.admin.action;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
@@ -60,6 +64,14 @@ public class FileAct {
 	@RequestMapping(value = "preview.htm")
 	public String v_task(String filePath,ModelMap model,HttpServletRequest request,HttpServletResponse response) throws ReadFileException{ 
 		List<String>  list =   fileService.previewTxtFile(filePath);
+//		List<String>  returnList = new ArrayList<String>();  
+//		//多个空格替换成一个
+//		Pattern p = Pattern.compile("\\s+");			
+//		for(String lineStr:list){
+//			Matcher	m = p.matcher(lineStr);
+//			returnList.add(m.replaceAll(" "));
+//		}
+//		model.put("list", returnList);
 		model.put("list", list);
 		model.put("filePath", filePath);
 		return "file/preview";

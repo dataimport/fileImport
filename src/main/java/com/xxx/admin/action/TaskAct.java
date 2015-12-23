@@ -2,10 +2,13 @@ package com.xxx.admin.action;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -57,22 +60,39 @@ public class TaskAct {
 	public String v_task(String filePath,String separator,boolean firstLineIgnore,String[] lines,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
 			
 		if(StringUtils.isBlank(separator)){
-			separator=" ";
+			separator="\\s+"; //代表多个空格
 			//separator="wKhTglXeaGY";
 			model.put("separator", " ");
 		}else{
 			model.put("separator", separator);
 		}
 		
+
 		if(lines.length>0){
 			model.put("columns", lines[0].split(separator,-1));	
 		}else{
 			 model.put("columns", new String[]{});	
 		}		 
+		
+		//多个空格替换成一个
+		int num =10;
+		int lenght = lines.length;	
+		String []  returnList = new String[num];  
+		Pattern p = Pattern.compile("\\s+");	
+		if(lenght>10){
+			num = lines.length;
+		}
+		
+		for(int i=0;i<num;i++){
+			Matcher	m = p.matcher(lines[i]);
+			returnList[i]=m.replaceAll(" ");
+		}
+		
+		
 		if(firstLineIgnore){
-			model.put("text", Arrays.copyOfRange(lines, 1,lines.length));	
+			model.put("text", Arrays.copyOfRange(returnList, 1,lines.length));	
 		}else{
-			model.put("text", lines);	
+			model.put("text", returnList);	
 		}
 		
 		model.put("filePath", filePath);

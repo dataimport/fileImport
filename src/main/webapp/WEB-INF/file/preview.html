@@ -46,7 +46,7 @@
 <input type="hidden" id="firstLineIgnore" name="firstLineIgnore" value="false">
 
 <#list list as file>
- <input  type="hidden" type="text" name="lines" value="${file!}">
+ <input  type="hidden" type="text" name="lines" value="${file?trim}">
 </#list>
      
 <button>确定</button>

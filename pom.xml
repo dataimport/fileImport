@@ -13,7 +13,7 @@
 	<url>http://maven.apache.org</url>
 
 	<dependencies>
-		<dependency>
+		<dependency>  
 			<groupId>net.sf.json-lib</groupId>
 			<artifactId>json-lib</artifactId>
 			<version>2.4</version>
@@ -25,8 +25,8 @@
 			<version>1.6.6</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.mortbay.jetty</groupId>
+		<dependency>  
+			<groupId>org.mortbay.jetty</groupId>  
 			<artifactId>servlet-api</artifactId>
 			<version>3.0.20100224</version>
 		</dependency>
@@ -151,6 +151,13 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-commons</artifactId>
+			<version>1.11.2.RELEASE</version>
+		</dependency>
+		
 		<!-- spring end -->
 
 		<dependency>
@@ -166,12 +173,12 @@
 		</dependency>
 
 
-
 		<dependency>
 			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20090211</version>
+			<artifactId>org.json</artifactId>
+			<version>chargebee-1.0</version>
 		</dependency>
+
 
 		<dependency>
 			<groupId>org.freemarker</groupId>
@@ -210,21 +217,54 @@
 		</dependency>
 
 		<dependency>
+			<groupId>antlr</groupId>
+			<artifactId>antlr</artifactId>
+			<version>2.7.6</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.mozilla</groupId>
+			<artifactId>rhino</artifactId>
+			<version>1.7.7</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch</artifactId>
 			<version>1.7.2</version>
 		</dependency>
+
+		<!-- 
+		
 		
 		<dependency>
- 			 <groupId>org.elasticsearch</groupId>
-  			<artifactId>elasticsearch</artifactId>
-  			<version>1.7.2</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+		</dependency>
+		-->
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.2</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>aopalliance</groupId>
+			<artifactId>aopalliance</artifactId>
+			<version>1.0</version>
 		</dependency>
 
 	</dependencies>
 
 	<properties>
-		<org.springframework.version>4.0.0.RELEASE</org.springframework.version>
+		<org.springframework.version>4.2.3.RELEASE</org.springframework.version>
 		<spring.data.jpa.version>1.4.1.RELEASE</spring.data.jpa.version>
 		<spring.data.mongodb.version>1.7.1.RELEASE</spring.data.mongodb.version>
 	</properties>
@@ -242,4 +282,6 @@
 		</plugins>
 		<finalName>DataImport</finalName>
 	</build>
+	   
+    
 </project>
