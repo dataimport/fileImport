@@ -85,20 +85,20 @@ public class TaskAct {
 		if(lenght<10){
 			num = lines.length;
 		}
-		String []  returnList = new String[num];  
+		List<String>  returnList = new ArrayList<String>();  
 		StringBuffer message = new StringBuffer();
 		for(int i=0;i<num;i++){
 			if(lines[i].split(separator,-1).length==columnsSize){
 				Matcher	m = p.matcher(lines[i]);				
-				returnList[i]=m.replaceAll(" ");
+				returnList.add(m.replaceAll(" "));
 			}else{
-				message.append(i+",");				
+				message.append(i+1+",");				
 			}			
 		}
 		
 		
 		if(firstLineIgnore){
-			model.put("text", Arrays.copyOfRange(returnList, 1,lines.length));	
+			model.put("text", returnList.subList(1, returnList.size()));	
 		}else{
 			model.put("text", returnList);	
 		}
@@ -110,7 +110,7 @@ public class TaskAct {
 			model.put("firstLineIgnore", "false");
 		}		
 		if(message.length()>0){
-			model.put("errorMessage", "提醒：此文件的 第： "+message.toString()+" ...... 行的列数与第一行的列数不相等，已经忽略，导入数据的时候也会被忽略");
+			model.put("errorMessage", "提醒：此文件的 第： "+message.toString()+" ...... 行的列数与第一行的列数不相等，显示的时候已经忽略，导入数据的时候也会被忽略");
 		}
 		return "file/task_view";
 	}	
