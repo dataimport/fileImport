@@ -14,7 +14,14 @@
 <#assign columnsSize=columns?size>
 <#assign listSize=text?size>
 <table width="100%"  class="gridtable">
-   
+   <#if errorMessage??&&errorMessage!="">
+  <tr>
+    <th>提醒</th>    
+ 	<td colspan="${columnsSize}" >
+ 	 <span style="color:red" id="blink"><b>${errorMessage!}</b></span>
+ 	</td> 	
+   <tr>
+   </#if>
    <tr>
     <th>当前文件</th>    
  	<td colspan="${columnsSize}" >
@@ -364,5 +371,25 @@ $("#submit").bind("click",function(){
 	
 	
 </script>
+
+
+<script type = "text/javascript" >
+function blinklink() {
+    if (!document.getElementById('blink').style.color) {
+        document.getElementById('blink').style.color = "red";
+    }
+    if (document.getElementById('blink').style.color == "red") {
+        document.getElementById('blink').style.color = "#0F0F0F";
+    } else {
+        document.getElementById('blink').style.color = "red";
+    }
+    timer = setTimeout("blinklink()", 1000);
+}
+function stoptimer() {
+    clearTimeout(timer);
+} 
+blinklink()
+</script>
+
 </BODY>
 </HTML>

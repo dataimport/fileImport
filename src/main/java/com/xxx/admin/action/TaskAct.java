@@ -66,14 +66,16 @@ public class TaskAct {
 		}else{
 			model.put("separator", separator);
 		}
-		
-	
+				
+		String[] columns =new String[]{};
 		if(lines.length>0){
-			separator = separatorCheck(separator);//特殊字符特换
-			model.put("columns", lines[0].split(separator,-1));			
-		}else{
-			 model.put("columns", new String[]{});	
-		}		 
+			if(!"\\s+".equals(separator)){
+				separator = separatorCheck(separator);//特殊字符特换
+			}			
+			columns = lines[0].split(separator,-1);						
+		}
+		model.put("columns", columns);
+		int columnsSize = columns.length; 
 		
 		//多个空格替换成一个
 		int num =10;
@@ -84,10 +86,14 @@ public class TaskAct {
 			num = lines.length;
 		}
 		String []  returnList = new String[num];  
-		
+		StringBuffer message = new StringBuffer();
 		for(int i=0;i<num;i++){
-			Matcher	m = p.matcher(lines[i]);
-			returnList[i]=m.replaceAll(" ");
+			if(lines[i].split(separator,-1).length==columnsSize){
+				Matcher	m = p.matcher(lines[i]);				
+				returnList[i]=m.replaceAll(" ");
+			}else{
+				message.append(i+",");				
+			}			
 		}
 		
 		
@@ -103,6 +109,9 @@ public class TaskAct {
 		}else{
 			model.put("firstLineIgnore", "false");
 		}		
+		if(message.length()>0){
+			model.put("errorMessage", "提醒：此文件的 第： "+message.toString()+" ...... 行的列数与第一行的列数不相等，已经忽略，导入数据的时候也会被忽略");
+		}
 		return "file/task_view";
 	}	
 	

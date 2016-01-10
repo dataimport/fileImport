@@ -191,32 +191,35 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 			try{//加上异常处理，这样个别数据有问题，不会影响整体数据的导入
 				data = new BasicDBObject(); 
 				lineSeparator = list.get(i).split(task.getSeparator(),-1);		
-				if(lineSeparator.length>=columnIndexSize){//处理虽然有换行但是没有数据的情况，或者数据分割后，总数跟填写的字段数不匹配。
-					for(int j=0;j<columnIndexSize;j++){
-						data.put(columns[j], lineSeparator[columnIndex[j]-1]);
+				if(lineSeparator.length==columns.length){//如果当前行的列数与设置的列名数一致 则导入
+					if(lineSeparator.length>=columnIndexSize){//处理虽然有换行但是没有数据的情况，或者数据分割后，总数跟填写的字段数不匹配。
+						for(int j=0;j<columnIndexSize;j++){
+							data.put(columns[j], lineSeparator[columnIndex[j]-1]);
+						}			
+						dbColleciton.insert(data);		
+						if(isBigFile!=null&&!isBigFile){//不是大文件 按行数更新
+							nowNum++;			
+							if(nowNum==valuesSize||nowNum%10==0){//每10条更新一次任务表进度
+								l=System.currentTimeMillis()-start;
+								timeUse = getTimeUse(l);
+								values[0]=String.valueOf(nowNum);
+								values[1]=timeUse;					
+								if(nowNum==valuesSize){;
+									 keys = new String[]{"runNum","timeUse","endDate","taskStatus"};
+									 values = new Object[5];
+									 values[0]=nowNum;
+									 values[1]=timeUse;	
+									 values[2]=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+									 values[3]=2;
+									 //values[4]=valuesSize;
+								}
+								updateFileInfoByField(task.getUid(),keys,values);
+							}				
+						}	
+						successNum++;
 					}			
-					dbColleciton.insert(data);		
-					if(isBigFile!=null&&!isBigFile){//不是大文件 按行数更新
-						nowNum++;			
-						if(nowNum==valuesSize||nowNum%10==0){//每10条更新一次任务表进度
-							l=System.currentTimeMillis()-start;
-							timeUse = getTimeUse(l);
-							values[0]=String.valueOf(nowNum);
-							values[1]=timeUse;					
-							if(nowNum==valuesSize){;
-								 keys = new String[]{"runNum","timeUse","endDate","taskStatus"};
-								 values = new Object[5];
-								 values[0]=nowNum;
-								 values[1]=timeUse;	
-								 values[2]=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-								 values[3]=2;
-								 //values[4]=valuesSize;
-							}
-							updateFileInfoByField(task.getUid(),keys,values);
-						}				
-					}	
-					successNum++;
-				}				
+				}
+				
 			}catch(Exception ex){
 				ex.printStackTrace();
 			}			
