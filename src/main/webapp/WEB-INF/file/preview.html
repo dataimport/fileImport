@@ -19,12 +19,14 @@
 <th>序号</th><th>内容</th>
 </tr>
 <#list list as file>
+   <#if file??&&file!="">
 	<tr>
 	   <td>${file_index+1}</td>
 	   <td>		
 	   ${file?replace('<', '&lt;' )?replace(">","&gt;")?replace('\n', '' )}
 		</td>		
-	</tr> 			
+	</tr> 		
+	</#if>	
 	</#list>
 </table>
 		   	   
@@ -46,7 +48,9 @@
 <input type="hidden" id="firstLineIgnore" name="firstLineIgnore" value="false">
 
 <#list list as file>
+ <#if file??&&file!="">
  <input  type="hidden" type="text" name="lines" value="${file?trim}">
+ </#if>	
 </#list>
      
 <button>确定</button>

@@ -1,5 +1,6 @@
 package com.xxx.admin.action;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -62,7 +63,8 @@ public class FileAct {
 //	}
 	
 	@RequestMapping(value = "preview.htm")
-	public String v_task(String filePath,ModelMap model,HttpServletRequest request,HttpServletResponse response) throws ReadFileException{ 
+	public String v_task(ModelMap model,HttpServletRequest request,HttpServletResponse response) throws ReadFileException, UnsupportedEncodingException{ 
+		String filePath = new String(request.getParameter("filePath").getBytes("iso-8859-1"), "utf-8");  
 		List<String>  list =   fileService.previewTxtFile(filePath);
 //		List<String>  returnList = new ArrayList<String>();  
 //		//多个空格替换成一个
