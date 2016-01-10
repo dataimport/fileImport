@@ -23,7 +23,13 @@
 			 <div class="pnav-box" id=letter-a>
 					 <div class=box-title>
 							 <a class="btn-fold " href="#"></a><a class="btn-unfold hidden" href="#"></a>
-							<span class=pnav-letter>${folderPath!}</span>
+							<span class=pnav-letter title="${folderPath!}">
+							<#if folderPath?length lt 35>   
+								${folderPath}							
+							<#else> 
+							     ${folderPath[0..36]}... 
+							</#if>
+							</span>
 					 </div>
 			        <ul class="box-list hidden">
 			     <#if (folderChildSize>20)>
@@ -44,7 +50,7 @@
 			   	   <#list folderChild as file>			   	   
 			            <li>
 			            <#if (file.isDirectory()!)>
-			            <a class=btn-fold href="#"></a><a class="btn-unfold hidden" href="#"></a>
+			            <a class=btn-fold href="child.htm?folderPath=${folderPath!}${file.name?trim}"></a><a class="btn-unfold hidden" href="#"></a>
 			            <b>          		
 			           	 	<a href="#" onclick="getChild(this.id)" id='${file.absolutePath}'>${file.name?trim}</a>            	 	
 			            </b>
@@ -236,13 +242,13 @@ NTES("span.photo-search input[type=text]").addEvent("focus", function(){ this.va
 		eleTitle.$("a.btn-fold").removeCss("hidden");
 		NTES(eleTitle.parentNode).$("ul.box-list").addCss("hidden");
 	});
-	NTES("div.pnav-box ul.box-list a.btn-fold").addEvent("click", function(e){
-		e.preventDefault();
-		var eleTitle = NTES(this.parentNode);
-		NTES(this).addCss("hidden");
-		eleTitle.$("a.btn-unfold").removeCss("hidden");
-		eleTitle.$("h2").removeCss("hidden");
-	});
+//	NTES("div.pnav-box ul.box-list a.btn-fold").addEvent("click", function(e){
+//		e.preventDefault();
+//		var eleTitle = NTES(this.parentNode);
+//		NTES(this).addCss("hidden");
+//		eleTitle.$("a.btn-unfold").removeCss("hidden");
+//		eleTitle.$("h2").removeCss("hidden");
+//	});
 	NTES("div.pnav-box ul.box-list a.btn-unfold").addEvent("click", function(e){
 		e.preventDefault();
 		var eleTitle = NTES(this.parentNode);

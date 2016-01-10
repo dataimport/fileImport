@@ -67,21 +67,23 @@ public class TaskAct {
 			model.put("separator", separator);
 		}
 		
-
+	
 		if(lines.length>0){
-			model.put("columns", lines[0].split(separator,-1));	
+			separator = separatorCheck(separator);//特殊字符特换
+			model.put("columns", lines[0].split(separator,-1));			
 		}else{
 			 model.put("columns", new String[]{});	
 		}		 
 		
 		//多个空格替换成一个
 		int num =10;
-		int lenght = lines.length;	
-		String []  returnList = new String[num];  
+		int lenght = lines.length;
+		
 		Pattern p = Pattern.compile("\\s+");	
-		if(lenght>10){
+		if(lenght<10){
 			num = lines.length;
 		}
+		String []  returnList = new String[num];  
 		
 		for(int i=0;i<num;i++){
 			Matcher	m = p.matcher(lines[i]);
@@ -183,6 +185,30 @@ public class TaskAct {
 			ResponseUtils.renderJson(response, "{\"msg\":\"创建任务成功\"}");
 		}		
 		return null;
+	}
+	
+	private String separatorCheck (String separator){
+		  if(separator.indexOf("\\")!=-1){
+			  separator = separator.replace("\\", "\\\\");
+		  }
+		  if(separator.indexOf("|")!=-1){
+			  separator = separator.replace("|", "\\|");
+		  }
+		  if(separator.indexOf("[")!=-1){
+			  separator = separator.replace("[", "\\[");
+		  }
+		  if(separator.indexOf("]")!=-1){
+			  separator = separator.replace("[", "\\]");
+		  }		  
+		  if(separator.indexOf(".")!=-1){
+			  separator = separator.replace(".", "[.]");
+		  }
+		  if(separator.indexOf("*")!=-1){
+			  separator = separator.replace("*", "\\*");
+		  }
+		  
+		  return separator;
+
 	}
 	
 	@Autowired
