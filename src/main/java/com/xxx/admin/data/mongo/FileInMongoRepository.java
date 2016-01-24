@@ -164,8 +164,8 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 	}
 	
 	
-	public int FilePushToMongo(Task task,List<String> list){	
-		return FilePushToMongo(task,list,false,null,null);
+	public int FilePushToMongo(Task task,List<String> list,int runNum){	
+		return FilePushToMongo(task,list,false,runNum,null);
 	}
 	
 	public int FilePushToMongo(Task task,List<String> list,Boolean isBigFile,Integer runNum,Long time){	
@@ -222,6 +222,7 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 				
 			}catch(Exception ex){
 				ex.printStackTrace();
+				saveFailData(task,runNum+i);
 			}			
 		}	
 		
@@ -234,6 +235,18 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 		
 		return successNum;
 	}
+	
+	/**
+	 * 保存失败的记录
+	 * @param task
+	 */
+	private void saveFailData(Task task,int failNum){
+		DBCollection dbColleciton =mongoTemplate.getCollection(task.getTableNameAlias()+"_falie"); 
+		DBObject data = new BasicDBObject();
+		data.put("num", failNum);
+		dbColleciton.insert(data);
+	}
+	
 	
 	private String getTimeUse(long time){		
 		if(time/86400000>0){

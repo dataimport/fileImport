@@ -87,15 +87,16 @@ public class FileService {
 				  String line = "";
 				  List<String> lines = new ArrayList<String>();
 				  int runNum=0;
+				  int nownum=0;
 				  long start = System.currentTimeMillis();		
 				  String charset = txtFileAnalysis.getCharset(t.getFilePath());
 				  while (fcin.read(rBuffer) != -1) {				
 					  lines.clear();
 					  lines = txtFileAnalysis.LoopBigFileByBuffer(fromIndex, endIndex, rSize,
 								bs,enterStr,line,strBuf,
-								fcin,rBuffer,lines,charset);	  
+								fcin,rBuffer,lines,charset);	 					 
+					 successNum+=fmRepository.FilePushToMongo(t, lines,true,runNum,System.currentTimeMillis()-start);		
 					 runNum+=lines.size();
-					 successNum+=fmRepository.FilePushToMongo(t, lines,true,runNum,System.currentTimeMillis()-start);					 
 				  }					
 
 				  //更新状态为导入完毕
@@ -115,10 +116,10 @@ public class FileService {
 					return -1;
 				}			  
 			  return successNum;
-		  }else{
+		  }else{//小文件
 			  try{
 				  List<String> lines = txtFileAnalysis.readSmallFile(t.getFilePath(),txtFileAnalysis.getCharset(t.getFilePath()));
-				  successNum = fmRepository.FilePushToMongo(t, lines);
+				  successNum = fmRepository.FilePushToMongo(t, lines,0);
 				  
 				  //更新状态为导入完毕
 				  String[] keys = new String[]{"taskStatus"};

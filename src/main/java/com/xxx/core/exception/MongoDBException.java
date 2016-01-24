@@ -13,6 +13,6 @@ public class MongoDBException extends BaseException {
 	}
 	
 	public MongoDBException(){
-		
+		   
 	}
 }

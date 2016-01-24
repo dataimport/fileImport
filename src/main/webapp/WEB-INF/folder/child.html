@@ -106,14 +106,14 @@
 		 <td> </td>
 		  <#elseif task.taskStatus==2>
 		 <td><font color="#2520EF">  已入库</font></td>
-		  <td><a href="../file/preview.htm?filePath=${folderChild[task_index].path!}">重新导入</a> </td>
+		  <td><a  name="previewClick" data-path="${folderChild[task_index].path!}" href="#">重新导入</a> </td>
 		  <#elseif task.taskStatus==-2>
 		<td>  <font color="#26FA79">执行失败</font></td>
 		<td>重新导入 </td>
 		 </#if>		 
 	   <#else>
 	     <td> <font color="#FF990">	未添加到计划任务中</font></td>
-	     <td><a href="../file/preview.htm?filePath=${folderChild[task_index].path!}">添加到任务</a> </td>
+	     <td><a name="previewClick" data-path="${folderChild[task_index].path!}" href="#">添加到任务</a> </td>
 	   </#if>	
 		
 		
@@ -167,6 +167,9 @@
  </#if>         
     </div>  
     
+<form id="previewForm" action="../file/preview.htm" method="post">
+<input type="hidden" name="filePath" id="filePath" value=""/>
+</form>
 
 <SCRIPT src="../js/js.js" type=text/javascript></SCRIPT> 
 <script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
@@ -224,6 +227,12 @@ function getFileTaskInfo(filePath){
          );  
 
 }
+
+$("a[name='previewClick'").click(function(){
+	var path= encodeURIComponent($(this).attr("data-path"));
+	$("#filePath").val(path);
+	$("#previewForm").submit();
+});
 </script>
 
 <SCRIPT type=text/javascript>

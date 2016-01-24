@@ -63,9 +63,10 @@ public class FileAct {
 //	}
 	
 	@RequestMapping(value = "preview.htm")
-	public String v_task(ModelMap model,HttpServletRequest request,HttpServletResponse response) throws ReadFileException, UnsupportedEncodingException{ 
-		String filePath = new String(request.getParameter("filePath").getBytes("iso-8859-1"), "utf-8");  
-		List<String>  list =   fileService.previewTxtFile(filePath);
+	public String v_task(ModelMap model,HttpServletRequest request,HttpServletResponse response,String filePath) throws ReadFileException, UnsupportedEncodingException{ 
+		//String filePath = new String(request.getParameter("filePath").getBytes("iso-8859-1"), "utf-8");  
+		System.out.println("########## "+java.net.URLDecoder.decode(filePath,"UTF-8"));
+		List<String>  list =   fileService.previewTxtFile(java.net.URLDecoder.decode(filePath,"UTF-8"));
 //		List<String>  returnList = new ArrayList<String>();  
 //		//多个空格替换成一个
 //		Pattern p = Pattern.compile("\\s+");			
