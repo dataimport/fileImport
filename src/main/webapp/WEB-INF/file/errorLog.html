@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBliC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+<TITLE>目录</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=utf-8">
+<liNK href="../resources/images/style.css" type=text/css rel=stylesheet>
+</HEAD>
+<BODY>
+<div id="wrap">         
+	<div id="content">    
+		<table class="gridtable">
+	    <#if (list?size>0)>
+		<tr>
+		<th>任务id</th><th>任务文件路径</th><th>错误信息</th><th>时间</th>
+		</tr>
+		
+		<#list list as errorLog>
+			<tr>
+			<td>${errorLog.id} </td>
+			<td>${errorLog.filePath} </td>
+			<td><div style="width:200px;height:30px;overflow:hidden;" title="${errorLog.message}">${errorLog.message}</div></td>
+			<td>${errorLog.createTime} </td>	
+			</tr>   		
+		</#list>
+		<#else>
+		<h3>无错误日志</h3>
+		</#if>
+		</table>
+	</div>  
+</div> 
+<script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
+
+<script>
+
+</script>
+
+</BODY>
+</HTML>

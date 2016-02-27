@@ -25,6 +25,7 @@ public abstract class BaseTask implements Serializable {
 	private String origin;
 	private String tags;
 	private String[] columnName;
+	private String[] columnNameTag;
 	private Integer[] columnIndex;
 	private String separator;
 	private String runTime;
@@ -44,7 +45,7 @@ public abstract class BaseTask implements Serializable {
 	private boolean firstLineIgnore; //首行是否忽略
 		
 	public BaseTask(String uid, String tableName, String tableNameAlias, String origin, String tags,
-			String[] columnName, Integer[] columnIndex, String separator,
+			String[] columnName,String[] columnNameTag, Integer[] columnIndex, String separator,
 			String runTime, String startDate, String endDate, String filePath,
 			String fileName, long fileSize, String leftTime, long totalCount,
 			int taskStatus, String timeUse, int runNum, int updateOrAdd,
@@ -56,6 +57,7 @@ public abstract class BaseTask implements Serializable {
 		this.origin = origin;
 		this.tags = tags;
 		this.columnName = columnName;
+		this.columnNameTag = columnNameTag;
 		this.columnIndex = columnIndex;
 		this.separator = separator;
 		this.runTime = runTime;
@@ -162,6 +164,16 @@ public abstract class BaseTask implements Serializable {
 	public void setColumnName(String[] columnName) {
 		this.columnName = columnName;
 	}
+	
+	public String[] getColumnNameTag() {
+		return columnNameTag;
+	}
+
+	public void setColumnNameTag(String[] columnNameTag) {
+		this.columnNameTag = columnNameTag;
+	}
+
+
 	public Integer[] getColumnIndex() {
 		return columnIndex;
 	}
@@ -229,6 +241,7 @@ public abstract class BaseTask implements Serializable {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
+	
 
 	public BaseTask(){
 		  

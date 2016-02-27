@@ -3,9 +3,6 @@ package com.xxx.admin.action;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
@@ -15,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;  
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.xxx.admin.bean.MongoInToErrorLog;
 import com.xxx.admin.bean.Task;
 import com.xxx.admin.service.FileService;
 import com.xxx.admin.service.TaskService;
@@ -63,7 +62,7 @@ public class FileAct {
 //	}
 	
 	@RequestMapping(value = "preview.htm")
-	public String v_task(ModelMap model,HttpServletRequest request,HttpServletResponse response,String filePath) throws ReadFileException, UnsupportedEncodingException{ 
+	public String preview(ModelMap model,HttpServletRequest request,HttpServletResponse response,String filePath) throws ReadFileException, UnsupportedEncodingException{ 
 		//String filePath = new String(request.getParameter("filePath").getBytes("iso-8859-1"), "utf-8");  
 		System.out.println("########## "+java.net.URLDecoder.decode(filePath,"UTF-8"));
 		List<String>  list =   fileService.previewTxtFile(java.net.URLDecoder.decode(filePath,"UTF-8"));
@@ -77,7 +76,32 @@ public class FileAct {
 //		model.put("list", returnList);
 		model.put("list", list);
 		model.put("filePath", filePath);
+		model.put("filePathShow",java.net.URLDecoder.decode(filePath,"UTF-8"));
 		return "file/preview";
+	}
+	
+	
+	@RequestMapping(value = "errorLogByTaskId.htm")
+	public String errorLog(ModelMap model,HttpServletRequest request,HttpServletResponse response,String id) throws ReadFileException, UnsupportedEncodingException{ 
+		List list = new ArrayList<MongoInToErrorLog>();
+		if(StringUtils.isNotBlank(id)){
+			MongoInToErrorLog mongoInToErrorLog  = fileService.getErrorLogByTaskId(id);
+			if(mongoInToErrorLog!=null){
+				list.add(mongoInToErrorLog);
+			}			
+		}
+		model.put("list", list);		
+		return "file/errorLog";
+	}
+	
+	@RequestMapping(value = "allErrorLogByTaskId.htm")
+	public String allErrorLog(ModelMap model,HttpServletRequest request,HttpServletResponse response,String id){ 
+		 List list = new ArrayList<MongoInToErrorLog>();
+		if(StringUtils.isNotBlank(id)){
+			list =   fileService.getAllErrorLogByTaskId(id);
+		}		
+		model.put("list", list);		
+		return "file/errorLog";
 	}
  
 	@Autowired

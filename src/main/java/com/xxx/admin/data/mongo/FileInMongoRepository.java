@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -26,6 +27,7 @@ import com.xxx.admin.bean.AllCollectionName;
 import com.xxx.admin.bean.Task;
 import com.xxx.mongo.repository.base.BaseRepository;
 import com.xxx.utils.Pagination;
+import com.xxx.utils.StrUtils;
 
 @Repository("fileMogo")
 public class FileInMongoRepository implements BaseRepository<Task> {
@@ -187,10 +189,18 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 		String timeUse = "0 秒";
 		long l=0l;
 		
+		String separator="";
+		
 		for(int i=0;i<valuesSize;i++){
 			try{//加上异常处理，这样个别数据有问题，不会影响整体数据的导入
 				data = new BasicDBObject(); 
-				lineSeparator = list.get(i).trim().split(task.getSeparator(),-1);		
+				separator = task.getSeparator();
+				if(StringUtils.isBlank(separator)){
+					separator="\\s+"; //代表多个空格			
+				}else{
+					separator = StrUtils.separatorCheck(separator);//特殊字符特换
+				}
+				lineSeparator = list.get(i).trim().split(separator,-1);		
 				if(lineSeparator.length==columns.length){//如果当前行的列数与设置的列名数一致 则导入
 					if(lineSeparator.length>=columnIndexSize){//处理虽然有换行但是没有数据的情况，或者数据分割后，总数跟填写的字段数不匹配。
 						for(int j=0;j<columnIndexSize;j++){

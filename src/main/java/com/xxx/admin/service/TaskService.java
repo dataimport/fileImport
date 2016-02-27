@@ -24,6 +24,7 @@ import com.xxx.admin.data.mongo.TaskRepository;
 import com.xxx.admin.file.analysis.TxtFileAnalysis;
 import com.xxx.elasticsearch.data.mongo.SolrTaskRepository;
 import com.xxx.utils.Pagination;
+import com.xxx.utils.StrUtils;
 
 @Service("taskService")
 public class TaskService {
@@ -76,7 +77,7 @@ public class TaskService {
 			//TODO 其实在这个环节，写入，有些不妥，应该在入mongo任务完成后
 			
 			SolrTask slorTask = new SolrTask(task.getUid(), task.getTableName(),task.getTableNameAlias(), task.getOrigin(), task.getTags(),
-					task.getColumnName(), task.getColumnIndex(), task.getSeparator(),
+					task.getColumnName(),task.getColumnNameTag(), task.getColumnIndex(), task.getSeparator(),
 					task.getRunTime(), task.getStartDate(), task.getEndDate(), task.getFilePath(),
 					task.getFileName(), task.getFileSize(), task.getLeftTime(),task.getTotalCount(),
 					BaseTask.TASK_STATUS_SOLR_WAITING,
@@ -166,7 +167,7 @@ public class TaskService {
 	}
 
 	private void setTaskInfo(Task task){
-		task.setTableNameAlias(UUID.randomUUID().toString().replaceAll("-", ""));//设置mongodb的collection 别名
+		task.setTableNameAlias(StrUtils.toMD5(task.getTableName()));//根据tableName设置mongodb的collection 别名
 		File file  = new File(task.getFilePath());
 		task.setFileSize(file.length());
 		task.setFileName(file.getName());

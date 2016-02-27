@@ -4,27 +4,36 @@ import java.io.File;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.xxx.admin.bean.MongoInToErrorLog;
 import com.xxx.admin.bean.NoRepeatColls;
 import com.xxx.admin.bean.Task;
 import com.xxx.admin.bean.base.BaseTask;
 import com.xxx.admin.data.mongo.FileInMongoRepository;
 import com.xxx.admin.data.mongo.MongoCollRepository;
+import com.xxx.admin.data.mongo.MongoIntoErrorInfo;
 import com.xxx.admin.file.analysis.TxtFileAnalysis;
 import com.xxx.core.exception.ReadFileException;
 import com.xxx.elasticsearch.data.mongo.SolrTaskRepository;
 
 @Service("fileService")
 public class FileService {
+	
+	private static final Logger log = LoggerFactory.getLogger(FileService.class);
 	
 	public List<String> previewTxtFile(String filePath) throws ReadFileException{		
 		return previewTxtFile(filePath,null);
@@ -112,7 +121,14 @@ public class FileService {
 				  saveToRepeatColls(t);
 				  System.out.println(" 总共 "+runNum+" 条记录 ");
 				} catch (Exception e) {
-					e.printStackTrace();	
+					e.printStackTrace();
+					log.error("保存大文件到mongodb异常： ", e);	
+					MongoInToErrorLog mel = new MongoInToErrorLog(t.getUid(),t.getFilePath(),e.getMessage(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+					mongoErrorLog.saveObject(mel);
+					//更新状态为导入失败
+					String[] keys = new String[]{"taskStatus"};
+					Object[] values = new Object[]{BaseTask.TASK_STATUS_FAILED};			
+					fmRepository.updateFileInfoByField(t.getUid(), keys, values);
 					return -1;
 				}			  
 			  return successNum;
@@ -135,6 +151,9 @@ public class FileService {
 				  return successNum;
 			  }catch(Exception ex){
 				  ex.printStackTrace();
+				  log.error("保存小文件到mongodb异常： ", ex);	
+				  MongoInToErrorLog mel = new MongoInToErrorLog(t.getUid(),t.getFilePath(),ex.getMessage(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+				  mongoErrorLog.saveObject(mel);
 				  //更新状态为导入失败
 				  String[] keys = new String[]{"taskStatus"};
 				  Object[] values = new Object[]{BaseTask.TASK_STATUS_FAILED};			
@@ -143,9 +162,45 @@ public class FileService {
 			  }			  
 		  }
 		}else{
+			//文件不存在，导入失败，记录到失败日志
+			MongoInToErrorLog mel = new MongoInToErrorLog(t.getUid(),t.getFilePath(),"文件不存在",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+			mongoErrorLog.saveObject(mel);
 			return -1;
+			
 		}
 		
+	}
+	
+	public MongoInToErrorLog getErrorLogByTaskId(String id){
+		try{
+			return mongoErrorLog.getObjectByTaskId(id);
+		}catch(Exception ex){
+			log.error("根据taskId获取所有的错误日志失败",ex);
+		}
+		return new MongoInToErrorLog();
+		
+	}
+	
+	public List<MongoInToErrorLog> getAllErrorLogByTaskId(String id){
+		try{
+			return mongoErrorLog.getAllObjectByTaskId(id);
+		}catch(Exception ex){
+			log.error("根据taskId获取所有的错误日志失败",ex);
+		}
+		return new ArrayList<MongoInToErrorLog>();
+		
+	}
+		
+	public int getFileLineNumber(String filePath){
+		return txtFileAnalysis.getBigFileLineNumByCommand(filePath);
+	}
+	
+	
+	@Async
+	public void getAndUpdateFileTotalCount(String uid,String filePath){
+		int count = getFileLineNumber(filePath);
+		fmRepository.updateFileInfoByField(uid, new String[]{"totalCount"},
+				new Object[]{count});
 	}
 	
 	private void saveToRepeatColls(Task t){
@@ -159,17 +214,6 @@ public class FileService {
 			  mcRepository.saveObject(nrc);
 		  }			
 	}
-	public int getFileLineNumber(String filePath){
-		return txtFileAnalysis.getBigFileLineNumByCommand(filePath);
-	}
-	
-	
-	@Async
-	public void getAndUpdateFileTotalCount(String uid,String filePath){
-		int count = getFileLineNumber(filePath);
-		fmRepository.updateFileInfoByField(uid, new String[]{"totalCount"},
-				new Object[]{count});
-	}
 
     @Resource
     FileInMongoRepository fmRepository;
@@ -179,4 +223,6 @@ public class FileService {
 	private TxtFileAnalysis txtFileAnalysis;
 	@Resource
 	SolrTaskRepository solrTaskRepository;
+	@Resource
+	MongoIntoErrorInfo mongoErrorLog;
 }

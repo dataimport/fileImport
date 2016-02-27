@@ -46,10 +46,23 @@
     <th>列名</th>
     <#list columns as column>
  	<td>
- 	 <div align="center">  <input  name="columnName"  id="columnName_${(column_index+1)}"  
+ 	 <div align="center">  <input style="width:150px" name="columnName"  id="columnName_${(column_index+1)}"  
  	 <#if (firstLineIgnore=="true")> value="${column?trim}" > <#else> value="" </#if> 	 
  	 </input>
  	 <input name="import" type="checkbox" id="isImport_${(column_index+1)}" checked=true  value="${(column_index+1)}">导入
+ 	 </div>
+ 	</td>
+	</#list>
+  </tr>
+  
+  <tr>
+    <th>列标签</th>
+    <#list columns as column>
+ 	<td>
+ 	 <div align="center"> 
+ 	  <input  style="width:150px" name="columnNameTag"  id="columnNameTag_${(column_index+1)}"   	 	 
+ 	 </input>
+ 	  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  	 </div>
  	</td>
 	</#list>
@@ -163,7 +176,7 @@
 	<input id="run" name="runType"  type="radio" value="1"  onclick="runTypeChange('1')"/>计划执行时间<br/>
 	<input type="text" id="run1" value="" style="display:none" readonly="readonly" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-%d'})">
 	<input name="sameRule" type="checkbox" id="sameRule" value="sameRule"> 以相同规则导入下一文件<br/>
-	<input type="button" onclick="javascript:history.go(-1);" value="返回上一步">   <input type="button" id="submit" value="提交任务"><span id="loading"></span>
+	<input type="button" onclick="javascript:history.go(-1);" value="返回上一步">   <input type="button" id="submit" disabled="true" value="提交任务"><span id="loading"></span>
 <br/>
 <br/>
 </div>
@@ -229,22 +242,26 @@ $("#submit").bind("click",function(){
 	var columnIndex = "";
 	
 	var columnName = "";
+	var columnNameTag = "";
 	
 	var columnChecked = $('[name = "import"]:checkbox:checked');
 	
 	var temp ="";
+	var tagTemp ="";
 	for (var i = 0; i < columnChecked.length; i++) {
 		columnIndex = (columnIndex + columnChecked.get(i).value) + (((i + 1)== columnChecked.length) ? '':','); 
 		
 		temp =$("#columnName_"+columnChecked.get(i).value).val();
+		tagTemp =$("#columnNameTag_"+columnChecked.get(i).value).val();
 		if(temp.replace(/(^\s*)|(\s*$)/g,'')==''){
 			alert("第 "+columnChecked.get(i).value+" 列列名不能为空")
 			return;
 		}	
 		
 		columnName = (columnName + temp) + (((i + 1)== columnChecked.length) ? '':','); 
+		columnNameTag = (columnNameTag + tagTemp) + (((i + 1)== columnChecked.length) ? '':','); 
 	}
-	
+		
 	$('#submit').attr('disabled','true');  
 	$('#loading').html("<img src='../resources/images/loading.gif'/>");
 	
@@ -253,7 +270,7 @@ $("#submit").bind("click",function(){
 	                url:'../task/o_task.htm', 
 	                type:"post",  
 	                async:true,  
-	                data:{'tableName':tableName,'firstLineIgnore':'${firstLineIgnore}','separator':"${separator!}",'filePath':$("#filePath").val(),'tags':tagName,'origin':origin,'runTime':runTime,'columnName':columnName,'columnIndex':columnIndex,'cleanOrAppend':cleanOrAppend},  
+	                data:{'tableName':tableName,'firstLineIgnore':'${firstLineIgnore}','separator':"${separator!}",'filePath':$("#filePath").val(),'tags':tagName,'origin':origin,'runTime':runTime,'columnName':columnName,'columnNameTag':columnNameTag,'columnIndex':columnIndex,'cleanOrAppend':cleanOrAppend},  
 	                dataType:"json",  
 	                timeout:"1000000",  
 	                error:function(){
@@ -261,10 +278,17 @@ $("#submit").bind("click",function(){
 	                },  
 	                success:function(data)  
 	                {  
-	                	$('#submit').attr('disabled',false); ; 
-	                	$('#loading').html("");
-	                	alert(data.msg);
-	              	 	
+	                	if(data.code==200){
+	                		$('#submit').attr('disabled',false); ; 
+		                	$('#loading').html("");
+		                	alert(data.msg);	  
+	                	}else{
+	                		 if(confirm(data.msg+"   ,是否查看错误日志？"))	                			  
+	                		    {   
+	                			 location.href='../file/errorLogByTaskId.htm?id='+data.taskId
+	                		     }
+	                	}
+	                	            	 	
 	                }  
 	            }  
 	        ); 
@@ -307,13 +331,14 @@ $("#submit").bind("click",function(){
 	                error:function(){alert("服务加载出错");},  
 	                success:function(data)  
 	                {  
-	                	if(data[0].exist==true){
+	                	if(data.code==100){
 	                		//$("#tableInfo")。text("存在"+collectionName);
 	                		$("#tableInfo").html("&nbsp;&nbsp; 已经存在表： "+collectionName+"&nbsp;&nbsp;  <a href='#'>浏览</a>"+
 	                				"&nbsp;&nbsp;  <input id='cleanOrAppend1' type='radio' name='cleanOrAppend' value='clean' checked=''>清空并追加"+
 	                				"&nbsp;&nbsp;  <input id='cleanOrAppend2' type='radio' name='cleanOrAppend' value='append'  >追加到此表 "
 	                				);  
 	                	}else{
+	                		$('#submit').attr('disabled',false); 
 	                		$("#tableInfo").html("");
 	                	}               	
 	              	 	

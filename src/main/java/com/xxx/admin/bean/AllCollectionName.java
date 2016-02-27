@@ -1,13 +1,7 @@
 package com.xxx.admin.bean;
 
-import java.io.Serializable;
 
-public class AllCollectionName implements Serializable{
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1014677312348893174L;
+public class AllCollectionName {
 
 	public static final String ALLFILEINFO_COLLECTIONNAME = "allFileInfo";//存所有文件信息的collection表名
 	
@@ -22,5 +16,7 @@ public class AllCollectionName implements Serializable{
 	public static final String SOLR_TASKINFO_COLLECTIONNAME = "solrTaskInfo";//存solr入库任务信息的collection表名
 	
 	public static final String SOLR_FINISH_TASKINFO_COLLECTIONNAME = "solrFinishTaskInfo";//存solr入库成功的任务信息的collection表名
+	
+	public static final String MONGOINTOERRORLOG = "mongoIntoErrorLog";//数据导入到mongod异常信息日志
 	
 }

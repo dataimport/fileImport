@@ -8,10 +8,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = AllCollectionName.NOREPEAT_COLLECTIONNAME) 
 public class NoRepeatColls  implements Serializable{
  
-    /**
+
+	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 8258791956189391088L;
 
 	@Id
     private String id;

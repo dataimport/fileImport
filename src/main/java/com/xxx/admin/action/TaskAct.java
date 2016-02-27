@@ -26,6 +26,7 @@ import com.xxx.admin.service.TaskService;
 import com.xxx.core.exception.ReadFileException;
 import com.xxx.utils.Pagination;
 import com.xxx.utils.ResponseUtils;
+import com.xxx.utils.StrUtils;
 
 @Controller
 @RequestMapping("/task")
@@ -70,7 +71,7 @@ public class TaskAct {
 		String[] columns =new String[]{};
 		if(lines.length>0){
 			if(!"\\s+".equals(separator)){
-				separator = separatorCheck(separator);//特殊字符特换
+				separator = StrUtils.separatorCheck(separator);//特殊字符特换
 			}			
 			columns = lines[0].split(separator,-1);						
 		}
@@ -102,8 +103,12 @@ public class TaskAct {
 		}else{
 			model.put("text", returnList);	
 		}
+		try{
+			model.put("filePath", java.net.URLDecoder.decode(filePath,"UTF-8"));
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
 		
-		model.put("filePath", filePath);
 		if(firstLineIgnore){
 			model.put("firstLineIgnore", "true");
 		}else{
@@ -182,11 +187,11 @@ public class TaskAct {
 				if(successNum!=-1){
 					ResponseUtils.renderJson(response, "{\"code\":200,\"msg\":\"创建任务,并且入库成功，本次任务共导入【  "+successNum+"  】条数据\"}");
 				}else{
-					ResponseUtils.renderJson(response, "{\"code\":200,\"msg\":\"创建任务成功,入库失败\"}");
+					ResponseUtils.renderJson(response, "{\"code\":500,\"taskId\":\""+task.getUid()+"\",\"msg\":\"创建任务成功,入库失败\"}");
 				}			
 			}else{
 				taskService.taskUpdate(task, null,new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),-2);
-				ResponseUtils.renderJson(response, "{\"msg\":\"创建任务失败\"}");
+				ResponseUtils.renderJson(response, "{\"code\":500,\"taskId\":\""+task.getUid()+"\",\"msg\":\"创建任务失败\"}");
 			}			
 		}else{//创建任务
 			task.setTaskStatus(0);
@@ -195,31 +200,7 @@ public class TaskAct {
 		}		
 		return null;
 	}
-	
-	private String separatorCheck (String separator){
-		  if(separator.indexOf("\\")!=-1){
-			  separator = separator.replace("\\", "\\\\");
-		  }
-		  if(separator.indexOf("|")!=-1){
-			  separator = separator.replace("|", "\\|");
-		  }
-		  if(separator.indexOf("[")!=-1){
-			  separator = separator.replace("[", "\\[");
-		  }
-		  if(separator.indexOf("]")!=-1){
-			  separator = separator.replace("[", "\\]");
-		  }		  
-		  if(separator.indexOf(".")!=-1){
-			  separator = separator.replace(".", "[.]");
-		  }
-		  if(separator.indexOf("*")!=-1){
-			  separator = separator.replace("*", "\\*");
-		  }
-		  
-		  return separator;
-
-	}
-	
+		
 	@Autowired
 	private FileService fileService;
 	@Autowired

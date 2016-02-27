@@ -10,10 +10,11 @@ import com.xxx.admin.bean.base.BaseTask;
 
 public class SolrTask extends BaseTask{
 	
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8693317133670857920L;
+	private static final long serialVersionUID = 5977296588100280150L;
 	@Id  
 	private String id;
 	
@@ -29,13 +30,13 @@ public class SolrTask extends BaseTask{
 	}
 	
 	public SolrTask(String uid, String tableName,String tableNameAlias, String origin, String tags,
-			String[] columnName, Integer[] columnIndex, String separator,
+			String[] columnName,String[] columnNameTag, Integer[] columnIndex, String separator,
 			String runTime, String startDate, String endDate, String filePath,
 			String fileName, long fileSize, String leftTime, long totalCount,
 			int taskStatus, String timeUse, int runNum, int updateOrAdd,
 			int beginLineNum, String createUser, boolean firstLineIgnore,
 			String id) {
-		super(uid, tableName,tableNameAlias, origin, tags, columnName, columnIndex, separator,
+		super(uid, tableName,tableNameAlias, origin, tags, columnName,columnNameTag, columnIndex, separator,
 				runTime, startDate, endDate, filePath, fileName, fileSize,
 				leftTime, totalCount, taskStatus, timeUse, runNum, updateOrAdd,
 				beginLineNum, createUser, firstLineIgnore);
