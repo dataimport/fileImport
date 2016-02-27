@@ -123,7 +123,7 @@ public class FileService {
 				} catch (Exception e) {
 					e.printStackTrace();
 					log.error("保存大文件到mongodb异常： ", e);	
-					MongoInToErrorLog mel = new MongoInToErrorLog(t.getUid(),t.getFilePath(),e.getMessage(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+					MongoInToErrorLog mel = new MongoInToErrorLog(t.getUid(),t.getFilePath(),"导入数据异常："+e.getMessage(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 					mongoErrorLog.saveObject(mel);
 					//更新状态为导入失败
 					String[] keys = new String[]{"taskStatus"};
@@ -152,7 +152,7 @@ public class FileService {
 			  }catch(Exception ex){
 				  ex.printStackTrace();
 				  log.error("保存小文件到mongodb异常： ", ex);	
-				  MongoInToErrorLog mel = new MongoInToErrorLog(t.getUid(),t.getFilePath(),ex.getMessage(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+				  MongoInToErrorLog mel = new MongoInToErrorLog(t.getUid(),t.getFilePath(),"导入数据异常："+ex.getMessage(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 				  mongoErrorLog.saveObject(mel);
 				  //更新状态为导入失败
 				  String[] keys = new String[]{"taskStatus"};

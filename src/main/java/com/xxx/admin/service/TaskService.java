@@ -10,15 +10,19 @@ import java.util.UUID;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.xxx.admin.bean.AllCollectionName;
+import com.xxx.admin.bean.MongoInToErrorLog;
 import com.xxx.admin.bean.MongoSolrInfo;
 import com.xxx.admin.bean.SolrTask;
 import com.xxx.admin.bean.Task;
 import com.xxx.admin.bean.base.BaseTask;
+import com.xxx.admin.data.mongo.MongoIntoErrorInfo;
 import com.xxx.admin.data.mongo.MongoToSolrRepository;
 import com.xxx.admin.data.mongo.TaskRepository;
 import com.xxx.admin.file.analysis.TxtFileAnalysis;
@@ -28,7 +32,7 @@ import com.xxx.utils.StrUtils;
 
 @Service("taskService")
 public class TaskService {
-
+	private static final Logger log = LoggerFactory.getLogger(TaskService.class);
 	/**
 	 * 创建任务
 	 * @param task
@@ -88,6 +92,9 @@ public class TaskService {
 			return true;
 		}catch(Exception ex){
 			ex.printStackTrace();
+			log.error("创建任务异常 ", ex);	
+			MongoInToErrorLog mel = new MongoInToErrorLog(task.getUid(),task.getFilePath(),"创建任务异常： "+ex.getMessage(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+			mongoErrorLog.saveObject(mel);
 		}		
 		return false;
 	
@@ -180,9 +187,10 @@ public class TaskService {
 	@Autowired
 	private FileService fileService;
     @Resource
-    MongoToSolrRepository mongoToSolrRepository;
-    
+    MongoToSolrRepository mongoToSolrRepository;    
     @Resource
     SolrTaskRepository solrTaskRepository;
+	@Resource
+	MongoIntoErrorInfo mongoErrorLog;
 	
 }
