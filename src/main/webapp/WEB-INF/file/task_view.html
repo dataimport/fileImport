@@ -283,6 +283,8 @@ $("#submit").bind("click",function(){
 		                	$('#loading').html("");
 		                	alert(data.msg);	  
 	                	}else{
+	                		$('#submit').attr('disabled',false); ; 
+		                	$('#loading').html("");
 	                		 if(confirm(data.msg+"   ,是否查看错误日志？"))	                			  
 	                		    {   
 	                			 location.href='../file/errorLogByTaskId.htm?id='+data.taskId

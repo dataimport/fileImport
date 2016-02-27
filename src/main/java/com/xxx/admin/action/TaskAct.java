@@ -187,7 +187,7 @@ public class TaskAct {
 				if(successNum!=-1){
 					ResponseUtils.renderJson(response, "{\"code\":200,\"msg\":\"创建任务,并且入库成功，本次任务共导入【  "+successNum+"  】条数据\"}");
 				}else{
-					ResponseUtils.renderJson(response, "{\"code\":500,\"taskId\":\""+task.getUid()+"\",\"msg\":\"创建任务成功,入库失败\"}");
+					ResponseUtils.renderJson(response, "{\"code\":500,\"taskId\":\""+task.getUid()+"\",\"msg\":\"创建任务成功,但是导入数据失败\"}");
 				}			
 			}else{
 				taskService.taskUpdate(task, null,new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),-2);
