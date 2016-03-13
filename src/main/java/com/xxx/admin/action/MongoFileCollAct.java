@@ -35,14 +35,13 @@ public class MongoFileCollAct {
 	 */
 	@RequestMapping(value = "getByCollectionName.htm")
 	public String  getByCollectionName(String collectionName,ModelMap model,HttpServletRequest request,HttpServletResponse response) {	
-		
-		
+
 		Map map = new HashMap();	
 		try{
 			map.put("code", 200);
 			map.put("exist", false);
 			if(StringUtils.isNotBlank(collectionName)){
-				List<MongoSolrInfo> list =  mongoFileService.getByCollectionName(collectionName);
+				List<MongoSolrInfo> list =  mongoFileService.getByCollectionName(collectionName.trim());
 				if(list!=null&&list.size()>0){	
 					map.put("code", 100);
 					map.put("exist", true);
@@ -72,7 +71,7 @@ public class MongoFileCollAct {
 				List<MongoSolrInfo> list =  mongoFileService.getByNameOrTagOrOrgin(KeyWord);
 				if(list!=null&&list.size()>0){	
 					json.put("exist", true);
-					json.put("content", net.sf.json.JSONArray.fromObject(list));
+					json.put("content",net.sf.json.JSONArray.fromObject(list));
 				}else{
 					json.put("code", 200);
 					json.put("exist", false);

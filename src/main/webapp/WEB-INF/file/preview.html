@@ -12,51 +12,86 @@
 <br><br>
 <b>文件预览：</b>(如果文件里的中文乱码，请修改文件编码格式为：UTF-8,否则导数据时，也会乱码)
 <br><br>
-<#assign size = list?size>		
-<#if (size>0)>
-<table class="gridtable">
-<tr>
-<th>序号</th><th>内容</th>
-</tr>
-<#list list as file>
-   <#if file??&&file!="">
+<#if extension="txt">
+	<#assign size = list?size>		
+	<#if (size>0)>
+	<table class="gridtable">
 	<tr>
-	   <td>${file_index+1}</td>
-	   <td>		
-	   ${file?replace('<', '&lt;' )?replace(">","&gt;")?replace('\n', '' )}
-		</td>		
-	</tr> 		
-	</#if>	
+	<th>序号</th><th>内容</th>
+	</tr>
+	<#list list as file>
+	   <#if file??&&file!="">
+		<tr>
+		   <td>${file_index+1}</td>
+		   <td>		
+		   ${file?replace('<', '&lt;' )?replace(">","&gt;")?replace('\n', '' )}
+			</td>		
+		</tr> 		
+		</#if>	
+		</#list>
+	</table>
+	
+	
+			   	   
+	<br><br>
+	<hr>
+	分隔符&nbsp;&nbsp;
+	<input id="fengefu_1" type="radio" name="fgf" value=""checked="" >无分隔符
+	<input id="fengefu_2" type="radio" name="fgf" value=",">逗号
+	<input id="fengefu_3" type="radio" name="fgf" value="\t"  >制表符
+	<input id="fengefu_4" type="radio" name="fgf" value=";" >分号
+	<input id="fengefu_5" type="radio" name="fgf" value=" ">空格
+	<input id="fengefu_6" type="radio" name="fgf" value="自定义" >自定义分隔符
+	<input id="fengefu_7" type="text"  style='display:none;' size="8" >
+	&nbsp;&nbsp;&nbsp;<input id="biaotou" type="checkbox" name="biaotou" value="true" >首行为表头
+	
+	<form  id="form" name="form" action="../task/v_task.htm"  method="post">
+	<input type="hidden" id="filePath" name="filePath" value="${filePath!}">
+	<input type="hidden" id="separator" name="separator" value="">
+	<input type="hidden" id="firstLineIgnore" name="firstLineIgnore" value="false">
+	
+	<#list list as file>
+	 <#if file??&&file!="">
+	 <input  type="hidden" type="text" name="lines" value="${file?trim}">
+	 </#if>	
 	</#list>
-</table>
-		   	   
-<br><br>
-<hr>
-分隔符&nbsp;&nbsp;
-<input id="fengefu_1" type="radio" name="fgf" value=""checked="" >无分隔符
-<input id="fengefu_2" type="radio" name="fgf" value=",">逗号
-<input id="fengefu_3" type="radio" name="fgf" value="\t"  >制表符
-<input id="fengefu_4" type="radio" name="fgf" value=";" >分号
-<input id="fengefu_5" type="radio" name="fgf" value=" ">空格
-<input id="fengefu_6" type="radio" name="fgf" value="自定义" >自定义分隔符
-<input id="fengefu_7" type="text"  style='display:none;' size="8" >
-&nbsp;&nbsp;&nbsp;<input id="biaotou" type="checkbox" name="biaotou" value="true" >首行为表头
-
-<form  id="form" name="form" action="../task/v_task.htm"  method="post">
-<input type="hidden" id="filePath" name="filePath" value="${filePath!}">
-<input type="hidden" id="separator" name="separator" value="">
-<input type="hidden" id="firstLineIgnore" name="firstLineIgnore" value="false">
-
-<#list list as file>
- <#if file??&&file!="">
- <input  type="hidden" type="text" name="lines" value="${file?trim}">
- </#if>	
-</#list>
-     
-<button>确定</button>
-</form>
+	     
+	<button id="txtButton">确定</button>
+	</form>
+	<#else>
+	此文件无内容
+	</#if>
 <#else>
-此文件无内容
+<!-- excele -->
+<form  id="form" name="form" action="../task/v_excelTask.htm"  method="post">
+	<input type="hidden" id="filePath" name="filePath" value="${filePath!}">
+<table class="gridtable">
+	<tr>
+	<#if (cellTotalMax>1)>
+		<th>序号</th>
+		<#list 1..cellTotalMax as t>
+			<th>列${t}</th> 
+		</#list>
+	</#if>
+	</tr>
+	
+	<#list list as cells>
+		<tr>
+	  	<td>${cells_index+1}</td>
+	  	<#list 0..(cellTotalMax-1) as t>
+	  		<td>${cells[t]!} </td>
+	  	</#list>
+		  	  
+		</tr> 
+	</#list>
+	</table>
+	
+	<br><br>
+	<hr>
+&nbsp;&nbsp;&nbsp;<input id="biaotou" type="checkbox" name="biaotou" value="true" >首行为表头
+<input type="hidden" id="firstLineIgnore" name="firstLineIgnore" value="false">
+<button id="excelButton">确定</button>
+</form>	
 </#if>
 </div>
 
@@ -64,7 +99,7 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
-	 $("button").click(function(){
+	 $("#txtButton").click(function(){
 		 var fgf = $('input[name="fgf"]:checked').val();
 			if(fgf=="自定义"){
 				fgf = $("#fengefu_7").val();
@@ -78,6 +113,15 @@ $(document).ready(function(){
 		}
 	  //  $("form").submit();
 	  });  
+	 
+	
+	 $("#excelButton").click(function(){		
+		var biaotou = $('input[name="biaotou"]:checked').val();
+		if(biaotou=="true"){
+			$("#firstLineIgnore").val("true");
+		}
+	  });  
+	 
 	});
 	
 $(function(){

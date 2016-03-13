@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -25,6 +27,7 @@ import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 import com.xxx.admin.bean.AllCollectionName;
 import com.xxx.admin.bean.Task;
+import com.xxx.admin.service.TaskService;
 import com.xxx.mongo.repository.base.BaseRepository;
 import com.xxx.utils.Pagination;
 import com.xxx.utils.StrUtils;
@@ -32,6 +35,7 @@ import com.xxx.utils.StrUtils;
 @Repository("fileMogo")
 public class FileInMongoRepository implements BaseRepository<Task> {
  
+	private static final Logger log = LoggerFactory.getLogger(FileInMongoRepository.class);
 	@Autowired
     MongoTemplate mongoTemplate;
  
@@ -172,7 +176,7 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 	
 	public int FilePushToMongo(Task task,List<String> list,Boolean isBigFile,Integer runNum,Long time){	
 		long start = System.currentTimeMillis();
-		if(task.isFirstLineIgnore()){
+		if(task.getFirstLineIgnore()){
 			list.remove(0);
 		}		
 		int valuesSize = list.size();		
@@ -242,6 +246,81 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 			values[1]=timeUse;	
 			updateFileInfoByField(task.getUid(),keys,values);
 		}	
+		
+		return successNum;
+	}
+	
+	
+	/**
+	 * 把excel文件导入到mongodb中
+	 * @param task
+	 * @param list
+	 * @param isBigFile
+	 * @param runNum
+	 * @param time
+	 * @return
+	 */
+	public int excelFilePushToMongo(Task task,List<String[]> list){	
+		long start = System.currentTimeMillis();
+		if(task.getFirstLineIgnore()){
+			list.remove(0);
+		}		
+		int valuesSize = list.size();		
+		DBCollection dbColleciton =mongoTemplate.getCollection(task.getTableNameAlias()); 
+		DBObject data = new BasicDBObject();
+		String[] columns = task.getColumnName();
+		Integer[] columnIndex = task.getColumnIndex();
+		int columnIndexSize = columnIndex.length;
+		
+		int nowNum = 0,successNum=0,runNum=0;
+		String[] keys = new String[]{"runNum","timeUse"};
+		Object[] values = new Object[2];
+		String timeUse = "0 秒";
+		long l=0l;
+		int excelRowCellNum = 0;
+		for(int i=0;i<valuesSize;i++){
+			try{//加上异常处理，这样个别数据有问题，不会影响整体数据的导入
+				data = new BasicDBObject(); 
+				for(int j=0;j<columnIndexSize;j++){					
+					excelRowCellNum = list.get(i).length;
+					//log.debug(" ## " +i+" #excelRowCellNum#  "+excelRowCellNum+" #columnIndex[j]-1# "+(columnIndex[j]-1));
+					if((columnIndex[j]-1)>=excelRowCellNum){//表格的列数与前台设置的不一致，数据设置成空
+						data.put(columns[j], "");
+					}else{
+						data.put(columns[j], list.get(i)[columnIndex[j]-1]);
+					}				
+				}			
+				dbColleciton.insert(data);		
+				nowNum++;			
+				if(nowNum==valuesSize||nowNum%10==0){//每10条更新一次任务表进度
+					l=System.currentTimeMillis()-start;
+					timeUse = getTimeUse(l);
+					values[0]=String.valueOf(nowNum);
+					values[1]=timeUse;					
+					if(nowNum==valuesSize){;
+						keys = new String[]{"runNum","timeUse","endDate","taskStatus"};
+						values = new Object[5];
+						values[0]=nowNum;
+						values[1]=timeUse;	
+						values[2]=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+						values[3]=2;
+						 //values[4]=valuesSize;
+					}
+						updateFileInfoByField(task.getUid(),keys,values);
+				 }				
+				successNum++;
+			}catch(Exception ex){
+				ex.printStackTrace();
+				saveFailData(task,runNum+i);
+			}			
+		}	
+		
+//		if(isBigFile){//大文件 按buffer更新
+//			timeUse = getTimeUse(time);		
+//			values[0]=runNum;
+//			values[1]=timeUse;	
+//			updateFileInfoByField(task.getUid(),keys,values);
+//		}	
 		
 		return successNum;
 	}

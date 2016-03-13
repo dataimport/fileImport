@@ -179,7 +179,7 @@ public class SolrFinishTaskRepository implements BaseRepository<Task> {
 		long start = System.currentTimeMillis();
 		//int columnSize = columns.length;
 		int columnIndexSize = columnIndex.length;
-		if(task.isFirstLineIgnore()){
+		if(task.getFirstLineIgnore()){
 			list.remove(0);
 		}		
 		int valuesSize = list.size();

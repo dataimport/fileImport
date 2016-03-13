@@ -87,7 +87,7 @@ public abstract class BaseTask implements Serializable {
 	}
 
 
-	public boolean isFirstLineIgnore() {
+	public boolean getFirstLineIgnore() {
 		return firstLineIgnore;
 	}
 	public void setFirstLineIgnore(boolean firstLineIgnore) {

@@ -1,8 +1,11 @@
 package com.xxx.admin.action;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
@@ -62,21 +65,37 @@ public class FileAct {
 //	}
 	
 	@RequestMapping(value = "preview.htm")
-	public String preview(ModelMap model,HttpServletRequest request,HttpServletResponse response,String filePath) throws ReadFileException, UnsupportedEncodingException{ 
+	public String preview(ModelMap model,HttpServletRequest request,HttpServletResponse response,String filePath){ 
 		//String filePath = new String(request.getParameter("filePath").getBytes("iso-8859-1"), "utf-8");  
-		System.out.println("########## "+java.net.URLDecoder.decode(filePath,"UTF-8"));
-		List<String>  list =   fileService.previewTxtFile(java.net.URLDecoder.decode(filePath,"UTF-8"));
-//		List<String>  returnList = new ArrayList<String>();  
-//		//多个空格替换成一个
-//		Pattern p = Pattern.compile("\\s+");			
-//		for(String lineStr:list){
-//			Matcher	m = p.matcher(lineStr);
-//			returnList.add(m.replaceAll(" "));
-//		}
-//		model.put("list", returnList);
-		model.put("list", list);
-		model.put("filePath", filePath);
-		model.put("filePathShow",java.net.URLDecoder.decode(filePath,"UTF-8"));
+		//System.out.println("########## "+java.net.URLDecoder.decode(filePath,"UTF-8"));
+		try{
+			String extension  = filePath.substring(filePath.lastIndexOf(".")+1, filePath.length());
+			if("txt".equals(extension.toLowerCase())){
+				List<String>  list =   fileService.previewTxtFile(java.net.URLDecoder.decode(filePath,"UTF-8"));
+				model.put("list", list);
+			}else if("xlsx".equals(extension.toLowerCase())||"xls".equals(extension.toLowerCase())){
+				Map<String,Object>   map =   fileService.previewExcelFile(java.net.URLDecoder.decode(filePath,"UTF-8"),10,extension.toLowerCase());
+				model.put("list", map.get("list"));
+				model.put("cellTotalMax", map.get("cellTotalMax"));
+			}else{
+				model.put("list", new ArrayList<Object>());
+			}
+			
+	//		List<String>  returnList = new ArrayList<String>();  
+	//		//多个空格替换成一个
+	//		Pattern p = Pattern.compile("\\s+");			
+	//		for(String lineStr:list){
+	//			Matcher	m = p.matcher(lineStr);
+	//			returnList.add(m.replaceAll(" "));
+	//		}
+	//		model.put("list", returnList);
+			model.put("extension", extension);
+			model.put("filePath", filePath);
+			model.put("filePathShow",java.net.URLDecoder.decode(filePath,"UTF-8"));
+			return "file/preview";
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
 		return "file/preview";
 	}
 	
@@ -110,12 +129,8 @@ public class FileAct {
 	private TaskService taskService;
 	
 	public static void main(String[] args) {
-		String str="164 gudei f2f76cdbd3972231a603094a0605b69b gudei@126.com 119.131.169.76";
-//		String str="12 34";
-		String[] a=str.split("\\b");
-		for(String m:a){
-		System.out.println(m+"kkk");
-		}
+		String str="aaa.txt";
+		System.out.println(str.substring(str.lastIndexOf(".")+1, str.length()));
 	}
 	
 }

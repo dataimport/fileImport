@@ -56,7 +56,6 @@ public class TaskService {
 			
 			//保存到所有文档表中	
 			taskRepository.saveObject(task,AllCollectionName.ALLFILEINFO_COLLECTIONNAME); 	
-		
 			
 			//保存到表-文件信息表中			
 			MongoSolrInfo msi = new MongoSolrInfo();
@@ -86,7 +85,7 @@ public class TaskService {
 					task.getFileName(), task.getFileSize(), task.getLeftTime(),task.getTotalCount(),
 					BaseTask.TASK_STATUS_SOLR_WAITING,
 					task.getTimeUse(), task.getRunNum(), 0,
-					task.getBeginLineNum(), task.getCreateUser(), false,
+					task.getBeginLineNum(), task.getCreateUser(), task.getFirstLineIgnore(),
 					task.getId());
 			solrTaskRepository.saveObject(slorTask, AllCollectionName.SOLR_TASKINFO_COLLECTIONNAME);
 			return true;
@@ -140,6 +139,7 @@ public class TaskService {
 			for(Task task:list){
 					taskUpdate(task, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),null, 1);//更新状态为正在执行
 					fileService.saveFileToMongo(task);
+					
 			}
 		}catch(Exception ex){
 			ex.printStackTrace();

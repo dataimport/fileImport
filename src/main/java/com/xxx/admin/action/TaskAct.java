@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -120,6 +121,42 @@ public class TaskAct {
 		return "file/task_view";
 	}	
 	
+	
+	/**
+	 * 导入excel 任务预览
+	 * @param filePath
+	 * @param separator
+	 * @param firstLineIgnore
+	 * @param lines
+	 * @param model
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "v_excelTask.htm")
+	public String v_excelTask(String filePath,boolean firstLineIgnore,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
+				
+		try{
+			String extension  = filePath.substring(filePath.lastIndexOf(".")+1, filePath.length());	
+			Map<String,Object>   map =   fileService.previewExcelFile(java.net.URLDecoder.decode(filePath,"UTF-8"),10,extension.toLowerCase());
+			if(firstLineIgnore){
+				model.put("firstLineIgnore", "true");	
+			}else{
+				model.put("firstLineIgnore", "false");
+			}		
+			model.put("list", map.get("list"));
+			model.put("cellTotalMax", map.get("cellTotalMax"));
+			model.put("filePath", java.net.URLDecoder.decode(filePath,"UTF-8"));
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		
+		
+		
+
+		return "task/excelTask_view";
+	}	
+	
 	/**
 	 *  根据相同规则导入下一个文档预览效果接口
 	 * @param preFilePath 上一个文件路径 用于建设规则
@@ -140,14 +177,23 @@ public class TaskAct {
 					if(childList!=null&&childList.length>1){
 						String thisFilePath = childList[1].getPath();
 						if(!new File(thisFilePath).isDirectory()){
-							List<String> list = fileService.previewTxtFile(thisFilePath);
-							String[] lines = new String[list.size()]; 
-							for(int i=0;i<list.size();i++){
-								lines[i] = list.get(i);
-							}
+							
 							model.put("task", task);
-							return v_task(thisFilePath,task.getSeparator(),task.isFirstLineIgnore(),
-									lines,model,request,response);
+							String extension  = thisFilePath.substring(thisFilePath.lastIndexOf(".")+1, thisFilePath.length());
+							if("txt".equals(extension.toLowerCase())){
+								List<String> list = fileService.previewTxtFile(thisFilePath);
+								String[] lines = new String[list.size()]; 
+								for(int i=0;i<list.size();i++){
+									lines[i] = list.get(i);
+								}
+								return v_task(thisFilePath,task.getSeparator(),task.getFirstLineIgnore(),
+										lines,model,request,response);
+							}else if("xlsx".equals(extension.toLowerCase())||"xls".equals(extension.toLowerCase())){						
+								return v_excelTask(thisFilePath,task.getFirstLineIgnore(),model,request,response);
+							}else{
+								return null;
+							}							
+						
 						}else{
 							return null;
 						}
@@ -196,7 +242,7 @@ public class TaskAct {
 		}else{//创建任务
 			task.setTaskStatus(0);
 			taskService.createTask(task,false);//创建任务
-			ResponseUtils.renderJson(response, "{\"msg\":\"创建任务成功\"}");
+			ResponseUtils.renderJson(response, "{\"code\":200,\"msg\":\"创建任务成功\"}");
 		}		
 		return null;
 	}

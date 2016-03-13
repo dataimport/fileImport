@@ -180,7 +180,7 @@ public class SolrTaskRepository implements BaseRepository<SolrTask> {
 		long start = System.currentTimeMillis();
 		//int columnSize = columns.length;
 		int columnIndexSize = columnIndex.length;
-		if(task.isFirstLineIgnore()){
+		if(task.getFirstLineIgnore()){
 			list.remove(0);
 		}		
 		int valuesSize = list.size();

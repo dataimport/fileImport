@@ -1,0 +1,413 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<link href="../resources/images/style.css" type=text/css rel=stylesheet>
+<title>导入excel文件预览</title>
+<style type="text/css">
+.radioText {
+	font-size:11px;
+}
+</style>
+</head>
+<BODY>
+
+
+<table width="100%"  class="gridtable">
+   <tr>
+    <th>当前文件</th>    
+ 	<td colspan="${cellTotalMax}" >
+ 	 ${filePath!}
+ 	</td> 	
+ 	</tr>
+ 	
+<tr>
+    <th>首行为表头</th>    
+ 	<td colspan="${cellTotalMax}" >
+ 	 <input  id="firstLineIgnore" value="" type="checkbox" <#if (firstLineIgnore='true')> checked="checked" </#if> disabled="disabled"></input>
+ 	</td>
+   </tr>
+      
+ <tr>
+    <th>列名</th>
+	    <#list 0..(cellTotalMax-1) as t>
+		  	<td>
+		  	 <div align="center">  <input style="width:150px" name="columnName"  id="columnName_${(t+1)}"  
+		 	 <#if (firstLineIgnore=="true")> value="${list[0][t]!}" > <#else> value="" </#if> 	 
+		 	 </input>
+		 	 <input name="import" type="checkbox" id="isImport_${(t+1)}" checked=true  value="${(t+1)}">导入
+		 	 </div>		  		
+		  	</td>
+		</#list>
+</tr>
+
+ <tr>
+    <th>列标签</th>
+    <#list 0..(cellTotalMax-1) as t>
+ 	<td>
+ 	 <div align="center"> 
+ 	  <input  style="width:150px" name="columnNameTag"  id="columnNameTag_${(t+1)}"   	 	 
+ 	 </input>
+ 	  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 	 </div>
+ 	</td>
+	</#list>
+  </tr>
+	
+   <tr>
+    <th>数据类型</th>
+   	<#list 1..cellTotalMax as i>
+ 	<td>
+       <div align="center">
+       <select name="columnDataType" id="columnDataType_${i}">
+		  <option value ="string">字符</option>
+		  <option value ="number">数值</option>
+		  <option value="date">日期</option>
+	   </select>
+       </div>
+ 	</td>
+	</#list>
+  </tr>
+ 
+ <#if (firstLineIgnore=="true")>
+	  <#list list as cells>
+		  <#if cells_index!=0>
+			   <tr>
+			  	<td> ${cells_index}</td>
+			  	<#list 0..(cellTotalMax-1) as t>			  	     
+			  		<td title="${cells[t]!}">
+			  		<#if cells[t]??&&cells[t]!="">
+				  		<#if cells[t]?length lt 15>
+				  			${cells[t]!}
+				  		<#else>
+				  			${cells[t][0..15]}...
+				  		</#if>				  		  
+			  		</#if>
+			  		 </td>
+			  	</#list>
+				  	  
+				</tr> 
+		  </#if>			
+	</#list>
+ <#else> 
+	  <#list list as cells>
+			<tr>
+		  	<td>${cells_index+1}</td>
+		  	<#list 0..(cellTotalMax-1) as t>
+		  		<td title="${cells[t]!}">
+			  		<#if cells[t]??&&cells[t]!="">
+				  		<#if cells[t]?length lt 15>
+				  			${cells[t]!}
+				  		<#else>
+				  			${cells[t][0..15]}...
+				  		</#if>				  		  
+			  		</#if>
+			   </td>
+		  	</#list>
+			  	  
+			</tr> 
+		</#list>
+ </#if> 	
+
+<tr>
+    <th>表信息</th>    
+ 	<td colspan="${cellTotalMax}" >
+ 	
+<div class="investment_f">
+  <div class="investment_title">
+    <div class="on">导入到新建表</div>
+    <div>追加到现有表</div>  
+  </div>
+  <div class="investment_con">
+    <div class="investment_con_list">
+     <P>
+ 		表名<input  id="tableName" value="<#if task??>${task.tableName!}</#if>" size="20" onchange="tableNameChange(this.value)" ></input> <span id="tableInfo"></span>
+	  </P>
+	  <br>
+      <P>
+ 		目录<input  id="catalog" value="" size="20"></input>
+	  </P>	  
+	  <br>
+      <P>
+ 		来源<input  id="origin" value="<#if task??>${task.origin!}</#if>" size="20"></input>
+	  </P>
+	   <br>
+	  <P>
+ 		标签<input  id="tagName" value="<#if task??>${task.tags!}</#if>" size="20"></input>
+	  </P>
+    </div>
+    
+    <div class="investment_con_list">    
+      <P>      
+ 		<input  id="search" value="" size="20"></input>&nbsp;&nbsp;<input type="button" id="searchSubmit" value="查询" onclick="searchCollction()">
+        
+<table class="gridtable" id="gridtable" style="display:none">
+<tr id="searchCollectionInfo">
+<th>表名</th><th>目录</th><th>来源</th><th>标签</th><th>操作</th> 
+</tr>
+</table>
+        
+       
+      </P>
+ 
+    </div>
+    <div class="investment_con_list" >
+     <p></p> 
+    </div>
+  </div>
+</div>
+ 	</td>
+
+  </tr>
+ 
+
+</table>
+<div class="radioText">
+	<input id="run0" name="runType"  type="radio" value="0000-00-00 00:00:00"  onclick="runTypeChange('0')" checked=''/>立即执行导入任务<br/>
+	<input id="run" name="runType"  type="radio" value="1"  onclick="runTypeChange('1')"/>计划执行时间<br/>
+	<input type="text" id="run1" value="" style="display:none" readonly="readonly" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-%d'})">
+	<input name="sameRule" type="checkbox" id="sameRule" value="sameRule"> 以相同规则导入下一文件<br/>
+	<input type="button" onclick="javascript:history.go(-1);" value="返回上一步">   <input type="button" id="submit" disabled="true" value="提交任务"><span id="loading"></span>
+<br/>
+<br/>
+</div>
+
+<form  id="form" name="form" action="../task/v_taskBySameRule.htm"  method="post">
+<input type="hidden" id="preFilePath" name="preFilePath" value="${filePath!}">
+</form>
+
+<input type="hidden" id="filePath" value="${filePath!}">
+<script type="text/javascript" src="../js/My97DatePicker/WdatePicker.js" id="st-main"></script>
+<script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
+<script type="text/javascript" src="../js/common.js" id="st-main"></script>
+<script>
+//预览
+$("#submit").bind("click",function(){
+	 var cleanOrAppend = $('input[name="cleanOrAppend"]:checked').val();
+	 
+	 if(cleanOrAppend==undefined){
+		 cleanOrAppend="clean";
+	 }
+	 
+	var tableName = $("#tableName").val();
+	var dis = $("#gridtable").css("display");	
+	if (tableName.replace(/(^\s*)|(\s*$)/g,'')==""){		
+		if(dis=="none"){
+			alert("请输入表名");
+			return;
+		}else{
+			var tableName2 = $('input[name="selectThisCollection"]:checked').val();			
+			if(tableName2==undefined){
+				alert("请选则要追加的表");
+				return;
+			}else{				
+				tableName = tableName2;
+				cleanOrAppend="append";
+			}			
+		}
+	} 
+	
+	var tagName = $("#tagName").val();
+	//if (tagName=="") return;
+	
+	var origin = $("#origin").val();
+	//if (origin=="") return;
+	
+	
+	var runTime  = "";
+	
+	if($("#run1").val()!=""){
+		runTime = $("#run1").val();
+	}else{
+		if($("input[name='runType'][checked]").val()!=null){
+			runTime = $("#run0").val();
+		}
+		
+	}
+	
+	if(runTime==""){
+		alert("请选择执行时间")
+		return;
+	}
+	
+	var columnIndex = "";
+	
+	var columnName = "";
+	var columnNameTag = "";
+	
+	var columnChecked = $('[name = "import"]:checkbox:checked');
+	
+	var temp ="";
+	var tagTemp ="";
+	for (var i = 0; i < columnChecked.length; i++) {
+		columnIndex = (columnIndex + columnChecked.get(i).value) + (((i + 1)== columnChecked.length) ? '':','); 
+		
+		temp =$("#columnName_"+columnChecked.get(i).value).val();
+		tagTemp =$("#columnNameTag_"+columnChecked.get(i).value).val();
+		if(temp.replace(/(^\s*)|(\s*$)/g,'')==''){
+			alert("第 【"+columnChecked.get(i).value+"】列列名不能为空")
+			return;
+		}	
+		
+		columnName = (columnName + temp) + (((i + 1)== columnChecked.length) ? '':','); 
+		columnNameTag = (columnNameTag + tagTemp) + (((i + 1)== columnChecked.length) ? '':','); 
+	}
+		
+	$('#submit').attr('disabled','true');  
+	$('#loading').html("<img src='../resources/images/loading.gif'/>");
+	
+		$.ajax(  
+	            {  
+	                url:'../task/o_task.htm', 
+	                type:"post",  
+	                async:true,  
+	                data:{'tableName':tableName,'firstLineIgnore':'${firstLineIgnore}','separator':"",'filePath':$("#filePath").val(),'tags':tagName,'origin':origin,'runTime':runTime,'columnName':columnName,'columnNameTag':columnNameTag,'columnIndex':columnIndex,'cleanOrAppend':cleanOrAppend},  
+	                dataType:"json",  
+	                timeout:"1000000",  
+	                error:function(){
+	                	
+	                },  
+	                success:function(data)  
+	                {  
+	                	if(data.code==200){
+	                		$('#submit').attr('disabled',false); ; 
+		                	$('#loading').html("");
+		                	alert(data.msg);	  
+	                	}else{
+	                		$('#submit').attr('disabled',false); ; 
+		                	$('#loading').html("");
+	                		 if(confirm(data.msg+"   ,是否查看错误日志？"))	                			  
+	                		    {   
+	                			 location.href='../file/errorLogByTaskId.htm?id='+data.taskId
+	                		     }
+	                	}
+	                	            	 	
+	                }  
+	            }  
+	        ); 
+
+			
+	if(document.getElementById("sameRule").checked){
+		$("#form").submit();
+	}
+	 
+});  
+	
+	function runTypeChange(value){
+		if(value==0){
+			$("#run0").attr("checked","checked");
+			$("#run1").removeAttr("checked");
+			$("#run1").val("");
+			$("#run1").hide();
+		}else{
+			$("#run1").show();
+			//$("#run1").attr("checked","checked");
+			$("#run0").removeAttr("checked");
+		}
+	
+	}
+	
+	function tableNameChange(collectionName){
+	   if(collectionName.replace(/(^\s*)|(\s*$)/g,'')==""){
+		   //alert(" 请填写表名");
+		   return ;
+	   }
+	   
+		$.ajax(  
+	            {  
+	                url:'../mongo/getByCollectionName.htm', 
+	                type:"post",  
+	                async:true,  
+	                data:{'collectionName':collectionName,'likeSelect':true},  
+	                dataType:"json",  
+	                timeout:"100000",  
+	                error:function(){alert("服务加载出错");},  
+	                success:function(data)  
+	                {  
+	                	if(data.code==100){
+	                		//$("#tableInfo")。text("存在"+collectionName);
+	                		$("#tableInfo").html("&nbsp;&nbsp; 已经存在表： "+collectionName+"&nbsp;&nbsp;  <a href='#'>浏览</a>"+
+	                				"&nbsp;&nbsp;  <input id='cleanOrAppend1' type='radio' name='cleanOrAppend' value='clean' checked=''>清空并追加"+
+	                				"&nbsp;&nbsp;  <input id='cleanOrAppend2' type='radio' name='cleanOrAppend' value='append'  >追加到此表 "
+	                				);  
+	                	}else{
+	                		$('#submit').attr('disabled',false); 
+	                		$("#tableInfo").html("");
+	                	}               	
+	              	 	
+	                }  
+	            }  
+	        );
+	
+	}
+	
+	function searchCollction(){
+		var keyWord = $("#search").val();
+		if (keyWord.replace(/(^\s*)|(\s*$)/g,'')==""){
+			alert("请输入关键词")
+			return;
+		} 
+		
+		$.ajax(  
+	            {  
+	                url:'../mongo/getByKeyWord.htm', 
+	                type:"post",  
+	                async:true,  
+	                data:{'KeyWord':keyWord},  
+	                dataType:"json",  
+	                timeout:"100000",  
+	                error:function(){alert("服务加载出错");},  
+	                success:function(data)  
+	                {  
+	                	if(data[0].exist==true){
+	                		 $("#tableName").val("");
+	             	 		var tbody = "";  
+	                		$.each(data[0].content, function (n, value) {  	    
+	                            var trs = "";  
+	                            trs += "<tr>"+
+	                            "<td>" + value.collectionName + "</td>"+
+	                            "<td> </td>"+
+	                            "<td>" + value.origin + "</td>" +
+	                            "<td>" + value.tags + "</td>"+
+	                            "<td><input id='selectThisCollection"+n+"' type='radio' name='selectThisCollection' value='"+value.collectionName+"'>选用</td>"+ 
+	                            "</tr>";  
+	                            tbody += trs;  
+	                        });             		
+	                		
+	                		$("#gridtable").css("display", "block")
+	                		$("#searchCollectionInfo").after(tbody);  
+	                	}else{
+	                		$("#gridtable").css("display", "block")
+	                		$('#searchCollectionInfo').siblings().remove();	                		
+	                	}               	
+	              	 	
+	                }  
+	            }  
+	        );
+		
+	}
+	
+	
+</script>
+
+
+<script type = "text/javascript" >
+function blinklink() {
+    if (!document.getElementById('blink').style.color) {
+        document.getElementById('blink').style.color = "red";
+    }
+    if (document.getElementById('blink').style.color == "red") {
+        document.getElementById('blink').style.color = "#0F0F0F";
+    } else {
+        document.getElementById('blink').style.color = "red";
+    }
+    timer = setTimeout("blinklink()", 1000);
+}
+function stoptimer() {
+    clearTimeout(timer);
+} 
+blinklink()
+</script>
+
+</BODY>
+</HTML>

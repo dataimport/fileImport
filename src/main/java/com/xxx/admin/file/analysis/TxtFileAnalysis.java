@@ -285,7 +285,7 @@ public class TxtFileAnalysis  {
 	
 		Runtime runtime=Runtime.getRuntime();
 		String temp;
-		int number=0;
+		int number=1;
 		try{
 			Process process  = runtime.exec(command);
 			BufferedReader br = new BufferedReader(new InputStreamReader(
