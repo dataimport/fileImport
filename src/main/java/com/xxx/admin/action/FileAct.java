@@ -129,8 +129,9 @@ public class FileAct {
 	private TaskService taskService;
 	
 	public static void main(String[] args) {
-		String str="aaa.txt";
-		System.out.println(str.substring(str.lastIndexOf(".")+1, str.length()));
+		String str="junglesaber	junglesaber	0	d5aa1729c8c253e5d917a5264855eab8	junglesaber@163.com";
+		String[] lineSeparator = str.split("\\s+",-1);	
+		System.out.println(lineSeparator.length);
 	}
 	
 }

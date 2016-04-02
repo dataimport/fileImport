@@ -63,7 +63,7 @@ public class FileService {
 	 * @param t
 	 * @return
 	 */
-	public int saveFileToMongo(Task t) {		
+	public int[] saveFileToMongo(Task t) {		
 	    String filePath = t.getFilePath();
 		File file = new File(filePath);
 		if(file.exists()){
@@ -75,7 +75,7 @@ public class FileService {
 				boolean canBreak = false;
 				while(i<4&&!canBreak){//最多执行3次，					
 					try{
-						Thread.sleep(i*5000);						
+						Thread.sleep(i*3000);						
 					}catch(Exception ex){
 						canBreak = true;
 						ex.printStackTrace();
@@ -88,7 +88,7 @@ public class FileService {
 				}
 			
 				if(!canBreak){
-					return -1;
+					return new int[]{-1,0};
 				}				
 		  }
 		  
@@ -100,19 +100,19 @@ public class FileService {
 				 return  excelFileImport(t);
 			 }catch(Exception e){
 				 log.error("excel 导入到mong异常： ",e.getMessage());
-				 return -1;
+				 return  new int[]{-1,0};
 			 }
 		 }else{
 			//文件不存在，导入失败，记录到失败日志
 			 MongoInToErrorLog mel = new MongoInToErrorLog(t.getUid(),t.getFilePath(),"文件格式不是txt、xls、或者xlsx的",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 			 mongoErrorLog.saveObject(mel);
-			 return -1;
+			 return  new int[]{-1,0};
 		 }
 		}else{
 			//文件不存在，导入失败，记录到失败日志
 			MongoInToErrorLog mel = new MongoInToErrorLog(t.getUid(),t.getFilePath(),"文件不存在",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 			mongoErrorLog.saveObject(mel);
-			return -1;
+			return  new int[]{-1,0};
 			
 		}
 		
@@ -175,9 +175,10 @@ public class FileService {
      * @param successNum
      * @return
      */
-	private int txtFileImport(File file,Task t){
-		  int successNum = -1;
-		  if(file.length()/1048576>TxtFileAnalysis.FILESIZE_TIPPINGPOINT){//大文件			 
+	private int[] txtFileImport(File file,Task t){
+		  int successNum = 0;
+		  if(file.length()/1048576>TxtFileAnalysis.FILESIZE_TIPPINGPOINT){//大文件		
+			  int runNum=0;
 			  try {
 				  FileChannel fcin = new RandomAccessFile(file, "r").getChannel();			
 				  ByteBuffer rBuffer = ByteBuffer.allocate(TxtFileAnalysis.BUFFER_SIZE);
@@ -187,8 +188,6 @@ public class FileService {
 				  StringBuffer strBuf = new StringBuffer("");
 				  String line = "";
 				  List<String> lines = new ArrayList<String>();
-				  int runNum=0;
-				  int nownum=0;
 				  long start = System.currentTimeMillis();		
 				  String charset = txtFileAnalysis.getCharset(t.getFilePath());
 				  while (fcin.read(rBuffer) != -1) {				
@@ -197,7 +196,7 @@ public class FileService {
 								bs,enterStr,line,strBuf,
 								fcin,rBuffer,lines,charset);	 					 
 					 successNum+=fmRepository.FilePushToMongo(t, lines,true,runNum,System.currentTimeMillis()-start);		
-					 runNum+=lines.size();
+					 //runNum+=lines.size();
 				  }					
 
 				  //更新状态为导入完毕
@@ -221,9 +220,9 @@ public class FileService {
 					String[] keys = new String[]{"taskStatus"};
 					Object[] values = new Object[]{BaseTask.TASK_STATUS_FAILED};			
 					fmRepository.updateFileInfoByField(t.getUid(), keys, values);
-					return -1;
+					 return new int[]{successNum,runNum-successNum};
 				}			  
-			  return successNum;
+			  return new int[]{successNum,runNum-successNum};
 		  }else{//小文件
 			  try{
 				  List<String> lines = txtFileAnalysis.readSmallFile(t.getFilePath(),txtFileAnalysis.getCharset(t.getFilePath()));
@@ -240,7 +239,7 @@ public class FileService {
 							new Object[]{BaseTask.TASK_STATUS_WAITING,lines.size()});
 				  
 				  saveToRepeatColls(t);
-				  return successNum;
+				  return new int[]{successNum,lines.size()-successNum};
 			  }catch(Exception ex){
 				  ex.printStackTrace();
 				  log.error("保存小文件到mongodb异常： ", ex);	
@@ -250,7 +249,7 @@ public class FileService {
 				  String[] keys = new String[]{"taskStatus"};
 				  Object[] values = new Object[]{BaseTask.TASK_STATUS_FAILED};			
 				  fmRepository.updateFileInfoByField(t.getUid(), keys, values);
-				  return -1;
+				  return new int[]{-1,0};
 			  }			  
 		  }
 	}
@@ -263,7 +262,7 @@ public class FileService {
 	 * @return
 	 * @throws Exception 
 	 */
-	private int excelFileImport(Task t) throws Exception{
+	private int[] excelFileImport(Task t) throws Exception{
 		int successNum = -1;
 		int totalNumber = excelFileAnalysis.getFileLineNum(t.getFilePath());
 		Map<String,Object> map= excelFileAnalysis.readAllLines(t.getFilePath(),totalNumber);
@@ -280,7 +279,7 @@ public class FileService {
 					new Object[]{BaseTask.TASK_STATUS_WAITING,successNum});
 		  
 		  saveToRepeatColls(t);
-		  return successNum;
+		  return new int[]{successNum,list.size()-successNum};
 	}
 	
 	

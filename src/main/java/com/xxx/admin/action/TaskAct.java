@@ -228,9 +228,14 @@ public class TaskAct {
 			boolean result = taskService.createTask(task);//创建任务
 			
 			if(result){
-				int successNum = fileService.saveFileToMongo(task);
-				if(successNum!=-1){
-					ResponseUtils.renderJson(response, "{\"code\":200,\"msg\":\"创建任务,并且入库成功，本次任务共导入【  "+successNum+"  】条数据\"}");
+				int[] successAndFailNum = fileService.saveFileToMongo(task);
+				if(successAndFailNum[0]!=-1){
+					if(successAndFailNum[1]>0){
+						ResponseUtils.renderJson(response, "{\"code\":200,\"msg\":\"创建任务并且入库成功，本次任务共导入【  "+successAndFailNum[0]+" 】条数据,【  "+successAndFailNum[1]+" 】条数据与设置列数不符，未导入\"}");
+					}else{
+						ResponseUtils.renderJson(response, "{\"code\":200,\"msg\":\"创建任务并且入库成功，本次任务共导入【  "+successAndFailNum[0]+"  】条数据\"}");
+					}
+					
 				}else{
 					ResponseUtils.renderJson(response, "{\"code\":500,\"taskId\":\""+task.getUid()+"\",\"msg\":\"创建任务成功,但是导入数据失败\"}");
 				}			

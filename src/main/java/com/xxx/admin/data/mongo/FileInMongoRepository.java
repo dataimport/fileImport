@@ -187,41 +187,43 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 		int columnIndexSize = columnIndex.length;
 		
 		String[] lineSeparator;
-		int nowNum = 0,successNum=0;
+		int successNum=0;
 		String[] keys = new String[]{"runNum","timeUse"};
 		Object[] values = new Object[2];
 		String timeUse = "0 秒";
 		long l=0l;
 		
-		String separator="";
-		
+		String separator = task.getSeparator();
+		if(StringUtils.isBlank(separator)){
+			separator="\\s+"; //代表多个空格			
+		}else{
+			if(!"\\s+".equals(separator)){				
+				separator = StrUtils.separatorCheck(separator);//特殊字符特换
+			}			
+		}
 		for(int i=0;i<valuesSize;i++){
+			runNum++;
 			try{//加上异常处理，这样个别数据有问题，不会影响整体数据的导入
 				data = new BasicDBObject(); 
-				separator = task.getSeparator();
-				if(StringUtils.isBlank(separator)){
-					separator="\\s+"; //代表多个空格			
-				}else{
-					separator = StrUtils.separatorCheck(separator);//特殊字符特换
-				}
-				lineSeparator = list.get(i).trim().split(separator,-1);		
+				lineSeparator = list.get(i).trim().split("\\s+",-1);	
 				if(lineSeparator.length==columns.length){//如果当前行的列数与设置的列名数一致 则导入
 					if(lineSeparator.length>=columnIndexSize){//处理虽然有换行但是没有数据的情况，或者数据分割后，总数跟填写的字段数不匹配。
 						for(int j=0;j<columnIndexSize;j++){
 							data.put(columns[j], lineSeparator[columnIndex[j]-1]);
 						}			
+						
 						dbColleciton.insert(data);		
 						if(isBigFile!=null&&!isBigFile){//不是大文件 按行数更新
-							nowNum++;			
-							if(nowNum==valuesSize||nowNum%10==0){//每10条更新一次任务表进度
+									
+							if(runNum==valuesSize||runNum%10==0){//每10条更新一次任务表进度
 								l=System.currentTimeMillis()-start;
 								timeUse = getTimeUse(l);
-								values[0]=String.valueOf(nowNum);
+								values[0]=String.valueOf(runNum);
 								values[1]=timeUse;					
-								if(nowNum==valuesSize){;
+								if(runNum==valuesSize){;
 									 keys = new String[]{"runNum","timeUse","endDate","taskStatus"};
 									 values = new Object[5];
-									 values[0]=nowNum;
+									 values[0]=runNum;
 									 values[1]=timeUse;	
 									 values[2]=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 									 values[3]=2;
@@ -232,12 +234,14 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 						}	
 						successNum++;
 					}			
+				}else{
+					saveFailData(task,runNum);//没导入，记录到失败记录表里
 				}
 				
 			}catch(Exception ex){
 				ex.printStackTrace();
-				nowNum++;//错误记录也加入到导入行中，否则算百分比的时候不正确。
-				saveFailData(task,runNum+i);
+				runNum++;//错误记录也加入到导入行中，否则算百分比的时候不正确。
+				saveFailData(task,runNum);
 			}			
 		}	
 		
@@ -367,7 +371,7 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 			for(int i=0;i<key.length;i++){
 				taskDB.put(key[i], value[i]);
 			}
-			dbColleciton.update(query, taskDB);
+			dbColleciton.update(query, taskDB);  
 		}		
 	}
 	
