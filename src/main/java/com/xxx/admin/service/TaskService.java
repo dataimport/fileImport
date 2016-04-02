@@ -1,6 +1,7 @@
 package com.xxx.admin.service;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -171,6 +172,32 @@ public class TaskService {
 			ex.printStackTrace();
 		}
 		return  null;
+	}
+	
+	public String getPercent(String filePath){
+		try{
+			Task task =  taskRepository.getObjectsByFilePath(filePath);
+			if(task!=null){
+				int runNum = task.getRunNum();
+				long totalCount = task.getTotalCount(); 
+				if(totalCount!=0l&&runNum!=0){
+					if(totalCount>=(long)runNum){
+						DecimalFormat df = new DecimalFormat("0");
+						return df.format(((float)((long)runNum*100/totalCount)));
+					}else{
+						return "0";
+					}					
+				}else{
+					return "0";
+				}
+			}else{
+				return "0";
+			}
+			
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return "0";
 	}
 
 	private void setTaskInfo(Task task){

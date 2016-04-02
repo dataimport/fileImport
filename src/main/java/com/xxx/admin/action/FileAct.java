@@ -2,6 +2,7 @@ package com.xxx.admin.action;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -129,9 +130,10 @@ public class FileAct {
 	private TaskService taskService;
 	
 	public static void main(String[] args) {
-		String str="junglesaber	junglesaber	0	d5aa1729c8c253e5d917a5264855eab8	junglesaber@163.com";
-		String[] lineSeparator = str.split("\\s+",-1);	
-		System.out.println(lineSeparator.length);
+	   long a = (long)100;
+	   long b = 1000000;
+	   DecimalFormat df = new DecimalFormat("0");
+	   System.out.print(df.format(((float)a*100/b)));
 	}
 	
 }

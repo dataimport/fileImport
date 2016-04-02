@@ -8,6 +8,18 @@
 .radioText {
 	font-size:11px;
 }
+#processbar {
+	height: 13px;
+	width: 30%;
+	margin-top: 20px;
+	background-color: #fff;
+	border: 1px solid #999;
+}
+#processbar .finish {
+	height: 13px;
+	width: 0%;
+	background-color: #999;
+}
 </style>
 </head>
 <BODY>
@@ -176,7 +188,10 @@
 	<input id="run" name="runType"  type="radio" value="1"  onclick="runTypeChange('1')"/>计划执行时间<br/>
 	<input type="text" id="run1" value="" style="display:none" readonly="readonly" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-%d'})">
 	<input name="sameRule" type="checkbox" id="sameRule" value="sameRule"> 以相同规则导入下一文件<br/>
-	<input type="button" onclick="javascript:history.go(-1);" value="返回上一步">   <input type="button" id="submit" disabled="true" value="提交任务"><span id="loading"></span>
+	<input type="button" onclick="javascript:history.go(-1);" value="返回上一步">   <input type="button" id="submit" disabled="true" value="提交任务">
+	<div id="processbar" style="display:none">
+  	<div class="finish" style="width:0%"></div>
+  </div>
 <br/>
 <br/>
 </div>
@@ -188,8 +203,12 @@
 <input type="hidden" id="filePath" value="${filePath!}">
 <script type="text/javascript" src="../js/My97DatePicker/WdatePicker.js" id="st-main"></script>
 <script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
+<script type="text/javascript" src="../js/jquery/jqmeter.min.js" id="st-main"></script>
+<script type="text/javascript" src="../js/jquery/jquery.timers-1.2.js" id="st-main"></script>
+<script type="text/javascript" src="../js/jquery/jquery.corner.js" id="st-main"></script>
 <script type="text/javascript" src="../js/common.js" id="st-main"></script>
 <script>
+
 //预览
 $("#submit").bind("click",function(){
 	 var cleanOrAppend = $('input[name="cleanOrAppend"]:checked').val();
@@ -262,9 +281,24 @@ $("#submit").bind("click",function(){
 		columnNameTag = (columnNameTag + tagTemp) + (((i + 1)== columnChecked.length) ? '':','); 
 	}
 		
-	$('#submit').attr('disabled','true');  
-	$('#loading').html("<img src='../resources/images/loading.gif'/>");
 	
+	$('#submit').attr('disabled','true');  
+	//$('#loading').html("<img src='../resources/images/loading.gif'/>");
+	$('#processbar').show();
+	
+	var stop = false;
+	$('body').everyTime('1s','C',function(){	
+		var percent = getPercent();
+		if(!stop){
+	   		 $("#processbar .finish").css("width", percent + "%");
+	   		 //$("#finishvalue").text(percent + "%");
+		}
+	    //console.log(" ####　"+percent);
+	    if(percent==100||stop){
+	    	$('body').stopTime();
+	    }
+	},0,true);
+	  
 		$.ajax(  
 	            {  
 	                url:'../task/o_task.htm', 
@@ -277,25 +311,26 @@ $("#submit").bind("click",function(){
 	                	
 	                },  
 	                success:function(data)  
-	                {  
+	                {  	     
+	                	stop = true;
 	                	if(data.code==200){
 	                		$('#submit').attr('disabled',false); ; 
-		                	$('#loading').html("");
+		                	//$('#loading').html("");
+		                	$("#processbar .finish").css("width", 100 + "%");
+		                	//$("#finishvalue").text("100%");
 		                	alert(data.msg);	  
 	                	}else{
 	                		$('#submit').attr('disabled',false); ; 
-		                	$('#loading').html("");
+		                	//$('#loading').html("");
 	                		 if(confirm(data.msg+"   ,是否查看错误日志？"))	                			  
 	                		    {   
 	                			 location.href='../file/errorLogByTaskId.htm?id='+data.taskId
 	                		     }
-	                	}
-	                	            	 	
+	                	}	 	
 	                }  
 	            }  
 	        ); 
 
-			
 	if(document.getElementById("sameRule").checked){
 		$("#form").submit();
 	}
@@ -329,7 +364,7 @@ $("#submit").bind("click",function(){
 	                async:true,  
 	                data:{'collectionName':collectionName,'likeSelect':true},  
 	                dataType:"json",  
-	                timeout:"100000",  
+	                timeout:"5000",  
 	                error:function(){alert("服务加载出错");},  
 	                success:function(data)  
 	                {  
@@ -396,6 +431,29 @@ $("#submit").bind("click",function(){
 		
 	}
 	
+	
+function getPercent(){
+	    var percent=0;
+		$.ajax(  
+	            {  
+	                url:'percent.htm', 
+	                type:"post",  
+	                async:true,  
+	                data:{'filePath':'${unDeCodeFilePath!}'},  
+	                dataType:"json",  
+	                timeout:"1000",  
+	                async:false,
+	                error:function(){
+	                	percent = 0;
+	                },  
+	                success:function(data)  
+	                {  	                	
+	                	percent = data.msg;
+	                }  
+	            }  
+	        );
+		return percent;
+	}
 	
 </script>
 

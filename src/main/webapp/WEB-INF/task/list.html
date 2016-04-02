@@ -88,7 +88,7 @@ span.jPag-current{
 </head>
 <body>
 <span style="font-size:12px;">状态：</span>
-<select onchange="setSeparator(this.options[this.options.selectedIndex].value)">
+<select onchange="showList(this.options[this.options.selectedIndex].value)">
 			<option value="">全部</option>
 			<option value="0" <#if status??&&status==0 >selected="selected"</#if>>未完成</option>
 			<option value="1" <#if status??&&status==1 >selected="selected"</#if>>执行中</option>
@@ -99,8 +99,8 @@ span.jPag-current{
 
 <table class="gridtable">
 <tr>
-<th>任务序号</th><th>任务名称</th><th>创建者</th><th>状态</th><th>计划/启动时间</th><th>时长</th>	
-<th>进度/数据条目</th><th>源文件</th><th>操作</th>
+<th>任务序号</th><th>任务名称</th><th>创建者</th><th>状态</th><th>计划启动时间</th><th>执行时间</th><th>时长</th>	<th>总记录数</th><th>导入的记录数</th>	
+<th>进度</th><th>源文件</th><th>操作</th>
 </tr>
 
 <#list list as task>
@@ -126,9 +126,17 @@ span.jPag-current{
 		<td>
 		 ${task.runTime!}
 		</td>
-		
+		<td>
+		 ${task.startDate!}
+		</td>
 		<td>
 		 ${task.timeUse!}
+		</td>
+		<td>
+		 ${task.totalCount!}
+		</td>
+		<td>
+		 ${task.runNum!}
 		</td>
 		
 	   <td>
@@ -138,55 +146,62 @@ span.jPag-current{
 	    <font color="#0D3EEF">${percent!}%</font> 
 	   <#else>
 	     <font color="#EF0F1A">${percent!}%</font> 
-	   </#if>
-		  / <b>${task.totalCount!}
+	   </#if>		
 	   <#else>
 	   		计算中
 	   </#if>
 	   </b></td><td>${task.filePath!}</td>
-	   <td>删除已导入数据 </td>
+	   <td><a  name="previewClick" data-path="${task.filePath!}" href="#">重新导入</a></td>
 	</tr> 			
 </#list>	
 </table>
 </#if>
 
 
-<div id="page">       </div>
-	
+<div id="page"> </div>
+<form id="previewForm" action="../file/preview.htm" method="post">
+<input type="hidden" name="filePath" id="filePath" value=""/>
+</form>	
+
+<script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
+<script type="text/javascript" src="../js/jquery/jquery.paginate.js" id="st-main"></script>
 <script>
-function setSeparator(status){
+function showList(status){
 	window.location.href="list.htm?status="+status;
  	 
 }
-</script>
-<script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
-<script type="text/javascript" src="../js/jquery/jquery.paginate.js" id="st-main"></script>
 
-<script type="text/javascript">
-		$(function() {
-			$("#page").paginate({
-				count 		: ${page.totalPage!},
-				start 		: ${pageNo!},
-				display     : 12,
-				border					: false,
-				text_color  			: '#888',
-				background_color    	: '#EEE',	
-				text_hover_color  		: 'black',
-				background_hover_color	: '#CFCFCF',
-				mouse		: 'press',
-				onChange  : function(page){
-					<#if status??>
-						window.location.href="list.htm?status=${status}&pageNo="+page;
-					<#else>
-						window.location.href="list.htm?pageNo="+page;
-					</#if>
-					
-				  }
-					
-			});
-	
-		});
-		</script>
+$("a[name='previewClick'").click(function(){
+	var path= encodeURIComponent($(this).attr("data-path"));
+	$("#filePath").val(path);
+	$("#previewForm").submit();
+});
+
+$(function() {
+	$("#page").paginate({
+		count 		: ${page.totalPage!},
+		start 		: ${pageNo!},
+		display     : 12,
+		border					: false,
+		text_color  			: '#888',
+		background_color    	: '#EEE',	
+		text_hover_color  		: 'black',
+		background_hover_color	: '#CFCFCF',
+		mouse		: 'press',
+		onChange  : function(page){
+			<#if status??>
+				window.location.href="list.htm?status=${status}&pageNo="+page;
+			<#else>
+				window.location.href="list.htm?pageNo="+page;
+			</#if>
+			
+		  }
+			
+	});
+
+});
+</script>
+
 		
 
 </body>

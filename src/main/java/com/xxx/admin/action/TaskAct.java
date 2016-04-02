@@ -109,6 +109,8 @@ public class TaskAct {
 			ex.printStackTrace();
 		}
 		
+		model.put("unDeCodeFilePath", filePath);
+		
 		if(firstLineIgnore){
 			model.put("firstLineIgnore", "true");
 		}else{
@@ -117,7 +119,7 @@ public class TaskAct {
 		if(message.length()>0){
 			model.put("errorMessage", "提醒：此文件的 第： "+message.toString()+" ...... 行的列数与第一行的列数不相等，显示的时候已经忽略，导入数据的时候也会被忽略");
 		}
-		return "file/task_view";
+		return "task/task_view";
 	}	
 	
 	
@@ -249,6 +251,17 @@ public class TaskAct {
 			ResponseUtils.renderJson(response, "{\"code\":200,\"msg\":\"创建任务成功\"}");
 		}		
 		return null;
+	}
+	
+	@RequestMapping(value = "percent.htm")
+	public void getPercent(String filePath,HttpServletResponse response) {	
+		String percent ="0";		
+		try{
+			percent = taskService.getPercent(java.net.URLDecoder.decode(filePath,"UTF-8"));
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}		
+		ResponseUtils.renderJson(response, "{\"code\":200,\"msg\":"+percent+"}");
 	}
 		
 	@Autowired
