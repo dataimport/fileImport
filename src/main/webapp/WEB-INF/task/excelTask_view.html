@@ -74,10 +74,10 @@
 		  <#if cells_index!=0>
 			   <tr>
 			  	<td> ${cells_index}</td>
-			  	<#list 0..(cellTotalMax-1) as t>			  	     
+			  	<#list 0..(cellTotalMax-1) as t>		  	     
 			  		<td title="${cells[t]!}">
 			  		<#if cells[t]??&&cells[t]!="">
-				  		<#if cells[t]?length lt 15>
+				  		<#if cells[t]?length lt 16>
 				  			${cells[t]!}
 				  		<#else>
 				  			${cells[t][0..15]}...
@@ -96,7 +96,7 @@
 		  	<#list 0..(cellTotalMax-1) as t>
 		  		<td title="${cells[t]!}">
 			  		<#if cells[t]??&&cells[t]!="">
-				  		<#if cells[t]?length lt 15>
+				  		<#if cells[t]?length lt 16>
 				  			${cells[t]!}
 				  		<#else>
 				  			${cells[t][0..15]}...

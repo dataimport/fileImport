@@ -87,9 +87,9 @@ span.jPag-current{
 </style>
 </head>
 <body>
-状态：
+<span style="font-size:12px;">状态：</span>
 <select onchange="setSeparator(this.options[this.options.selectedIndex].value)">
-			<option value=""></option>
+			<option value="">全部</option>
 			<option value="0" <#if status??&&status==0 >selected="selected"</#if>>未完成</option>
 			<option value="1" <#if status??&&status==1 >selected="selected"</#if>>执行中</option>
 			<option value="2" <#if status??&&status==2>selected="selected"</#if>>已完成</option>
@@ -133,12 +133,18 @@ span.jPag-current{
 		
 	   <td>
 	   <#if task.totalCount??&&task.totalCount!=0>
-		    ${((task.runNum!/task.totalCount!)*100)?string("0.#")}% / <b>${task.totalCount!}
+	   <#assign percent = ((task.runNum!/task.totalCount!)*100)?string("0.#")>
+	   <#if percent=="100">
+	    <font color="#0D3EEF">${percent!}%</font> 
+	   <#else>
+	     <font color="#EF0F1A">${percent!}%</font> 
+	   </#if>
+		  / <b>${task.totalCount!}
 	   <#else>
 	   		计算中
 	   </#if>
 	   </b></td><td>${task.filePath!}</td>
-	   <td>删除已导入数据 | 变更启动时间</td>
+	   <td>删除已导入数据 </td>
 	</tr> 			
 </#list>	
 </table>

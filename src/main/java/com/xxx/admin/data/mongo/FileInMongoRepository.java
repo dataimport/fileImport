@@ -236,6 +236,7 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 				
 			}catch(Exception ex){
 				ex.printStackTrace();
+				nowNum++;//错误记录也加入到导入行中，否则算百分比的时候不正确。
 				saveFailData(task,runNum+i);
 			}			
 		}	
