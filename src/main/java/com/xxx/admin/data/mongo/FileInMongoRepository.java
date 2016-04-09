@@ -236,7 +236,7 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 						successNum++;
 					//}			
 				}else{
-					System.out.println(" run " +runNum +" ### "+  list.get(i).trim()	);
+					//System.out.println(" run " +runNum +" ### "+  list.get(i).trim()	);
 					saveFailData(task,runNum, list.get(i).trim());//没导入，记录到失败记录表里
 				}
 				

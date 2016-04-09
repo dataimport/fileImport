@@ -190,23 +190,28 @@
 
   </tr>
  
+<tr>
+    <th>操作</th> 	
+ 		<td  colspan="${columnsSize}">
+ 		<div class="radioText">
+			<input id="run0" name="runType"  type="radio" value="0000-00-00 00:00:00"  onclick="runTypeChange('0')" checked=''/>立即执行导入任务<br/>
+			<input id="run" name="runType"  type="radio" value="1"  onclick="runTypeChange('1')"/>计划执行时间<br/>
+			<input type="text" id="run1" value="" style="display:none" readonly="readonly" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-%d'})">
+			<input name="sameRule" type="checkbox" id="sameRule" value="sameRule"> 以相同规则导入下一文件<br/>
+			<input type="button" onclick="javascript:history.go(-1);" value="返回上一步">   <input type="button" id="submit" disabled="true" value="提交任务">
+			<div id="processbar" style="display:none">
+		  	<div class="finish" style="width:0%"></div>
+		  	</div>
+		</div>
+ 		</td>	
+</tr>
 
 </table>
-<div class="radioText">
-	<input id="run0" name="runType"  type="radio" value="0000-00-00 00:00:00"  onclick="runTypeChange('0')" checked=''/>立即执行导入任务<br/>
-	<input id="run" name="runType"  type="radio" value="1"  onclick="runTypeChange('1')"/>计划执行时间<br/>
-	<input type="text" id="run1" value="" style="display:none" readonly="readonly" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-%d'})">
-	<input name="sameRule" type="checkbox" id="sameRule" value="sameRule"> 以相同规则导入下一文件<br/>
-	<input type="button" onclick="javascript:history.go(-1);" value="返回上一步">   <input type="button" id="submit" disabled="true" value="提交任务">
-	<div id="processbar" style="display:none">
-  	<div class="finish" style="width:0%"></div>
-  </div>
-<br/>
-<br/>
-</div>
+
 
 <form  id="form" name="form" action="../task/v_taskBySameRule.htm"  method="post">
 <input type="hidden" id="preFilePath" name="preFilePath" value="${filePath!}">
+<input type="hidden" id="preFilePath" name="fileCode" value="${fileCode!}">
 </form>
 
 <input type="hidden" id="filePath" value="${filePath!}">
@@ -271,16 +276,24 @@ $("#submit").bind("click",function(){
 	
 	var columnName = "";
 	var columnNameTag = "";
+	var dataType = ""
 	
 	var columnChecked = $('[name = "import"]:checkbox:checked');
 	
 	var temp ="";
 	var tagTemp ="";
+	var dataTypeTemp ="";
+	var index="";
 	for (var i = 0; i < columnChecked.length; i++) {
-		columnIndex = (columnIndex + columnChecked.get(i).value) + (((i + 1)== columnChecked.length) ? '':','); 
+		index = columnChecked.get(i).value;
 		
-		temp =$("#columnName_"+columnChecked.get(i).value).val();
-		tagTemp =$("#columnNameTag_"+columnChecked.get(i).value).val();
+		columnIndex = (columnIndex + index) + (((i + 1)== columnChecked.length) ? '':','); 
+		
+		temp =$("#columnName_"+index).val();
+		tagTemp =$("#columnNameTag_"+index).val();
+
+		dataTypeTemp  = $('#columnDataType_'+index+' option:selected').val();
+		
 		if(temp.replace(/(^\s*)|(\s*$)/g,'')==''){
 			alert("第 "+columnChecked.get(i).value+" 列列名不能为空")
 			return;
@@ -288,13 +301,13 @@ $("#submit").bind("click",function(){
 		
 		columnName = (columnName + temp) + (((i + 1)== columnChecked.length) ? '':','); 
 		columnNameTag = (columnNameTag + tagTemp) + (((i + 1)== columnChecked.length) ? '':','); 
-	}
-		
+		dataType= (dataType + dataTypeTemp) + (((i + 1)== columnChecked.length) ? '':','); 
+	}	
 	
 	$('#submit').attr('disabled','true');  
 	//$('#loading').html("<img src='../resources/images/loading.gif'/>");
 	$('#processbar').show();
-	
+		
 	var stop = false;
 	$('body').everyTime('1s','C',function(){	
 		var percent = getPercent();
@@ -313,7 +326,7 @@ $("#submit").bind("click",function(){
 	                url:'../task/o_task.htm', 
 	                type:"post",  
 	                async:true,  
-	                data:{'tableName':tableName,'firstLineIgnore':'${firstLineIgnore}','separator':"${separator!}",'filePath':$("#filePath").val(),'fileCode':'${fileCode!}','tags':tagName,'origin':origin,'runTime':runTime,'columnName':columnName,'columnNameTag':columnNameTag,'columnIndex':columnIndex,'cleanOrAppend':cleanOrAppend},  
+	                data:{'tableName':tableName,'firstLineIgnore':'${firstLineIgnore}','separator':"${separator!}",'filePath':$("#filePath").val(),'fileCode':'${fileCode!}','tags':tagName,'origin':origin,'runTime':runTime,'columnName':columnName,'dataType':dataType,'columnNameTag':columnNameTag,'columnIndex':columnIndex,'cleanOrAppend':cleanOrAppend},  
 	                dataType:"json",  
 	                timeout:"1000000",  
 	                error:function(){
@@ -361,11 +374,11 @@ $("#submit").bind("click",function(){
 	}
 	
 	function checkboxChange(id){
-		alert($.trim($('#columnName_'+id).val()));
+
 		if($.trim($('#columnName_'+id).val())!=''){
-			 $('#isImport_'+id).attr("checked","checked");
+			 $('#isImport_'+id).prop("checked", true);
 		}else{
-			$('#isImport_'+id).attr("checked",false);
+			$('#isImport_'+id).prop("checked", false);
 			//$('#isImport_'+id).removeAttr("checked");
 		}
 	}

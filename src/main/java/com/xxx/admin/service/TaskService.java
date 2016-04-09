@@ -87,7 +87,7 @@ public class TaskService {
 					task.getFileName(),task.getFileCode(), task.getFileSize(), task.getLeftTime(),task.getTotalCount(),
 					BaseTask.TASK_STATUS_SOLR_WAITING,
 					task.getTimeUse(), task.getRunNum(), "0",
-					task.getBeginLineNum(), task.getCreateUser(), task.getFirstLineIgnore());		
+					task.getBeginLineNum(), task.getCreateUser(), task.getFirstLineIgnore(),task.getDataType());		
 						
 			solrTaskRepository.saveObject(slorTask, AllCollectionName.SOLR_TASKINFO_COLLECTIONNAME);
 			return true;

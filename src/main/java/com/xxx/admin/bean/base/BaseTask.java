@@ -2,9 +2,6 @@ package com.xxx.admin.bean.base;
 
 import java.io.Serializable;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.PersistenceConstructor;
-
 public abstract class BaseTask implements Serializable {
 
 	/**
@@ -44,6 +41,7 @@ public abstract class BaseTask implements Serializable {
 	private int  beginLineNum; //从文件第几行继续开始导入
 	private String createUser="lxc_admin"; //任务的创建者
 	private boolean firstLineIgnore; //首行是否忽略
+	private String[] dataType;//数据类型
 		
 	
 	public String getTableNameAlias() {
@@ -221,6 +219,14 @@ public abstract class BaseTask implements Serializable {
 	}
 
 
+	public String[] getDataType() {
+		return dataType;
+	}
+
+	public void setDataType(String[] dataType) {
+		this.dataType = dataType;
+	}
+
 	public BaseTask(){
 		  
 	  }
@@ -229,7 +235,7 @@ public abstract class BaseTask implements Serializable {
 			String[] columnName, String[] columnNameTag, Integer[] columnIndex, String separator, String runTime,
 			String startDate, String endDate, String filePath, String fileName, String fileCode, long fileSize,
 			String leftTime, long totalCount, int taskStatus, String timeUse, int runNum, String cleanOrAppend,
-			int beginLineNum, String createUser, boolean firstLineIgnore) {
+			int beginLineNum, String createUser, boolean firstLineIgnore, String[] dataType) {
 		super();
 		this.uid = uid;
 		this.tableName = tableName;
@@ -256,6 +262,7 @@ public abstract class BaseTask implements Serializable {
 		this.beginLineNum = beginLineNum;
 		this.createUser = createUser;
 		this.firstLineIgnore = firstLineIgnore;
+		this.dataType = dataType;
 	}
 	
 }
