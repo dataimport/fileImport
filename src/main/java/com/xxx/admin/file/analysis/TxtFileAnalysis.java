@@ -45,8 +45,8 @@ public class TxtFileAnalysis  {
 	 * @param separator
 	 * @return
 	 */
-	public Map previewFileBySeparator(String filePath,String separator,Integer lineNum)throws ReadFileException{
-		List<String> lines = previewFileByLineNum(filePath,lineNum);//预览指定行数
+	public Map previewFileBySeparator(String filePath,String fileCode,String separator,Integer lineNum)throws ReadFileException{
+		List<String> lines = previewFileByLineNum(filePath,fileCode,lineNum);//预览指定行数
 		String[] columns = getColumns(lines,separator);//获取表头字段,不管有没有
 		Map map = new HashMap();
 		map.put("text", lines);
@@ -59,8 +59,8 @@ public class TxtFileAnalysis  {
 	 * @param filePath
 	 * @return
 	 */
-	public  List<String> previewFileByLineNum(String filePath)throws ReadFileException{	
-		return previewFileByLineNum(filePath,null);
+	public  List<String> previewFileByLineNum(String filePath,String fileCode)throws ReadFileException{	
+		return previewFileByLineNum(filePath,fileCode,null);
 	}
 	
 	/**
@@ -69,11 +69,11 @@ public class TxtFileAnalysis  {
 	 * @param viewNum   预览的文件行数
 	 * @return
 	 */
-	public  List<String> previewFileByLineNum(String filePath,Integer viewNum) throws ReadFileException{    
+	public  List<String> previewFileByLineNum(String filePath,String fileCode,Integer viewNum) throws ReadFileException{    
 		  
 		 	   File file = new File(filePath);
                if(file.exists()){
-            	String charSet = getCharset(filePath);
+            	String charSet = getCharset(filePath,fileCode);
             	   if (viewNum==null || viewNum > MAX_LINENUM) {
 					   viewNum = DEFAULT_LINENUM;
 				   }
@@ -312,13 +312,18 @@ public class TxtFileAnalysis  {
         return number;
 	}
 
-	public String getCharset(String filePath){
-		try{
-			return new FileCharsetDetector().guestFileEncoding(filePath);
-		}catch(Exception ex){
-			ex.printStackTrace();
+	public String getCharset(String filePath,String fileCode){
+		if(StringUtils.isNotBlank(fileCode)){
+			return fileCode;
+		}else{
+			try{
+				return new FileCharsetDetector().guestFileEncoding(filePath);
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}
+			return "UTF-8";
 		}
-		return "UTF-8";
+		
 	}
 	
 	private String[] getColumns(List<String> lines,String separator){

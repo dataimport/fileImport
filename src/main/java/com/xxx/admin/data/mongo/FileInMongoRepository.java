@@ -205,9 +205,10 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 			runNum++;
 			try{//加上异常处理，这样个别数据有问题，不会影响整体数据的导入
 				data = new BasicDBObject(); 
-				lineSeparator = list.get(i).trim().split("\\s+",-1);	
-				if(lineSeparator.length==columns.length){//如果当前行的列数与设置的列名数一致 则导入
-					if(lineSeparator.length>=columnIndexSize){//处理虽然有换行但是没有数据的情况，或者数据分割后，总数跟填写的字段数不匹配。
+				//System.out.println(list.get(i).trim());
+				lineSeparator = list.get(i).trim().split(separator,-1);	
+				if(lineSeparator.length>=columnIndexSize){//处理虽然有换行但是没有数据的情况，或者数据分割后，总数跟填写的字段数不匹配。 --//如果当前行的列数与设置的列名数一致 则导入
+					//if(lineSeparator.length>=columnIndexSize){//处理虽然有换行但是没有数据的情况，或者数据分割后，总数跟填写的字段数不匹配。
 						for(int j=0;j<columnIndexSize;j++){
 							data.put(columns[j], lineSeparator[columnIndex[j]-1]);
 						}			
@@ -233,15 +234,16 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 							}				
 						}	
 						successNum++;
-					}			
+					//}			
 				}else{
-					saveFailData(task,runNum);//没导入，记录到失败记录表里
+					System.out.println(" run " +runNum +" ### "+  list.get(i).trim()	);
+					saveFailData(task,runNum, list.get(i).trim());//没导入，记录到失败记录表里
 				}
 				
 			}catch(Exception ex){
 				ex.printStackTrace();
 				runNum++;//错误记录也加入到导入行中，否则算百分比的时候不正确。
-				saveFailData(task,runNum);
+				saveFailData(task,runNum, list.get(i).trim());
 			}			
 		}	
 		
@@ -316,7 +318,7 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 				successNum++;
 			}catch(Exception ex){
 				ex.printStackTrace();
-				saveFailData(task,runNum+i);
+				saveFailData(task,runNum+i,"");
 			}			
 		}	
 		
@@ -334,10 +336,11 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 	 * 保存失败的记录
 	 * @param task
 	 */
-	private void saveFailData(Task task,int failNum){
+	private void saveFailData(Task task,int failNum,String value){
 		DBCollection dbColleciton =mongoTemplate.getCollection(task.getTableNameAlias()+"_falie"); 
 		DBObject data = new BasicDBObject();
 		data.put("num", failNum);
+		data.put("value", value);
 		dbColleciton.insert(data);
 	}
 	

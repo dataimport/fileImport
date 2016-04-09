@@ -8,34 +8,32 @@
 <BODY >
 
 <div align="center">
-<b>导入文件：</b>${filePathShow!}
-<br><br>
-<b>文件预览：</b>(如果文件里的中文乱码，请修改文件编码格式为：UTF-8,否则导数据时，也会乱码)
-<br><br>
+<br>
 <#if extension="txt">
 	<#assign size = list?size>		
 	<#if (size>0)>
-	<table class="gridtable">
-	<tr>
-	<th>序号</th><th>内容</th>
-	</tr>
+<table width="60%"  class="gridtable">
+ <tr>
+    <th width="10%">导入文件</th>
+    <td width="90%">${filePathShow!}</td>
+</tr>
+ <tr>
+    <th rowspan="${(list?size)+1}">预览内容</th>
+     
 	<#list list as file>
-	   <#if file??&&file!="">
-		<tr>
-		   <td>${file_index+1}</td>
-		   <td>		
-		   ${file?replace('<', '&lt;' )?replace(">","&gt;")?replace('\n', '' )}
-			</td>		
-		</tr> 		
-		</#if>	
-		</#list>
-	</table>
-	
-	
-			   	   
-	<br><br>
-	<hr>
-	分隔符&nbsp;&nbsp;
+		   <#if file??&&file!="">
+			<tr>	
+				<td>	  
+			   ${file?replace('<', '&lt;' )?replace(">","&gt;")?replace('\n', '' )}
+			    </td>
+			</tr> 		
+			</#if>	
+	</#list>
+
+</tr>
+ <tr>
+    <th>分隔符</th>
+     <td>
 	<input id="fengefu_1" type="radio" name="fgf" value=""checked="" >无分隔符
 	<input id="fengefu_2" type="radio" name="fgf" value=",">逗号
 	<input id="fengefu_3" type="radio" name="fgf" value="\t"  >制表符
@@ -44,20 +42,40 @@
 	<input id="fengefu_6" type="radio" name="fgf" value="自定义" >自定义分隔符
 	<input id="fengefu_7" type="text"  style='display:none;' size="8" >
 	&nbsp;&nbsp;&nbsp;<input id="biaotou" type="checkbox" name="biaotou" value="true" >首行为表头
-	
-	<form  id="form" name="form" action="../task/v_task.htm"  method="post">
+	</td>
+</tr>
+
+<tr>
+    <th>文件编码</th>
+     <td>
+	 <select name="fileCode" onchange="reload(this.value);" >		
+	  <option value ="UTF-8"   <#if fileCode??&&fileCode=='UTF-8' >selected="selected"</#if>>UTF-8</option>
+	  <option value ="ANSI"   <#if fileCode??&&fileCode=='ANSI' >selected="selected"</#if> >ANSI</option>
+	  <option value="Unicode" <#if fileCode??&&fileCode=='Unicode' >selected="selected"</#if>>Unicode</option>
+	  <option value="Unicode big endian"  <#if fileCode??&&fileCode=='Unicode big endian' >selected="selected"</#if> >Unicode big endian</option>
+	  <option value="" <#if fileCode??&&fileCode=='' >selected="selected"</#if>>自动识别</option>
+	</select>
+	 </td>
+</tr>
+
+<tr>
+    <th>操作</th>
+     <td>
+    <form  id="form" name="form" action="../task/v_task.htm"  method="post">
 	<input type="hidden" id="filePath" name="filePath" value="${filePath!}">
 	<input type="hidden" id="separator" name="separator" value="">
-	<input type="hidden" id="firstLineIgnore" name="firstLineIgnore" value="false">
-	
+	<input type="hidden" id="fileCode" name="fileCode" value="">
+	<input type="hidden" id="firstLineIgnore" name="firstLineIgnore" value="false">	
 	<#list list as file>
 	 <#if file??&&file!="">
 	 <input  type="hidden" type="text" name="lines" value="${file?trim}">
 	 </#if>	
-	</#list>
-	     
-	<button id="txtButton">确定</button>
+	</#list>	     
+	<button id="txtButton">下一步</button>
 	</form>
+	 </td>
+</tr>
+</table>
 	<#else>
 	此文件无内容
 	</#if>
@@ -107,10 +125,13 @@ $(document).ready(function(){
 		$("#separator").val(fgf);
 		
 		var biaotou = $('input[name="biaotou"]:checked').val();
-
+		
 		if(biaotou=="true"){
 			$("#firstLineIgnore").val("true");
 		}
+		
+		var fileCode = $("select[name='fileCode']").val();
+		$("#fileCode").val(fileCode);
 	  //  $("form").submit();
 	  });  
 	 
@@ -134,10 +155,15 @@ $(function(){
 	  });
 });
 
-
-
-
+function reload(fileCode){
+	$("#previewForm_fileCode").val(fileCode);
+	$("#previewForm").submit();
+}
 	 
 </script>
+<form id="previewForm" action="../file/preview.htm" method="post">
+<input type="hidden" name="filePath" id="previewForm_filePath" value="${filePath!}"/>
+<input type="hidden" name="fileCode" id="previewForm_fileCode" value=""/>
+</form>
 </BODY>
 </HTML>

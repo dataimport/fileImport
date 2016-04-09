@@ -311,6 +311,18 @@
 			<version>3.13</version>
 		</dependency>
 		
+		<dependency>
+  		 	 <groupId>com.wangyin.3rd-jar</groupId>
+    		<artifactId>kettle-core</artifactId>
+    		<version>5.3.0.0-213</version>
+		</dependency>
+		
+		<dependency>		
+	  	  	<groupId>com.wangyin.3rd-jar</groupId>
+	    	<artifactId>kettle-engine</artifactId>
+	    	<version>5.3.0.0-213</version>
+		</dependency>
+				
 	</dependencies>
 
 	<properties>

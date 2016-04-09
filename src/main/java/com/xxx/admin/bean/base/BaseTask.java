@@ -33,6 +33,7 @@ public abstract class BaseTask implements Serializable {
 	private String endDate="";
 	private String filePath;
 	private String fileName;
+	private String fileCode;
 	private long fileSize;
 	private String leftTime;
 	private long totalCount= 0l;
@@ -44,39 +45,6 @@ public abstract class BaseTask implements Serializable {
 	private String createUser="lxc_admin"; //任务的创建者
 	private boolean firstLineIgnore; //首行是否忽略
 		
-	public BaseTask(String uid, String tableName, String tableNameAlias, String origin, String tags,
-			String[] columnName,String[] columnNameTag, Integer[] columnIndex, String separator,
-			String runTime, String startDate, String endDate, String filePath,
-			String fileName, long fileSize, String leftTime, long totalCount,
-			int taskStatus, String timeUse, int runNum, int updateOrAdd,
-			int beginLineNum, String createUser, boolean firstLineIgnore) {
-		super();
-		this.uid = uid;
-		this.tableName = tableName;
-		this.tableNameAlias = tableNameAlias;
-		this.origin = origin;
-		this.tags = tags;
-		this.columnName = columnName;
-		this.columnNameTag = columnNameTag;
-		this.columnIndex = columnIndex;
-		this.separator = separator;
-		this.runTime = runTime;
-		this.startDate = startDate;
-		this.endDate = endDate;
-		this.filePath = filePath;
-		this.fileName = fileName;
-		this.fileSize = fileSize;
-		this.leftTime = leftTime;
-		this.totalCount = totalCount;
-		this.taskStatus = taskStatus;
-		this.timeUse = timeUse;
-		this.runNum = runNum;
-		this.cleanOrAppend = cleanOrAppend;
-		this.beginLineNum = beginLineNum;
-		this.createUser = createUser;
-		this.firstLineIgnore = firstLineIgnore;
-	}
-	
 	
 	public String getTableNameAlias() {
 		return tableNameAlias;
@@ -243,7 +211,51 @@ public abstract class BaseTask implements Serializable {
 	}
 	
 
+	public String getFileCode() {
+		return fileCode;
+	}
+
+
+	public void setFileCode(String fileCode) {
+		this.fileCode = fileCode;
+	}
+
+
 	public BaseTask(){
 		  
 	  }
+
+	public BaseTask(String uid, String tableName, String tableNameAlias, String origin, String tags,
+			String[] columnName, String[] columnNameTag, Integer[] columnIndex, String separator, String runTime,
+			String startDate, String endDate, String filePath, String fileName, String fileCode, long fileSize,
+			String leftTime, long totalCount, int taskStatus, String timeUse, int runNum, String cleanOrAppend,
+			int beginLineNum, String createUser, boolean firstLineIgnore) {
+		super();
+		this.uid = uid;
+		this.tableName = tableName;
+		this.tableNameAlias = tableNameAlias;
+		this.origin = origin;
+		this.tags = tags;
+		this.columnName = columnName;
+		this.columnNameTag = columnNameTag;
+		this.columnIndex = columnIndex;
+		this.separator = separator;
+		this.runTime = runTime;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.filePath = filePath;
+		this.fileName = fileName;
+		this.fileCode = fileCode;
+		this.fileSize = fileSize;
+		this.leftTime = leftTime;
+		this.totalCount = totalCount;
+		this.taskStatus = taskStatus;
+		this.timeUse = timeUse;
+		this.runNum = runNum;
+		this.cleanOrAppend = cleanOrAppend;
+		this.beginLineNum = beginLineNum;
+		this.createUser = createUser;
+		this.firstLineIgnore = firstLineIgnore;
+	}
+	
 }

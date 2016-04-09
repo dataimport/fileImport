@@ -80,14 +80,15 @@ public class TaskService {
 			//保存一份任务信息到solr入库的任务表中
 			//TODO 其实在这个环节，写入，有些不妥，应该在入mongo任务完成后
 			
+			
 			SolrTask slorTask = new SolrTask(task.getUid(), task.getTableName(),task.getTableNameAlias(), task.getOrigin(), task.getTags(),
 					task.getColumnName(),task.getColumnNameTag(), task.getColumnIndex(), task.getSeparator(),
 					task.getRunTime(), task.getStartDate(), task.getEndDate(), task.getFilePath(),
-					task.getFileName(), task.getFileSize(), task.getLeftTime(),task.getTotalCount(),
+					task.getFileName(),task.getFileCode(), task.getFileSize(), task.getLeftTime(),task.getTotalCount(),
 					BaseTask.TASK_STATUS_SOLR_WAITING,
-					task.getTimeUse(), task.getRunNum(), 0,
-					task.getBeginLineNum(), task.getCreateUser(), task.getFirstLineIgnore(),
-					task.getId());
+					task.getTimeUse(), task.getRunNum(), "0",
+					task.getBeginLineNum(), task.getCreateUser(), task.getFirstLineIgnore());		
+						
 			solrTaskRepository.saveObject(slorTask, AllCollectionName.SOLR_TASKINFO_COLLECTIONNAME);
 			return true;
 		}catch(Exception ex){

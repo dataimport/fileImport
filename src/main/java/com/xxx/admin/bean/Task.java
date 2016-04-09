@@ -28,18 +28,15 @@ public class Task extends BaseTask{
 		super();
 	}
 	
-	public Task(String uid, String tableName, String tableNameAlias, String origin, String tags,
-			String[] columnName,String[] columnNameTag, Integer[] columnIndex, String separator,
-			String runTime, String startDate, String endDate, String filePath,
-			String fileName, long fileSize, String leftTime, long totalCount,
-			int taskStatus, String timeUse, int runNum, int updateOrAdd,
-			int beginLineNum, String createUser, boolean firstLineIgnore,
-			String id) {
-		super(uid, tableName, tableNameAlias, origin, tags, columnName,columnNameTag, columnIndex, separator,
-				runTime, startDate, endDate, filePath, fileName, fileSize,
-				leftTime, totalCount, taskStatus, timeUse, runNum, updateOrAdd,
-				beginLineNum, createUser, firstLineIgnore);
-		this.id = id;
+	public Task(String uid, String tableName, String tableNameAlias, String origin, String tags, String[] columnName,
+			String[] columnNameTag, Integer[] columnIndex, String separator, String runTime, String startDate,
+			String endDate, String filePath, String fileName, String fileCode, long fileSize, String leftTime,
+			long totalCount, int taskStatus, String timeUse, int runNum, String cleanOrAppend, int beginLineNum,
+			String createUser, boolean firstLineIgnore) {
+		super(uid, tableName, tableNameAlias, origin, tags, columnName, columnNameTag, columnIndex, separator, runTime,
+				startDate, endDate, filePath, fileName, fileCode, fileSize, leftTime, totalCount, taskStatus, timeUse, runNum,
+				cleanOrAppend, beginLineNum, createUser, firstLineIgnore);
+		// TODO Auto-generated constructor stub
 	}
-
+	
 }

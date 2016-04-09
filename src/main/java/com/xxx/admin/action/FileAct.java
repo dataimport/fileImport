@@ -66,18 +66,43 @@ public class FileAct {
 //	}
 	
 	@RequestMapping(value = "preview.htm")
-	public String preview(ModelMap model,HttpServletRequest request,HttpServletResponse response,String filePath){ 
+	public String preview(ModelMap model,HttpServletRequest request,HttpServletResponse response,String filePath,String fileCode){ 
 		//String filePath = new String(request.getParameter("filePath").getBytes("iso-8859-1"), "utf-8");  
-		//System.out.println("########## "+java.net.URLDecoder.decode(filePath,"UTF-8"));
-		try{
+		
+		try{			
+			//System.out.println("########## "+java.net.URLDecoder.decode(filePath,"UTF-8"));
 			String extension  = filePath.substring(filePath.lastIndexOf(".")+1, filePath.length());
 			if("txt".equals(extension.toLowerCase())){
-				List<String>  list =   fileService.previewTxtFile(java.net.URLDecoder.decode(filePath,"UTF-8"));
-				model.put("list", list);
+				try{
+					List<String>  list =   fileService.previewTxtFile(java.net.URLDecoder.decode(filePath,"UTF-8"),fileCode);
+					if(StringUtils.isBlank(fileCode)){
+						model.put("fileCode", "");
+					}else{
+						model.put("fileCode", fileCode);
+					}		
+					model.put("list", list);
+					model.put("extension", extension);
+					model.put("filePath", filePath);
+					model.put("filePathShow",java.net.URLDecoder.decode(filePath,"UTF-8"));
+				}catch(Exception ex){
+					ex.printStackTrace();
+					model.put("list", new ArrayList<Object>());
+					model.put("extension", extension);
+					model.put("filePath", filePath);
+					model.put("filePathShow","");
+					model.put("fileCode", "");
+				}
+			
 			}else if("xlsx".equals(extension.toLowerCase())||"xls".equals(extension.toLowerCase())){
-				Map<String,Object>   map =   fileService.previewExcelFile(java.net.URLDecoder.decode(filePath,"UTF-8"),10,extension.toLowerCase());
-				model.put("list", map.get("list"));
-				model.put("cellTotalMax", map.get("cellTotalMax"));
+				try{
+					Map<String,Object>   map =   fileService.previewExcelFile(java.net.URLDecoder.decode(filePath,"UTF-8"),10,extension.toLowerCase());
+					model.put("list", map.get("list"));
+					model.put("cellTotalMax", map.get("cellTotalMax"));
+				}catch(Exception ex){
+					ex.printStackTrace();
+					model.put("list", "");
+					model.put("cellTotalMax","");
+				}			
 			}else{
 				model.put("list", new ArrayList<Object>());
 			}
@@ -90,12 +115,10 @@ public class FileAct {
 	//			returnList.add(m.replaceAll(" "));
 	//		}
 	//		model.put("list", returnList);
-			model.put("extension", extension);
-			model.put("filePath", filePath);
-			model.put("filePathShow",java.net.URLDecoder.decode(filePath,"UTF-8"));
+
 			return "file/preview";
 		}catch(Exception ex){
-			ex.printStackTrace();
+			ex.printStackTrace();			
 		}
 		return "file/preview";
 	}
@@ -130,10 +153,9 @@ public class FileAct {
 	private TaskService taskService;
 	
 	public static void main(String[] args) {
-	   long a = (long)100;
-	   long b = 1000000;
-	   DecimalFormat df = new DecimalFormat("0");
-	   System.out.print(df.format(((float)a*100/b)));
+	  String s = "778	|	庄江涛	|	0908028238	|	330183199007212617	|	机械工程学院	|	数控技术(中澳)	|	数控0982	|	杭州富阳	|	2012	|";
+	  String separator="\\|";
+	  System.out.println(s.split(separator,-1).length);
 	}
 	
 }

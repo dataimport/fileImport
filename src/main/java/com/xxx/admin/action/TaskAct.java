@@ -58,7 +58,7 @@ public class TaskAct {
 	 * @return
 	 */
 	@RequestMapping(value = "v_task.htm")
-	public String v_task(String filePath,String separator,boolean firstLineIgnore,String[] lines,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
+	public String v_task(String filePath,String separator,String fileCode,boolean firstLineIgnore,String[] lines,ModelMap model,HttpServletRequest request,HttpServletResponse response) {
 			
 		if(StringUtils.isBlank(separator)){
 			separator="\\s+"; //代表多个空格
@@ -119,6 +119,7 @@ public class TaskAct {
 		if(message.length()>0){
 			model.put("errorMessage", "提醒：此文件的 第： "+message.toString()+" ...... 行的列数与第一行的列数不相等，显示的时候已经忽略，导入数据的时候也会被忽略");
 		}
+		model.put("fileCode", fileCode);
 		return "task/task_view";
 	}	
 	
@@ -167,7 +168,7 @@ public class TaskAct {
 	 * @return
 	 */
 	@RequestMapping(value = "v_taskBySameRule.htm")
-	public String v_taskBySameRule(String preFilePath,ModelMap model,HttpServletRequest request,HttpServletResponse response)throws ReadFileException {
+	public String v_taskBySameRule(String preFilePath,String fileCode,ModelMap model,HttpServletRequest request,HttpServletResponse response)throws ReadFileException {
 
 		if(StringUtils.isNotBlank(preFilePath)){
 			File file = new File(preFilePath);
@@ -182,12 +183,12 @@ public class TaskAct {
 							model.put("task", task);
 							String extension  = thisFilePath.substring(thisFilePath.lastIndexOf(".")+1, thisFilePath.length());
 							if("txt".equals(extension.toLowerCase())){
-								List<String> list = fileService.previewTxtFile(thisFilePath);
+								List<String> list = fileService.previewTxtFile(thisFilePath,fileCode);
 								String[] lines = new String[list.size()]; 
 								for(int i=0;i<list.size();i++){
 									lines[i] = list.get(i);
 								}
-								return v_task(thisFilePath,task.getSeparator(),task.getFirstLineIgnore(),
+								return v_task(thisFilePath,task.getSeparator(),fileCode,task.getFirstLineIgnore(),
 										lines,model,request,response);
 							}else if("xlsx".equals(extension.toLowerCase())||"xls".equals(extension.toLowerCase())){						
 								return v_excelTask(thisFilePath,task.getFirstLineIgnore(),model,request,response);

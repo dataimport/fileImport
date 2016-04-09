@@ -1,7 +1,6 @@
 package com.xxx.admin.service;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -37,8 +36,8 @@ public class FileService {
 	
 	private static final Logger log = LoggerFactory.getLogger(FileService.class);
 	
-	public List<String> previewTxtFile(String filePath) throws ReadFileException{		
-		return previewTxtFile(filePath,null);
+	public List<String> previewTxtFile(String filePath,String fileCode) throws ReadFileException{		
+		return previewTxtFile(filePath,fileCode,null);
 	}
 	
 	public  Map<String,Object>  previewExcelFile(String filePath,Integer lineNum,String excelVersion) throws Exception{		
@@ -46,16 +45,16 @@ public class FileService {
 	}
 	
 	
-	public List<String> previewTxtFile(String filePath,Integer lineNum) throws ReadFileException{		
-		return (List<String>)txtFileAnalysis.previewFileByLineNum(filePath,lineNum);
+	public List<String> previewTxtFile(String filePath,String fileCode,Integer lineNum) throws ReadFileException{		
+		return (List<String>)txtFileAnalysis.previewFileByLineNum(filePath,fileCode,lineNum);
 	}
 	
-	public Map viewBySeparator(String filePath,String separator) throws ReadFileException{		
-		return viewBySeparator(filePath, separator,null);
+	public Map viewBySeparator(String filePath,String fileCode,String separator) throws ReadFileException{		
+		return viewBySeparator(filePath,fileCode, separator,null);
 	}
 	
-	public Map viewBySeparator(String filePath,String separator,Integer lineNum) throws ReadFileException{		
-		return txtFileAnalysis.previewFileBySeparator(filePath, separator,lineNum);
+	public Map viewBySeparator(String filePath ,String fileCode,String separator,Integer lineNum) throws ReadFileException{		
+		return txtFileAnalysis.previewFileBySeparator(filePath,fileCode, separator,lineNum);
 	}
 		
 	/**
@@ -189,7 +188,7 @@ public class FileService {
 				  String line = "";
 				  List<String> lines = new ArrayList<String>();
 				  long start = System.currentTimeMillis();		
-				  String charset = txtFileAnalysis.getCharset(t.getFilePath());
+				  String charset = txtFileAnalysis.getCharset(t.getFilePath(),t.getFileCode());
 				  while (fcin.read(rBuffer) != -1) {				
 					  lines.clear();
 					  lines = txtFileAnalysis.LoopBigFileByBuffer(fromIndex, endIndex, rSize,
@@ -225,7 +224,7 @@ public class FileService {
 			  return new int[]{successNum,runNum-successNum};
 		  }else{//小文件
 			  try{
-				  List<String> lines = txtFileAnalysis.readSmallFile(t.getFilePath(),txtFileAnalysis.getCharset(t.getFilePath()));
+				  List<String> lines = txtFileAnalysis.readSmallFile(t.getFilePath(),txtFileAnalysis.getCharset(t.getFilePath(),t.getFileCode()));
 				  successNum = fmRepository.FilePushToMongo(t, lines,0);
 				  
 				  //更新状态为导入完毕

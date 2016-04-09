@@ -40,7 +40,7 @@
  	 ${filePath!}
  	</td> 	
    <tr>
-
+<!-- 
    <tr>
     <th>分隔符</th>    
  	<td colspan="${columnsSize}" >
@@ -53,15 +53,24 @@
  	 <input  id="firstLineIgnore" value="" type="checkbox" <#if (firstLineIgnore='true')> checked="checked" </#if> disabled="disabled"></input>
  	</td>
    </tr>
+   -->
    
    <tr>
     <th>列名</th>
     <#list columns as column>
  	<td>
- 	 <div align="center">  <input style="width:150px" name="columnName"  id="columnName_${(column_index+1)}"  
- 	 <#if (firstLineIgnore=="true")> value="${column?trim}" > <#else> value="" </#if> 	 
- 	 </input>
- 	 <input name="import" type="checkbox" id="isImport_${(column_index+1)}" checked=true  value="${(column_index+1)}">导入
+ 	 <div align="center"> 
+ 	 	 <#if (firstLineIgnore=="true")>
+ 	 	  <input style="width:150px" name="columnName"  id="columnName_${(column_index+1)}"   onblur="checkboxChange('${(column_index+1)}')"
+ 			value="${column?trim}" >
+ 		 </input>
+ 		  <input name="import" type="checkbox" id="isImport_${(column_index+1)}" checked='checked'  value="${(column_index+1)}">导入
+ 	 	 <#else>
+ 	 	 <input style="width:150px" name="columnName"  id="columnName_${(column_index+1)}"  onblur="checkboxChange('${(column_index+1)}')"
+ 			value="" >
+ 		 </input>
+ 		  <input name="import" type="checkbox" id="isImport_${(column_index+1)}"   value="${(column_index+1)}">导入
+ 	 	 </#if> 	 	 
  	 </div>
  	</td>
 	</#list>
@@ -304,7 +313,7 @@ $("#submit").bind("click",function(){
 	                url:'../task/o_task.htm', 
 	                type:"post",  
 	                async:true,  
-	                data:{'tableName':tableName,'firstLineIgnore':'${firstLineIgnore}','separator':"${separator!}",'filePath':$("#filePath").val(),'tags':tagName,'origin':origin,'runTime':runTime,'columnName':columnName,'columnNameTag':columnNameTag,'columnIndex':columnIndex,'cleanOrAppend':cleanOrAppend},  
+	                data:{'tableName':tableName,'firstLineIgnore':'${firstLineIgnore}','separator':"${separator!}",'filePath':$("#filePath").val(),'fileCode':'${fileCode!}','tags':tagName,'origin':origin,'runTime':runTime,'columnName':columnName,'columnNameTag':columnNameTag,'columnIndex':columnIndex,'cleanOrAppend':cleanOrAppend},  
 	                dataType:"json",  
 	                timeout:"1000000",  
 	                error:function(){
@@ -350,6 +359,17 @@ $("#submit").bind("click",function(){
 		}
 	
 	}
+	
+	function checkboxChange(id){
+		alert($.trim($('#columnName_'+id).val()));
+		if($.trim($('#columnName_'+id).val())!=''){
+			 $('#isImport_'+id).attr("checked","checked");
+		}else{
+			$('#isImport_'+id).attr("checked",false);
+			//$('#isImport_'+id).removeAttr("checked");
+		}
+	}
+	
 	
 	function tableNameChange(collectionName){
 	   if(collectionName.replace(/(^\s*)|(\s*$)/g,'')==""){
