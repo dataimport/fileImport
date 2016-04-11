@@ -3,28 +3,41 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>添加目录</title>
+<link href="../resources/images/style.css" type=text/css rel=stylesheet>
 </head>
 <body>
 
 <div id="base" class="">
 
-      <div id="add" >
-         <input id="folderPath" type="text" value="" size="50">
-         <input id="folderId" type="hidden" value="" >
-         <input id="addButton" type="button" value="添加">
-         <input id="delButton" type="button" value="删除">
-      </div>
-      
-  	  
-	      <div>    
-	        <select id="folderPathSelect" size="10" onchange="setSeparator(this.options[this.options.selectedIndex].value,this.options[this.options.selectedIndex].text)">    
+<table width="60%"  class="gridtable">
+<tr>
+    <th  width="40%" >文件路径</th>    
+ 	<td width="60%" >
+ 	  <input id="folderPath" type="text" value="" size="50">
+ 	  <input id="folderId" type="hidden" value="" >
+ 	</td> 	
+</tr>
+<tr>
+    <th width="40%" >已添加</th>    
+ 	<td width="60%" >
+ 	 <div>    
+	        <select id="folderPathSelect" style="width:100%;" size="10" onchange="setSeparator(this.options[this.options.selectedIndex].value,this.options[this.options.selectedIndex].text)">    
 	       	  <#list list as folder>
 	         	 <option value="${folder.folderId!}">${folder.folderPath!}</option>
 	          </#list>
 	        </select>
 	      </div>
-      
-    </div>
+ 	</td> 	
+</tr>
+<tr>
+    <th width="40%" >操作</th>    
+ 	<td width="60%" >
+ 	 <input id="addButton" type="button" value="添加">&nbsp;&nbsp;
+     <input id="delButton" type="button" value="删除">
+ 	</td> 	
+</tr>
+</table>
+ </div>
 </body>
 <script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
 

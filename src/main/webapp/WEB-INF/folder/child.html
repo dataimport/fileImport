@@ -8,72 +8,40 @@
 <BODY>
 <div id="wrap">  
         <div id="header">
-        <select id="filePathSelect" onchange="getFolderChild(this.options[this.options.selectedIndex].value)" style="width:400px">
+        <select id="filePathSelect" style="width:350px">
        	 <#list folderList as folder>
-          <option value="${folder.folderPath!}" <#if (folderPath??&&folderPath==folder.folderPath)> selected="selected"</#if>>${folder.folderPath!}</option>
+          <option value="${folder.folderId!}"  <#if (folderPath??&&folderPath==folder.folderPath)> selected="selected"</#if>>${folder.folderPath!}</option>
           </#list>
         </select>
-   			 &nbsp; <a href="list.htm" target="_blank">添加目录</a>   
+   			<!--  &nbsp; <a href="list.htm" target="_blank">添加目录</a> -->   
         </div>  
         
-        <#if folderChild??>
-			<#assign folderChildSize  = folderChild?size>
-        <div id="container">  
+<#if folderChild??>
+			
+     <div id="container">  
          <div id="left_side">
 			 <div class="pnav-box" id=letter-a>
 					 <div class=box-title>
-							 <a class="btn-fold " href="#"></a><a class="btn-unfold hidden" href="#"></a>
-							<span class=pnav-letter title="${folderPath!}">
-							
-							<#if folderPath?length lt 35>   
-								${folderPath}							
-							<#else> 
-							     ${folderPath[0..36]}... 
-							</#if>
+					  文件夹：
+					  </br>
+					<#list folderChild as file>	  
+			            <#if (file.isDirectory()!)>
+			          <a  title="" href="child.htm?folderPath=${file.absolutePath!}">
+			           		 <span class=pnav-letter>							
+								${file.name?trim}
 							</span>
-					 </div>
-			        <ul class="box-list hidden">
-			     <#if (folderChildSize>20)>
-			   	   <#list folderChild[0..20] as file>			   	   
-			            <li>
-			            <#if (file.isDirectory()!)>
-			            <a class=btn-fold href="#"></a><a class="btn-unfold hidden" href="#"></a>
-			            <b>          		
-			           	 	<a href="#" onclick="getChild(this.id)" id='${file.absolutePath}'>${file.name?trim}</a>            	 	
-			            </b>
-			             <#else>
-			             <!--  <h2><a href="#" onclick="getFileTaskInfo(this.id)" id='${file.absolutePath}'>${file.name?trim}</a></h2> -->
-			            </#if>             
-			                
-			            </li>
-			      </#list>        
-			   	 <#else>
-			   	   <#list folderChild as file>			   	   
-			            <li>
-			            <#if (file.isDirectory()!)>
-			            <a class=btn-fold href="child.htm?folderPath=${folderPath!}${file.name?trim}"></a><a class="btn-unfold hidden" href="#"></a>
-			            <b>          		
-			           	 	<a href="#" onclick="getChild(this.id)" id='${file.absolutePath}'>${file.name?trim}</a>            	 	
-			            </b>
-			             <#else>
-			              <!--   <h2><a href="#" onclick="getFileTaskInfo(this.id)" id='${file.absolutePath}'>${file.name?trim}</a></h2>-->
+			           	</a>
+			           </br>
 			            </#if>        
-			            </li>
+			    
 			      </#list>        
-			   	 </#if>
-		
-			<#if (folderChildSize>20)>
-			 	<li>
-			   		<h2><a href="#">......</a></h2>                 
-			    </li>
-			</#if>
-			        </ul>
+				</div>
 			 </div>
-			</div>  
+		  </div>  
 
 <div id="content">
     
-<table class="gridtable">
+<table class="gridtable" style="width:800px;">
 <tr>
 <th>文件名</th><th>修改时间</th><th>文件大小</th><th>入库状态</th><th>操作</th>
 </tr>
@@ -122,23 +90,15 @@
 </#if>     		
 </#list>
 
-<#if (folderChildSize>20)>
-	<tr>
-	   <td>......</td>
-	   <td>......</td>
-	   <td>......</td>
-	   <td>......</td>
-	   <td>......</td>
-	</tr> 
-</#if>
 </table>
-
+</br>
+<div id="page"> </div>
       </div>  
-    <div id="right_side">
+    <div id="right_side" style="display:none;" >
          <#list fileTaskList as task>
          <#if !(folderChild[task_index].isDirectory())>
            <div id="detailInfo_${task_index}"  <#if task_index!=1> style="display:none;"</#if>>             
-				  文件信息  <br> 
+				  文件信息  </br> 
 		       <#if task.filePath??>				
 					状态： 
 					<#if task.taskStatus==0>
@@ -174,17 +134,24 @@
 
 <SCRIPT src="../js/js.js" type=text/javascript></SCRIPT> 
 <script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
+<script type="text/javascript" src="../js/jquery/jquery.paginate.js" id="st-main"></script>
 
 <script>
 
-function getFolderChild(folderPath){	
-	window.location.href="child.htm?folderPath="+folderPath;
+$('#filePathSelect').change(function(){ 
+	window.location.href="child.htm?folderId="+$(this).val();
+}) 
+	
+function getFolderChild(){	
+	//this.options[this.options.selectedIndex].value
+	
 
 }
 
 
 function showTaskDetail(id){	
 	$("div[id^='detailInfo']").hide();
+	$("#right_side").show();
 	$("#detailInfo_"+id).show(1000)
 }
 
@@ -234,6 +201,26 @@ $("a[name='previewClick'").click(function(){
 	$("#filePath").val(path);
 	$("#previewForm").submit();
 });
+
+$(function() {
+	$("#page").paginate({
+		count 		: ${page.totalPage!},
+		start 		: ${page.pageNo!},
+		display     : 12,
+		border					: false,
+		text_color  			: '#888',
+		background_color    	: '#EEE',	
+		text_hover_color  		: 'black',
+		background_hover_color	: '#CFCFCF',
+		mouse		: 'press',
+		onChange  : function(page){
+			window.location.href="child.htm?pageNo="+page+"&folderId=${folderId!}";		
+		  }
+			
+	});
+
+});
+
 </script>
 
 <SCRIPT type=text/javascript>

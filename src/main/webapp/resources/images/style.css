@@ -51,10 +51,10 @@ h2{ FONT-WEIGHT:normal;FONT-SIZE:100%}
 #left_side{  
     position:absolute;  
     top:0px;  
-    left:0px;  
-    border:solid 0px #0000FF;  
-    width:570px;  
+    left:20px;      
+    width:350px;  
     height:100%;  
+    border:1px dashed #584848;
 }  
 #content{  
     margin:0px 190px 0px 390px;  
@@ -64,9 +64,9 @@ h2{ FONT-WEIGHT:normal;FONT-SIZE:100%}
 #right_side{  
     position:absolute;  
     top:0px;  
-    right:0px;  
-    border:solid 0px #0000FF;  
-    width:550px;  
+    margin:0px 190px 0px 1200px; 
+    border:1px dashed #584848;
+    width:250px;  
     height:100%;  
 }  
 
@@ -92,6 +92,59 @@ table.gridtable td {
 	border-style: solid;
 	border-color: #666666;
 	background-color: #ffffff;
+}
+
+			
+.jPaginate{
+    height:34px;
+    position:relative;
+    color:#a5a5a5;
+    font-size:small;   
+	width:100%;
+}
+.jPaginate a{
+    line-height:15px;
+    height:18px;
+    cursor:pointer;
+    padding:2px 5px;
+    margin:2px;
+    float:left;
+}
+.jPag-control-back{
+	position:absolute;
+	left:0px;
+}
+.jPag-control-front{
+	position:absolute;
+	top:0px;
+}
+.jPaginate span{
+    cursor:pointer;
+}
+ul.jPag-pages{
+    float:left;
+    list-style-type:none;
+    margin:0px 0px 0px 0px;
+    padding:0px;
+}
+ul.jPag-pages li{
+    display:inline;
+    float:left;
+    padding:0px;
+    margin:0px;
+}
+ul.jPag-pages li a{
+    float:left;
+    padding:2px 5px;
+}
+span.jPag-current{
+    cursor:default;
+    font-weight:normal;
+    line-height:15px;
+    height:18px;
+    padding:2px 5px;
+    margin:2px;
+    float:left;
 }
 
 .investment_f{ width:100%px; margin:0px auto}
