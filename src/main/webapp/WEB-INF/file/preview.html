@@ -50,7 +50,7 @@
      <td>
 	 <select name="fileCode" onchange="reload(this.value);" >		
 	  <option value ="UTF-8"   <#if fileCode??&&fileCode=='UTF-8' >selected="selected"</#if>>UTF-8</option>
-	  <option value ="ANSI"   <#if fileCode??&&fileCode=='ANSI' >selected="selected"</#if> >ANSI</option>
+	  <option value ="GBK"   <#if fileCode??&&fileCode=='ANSI' >selected="selected"</#if> >ANSI</option>
 	  <option value="Unicode" <#if fileCode??&&fileCode=='Unicode' >selected="selected"</#if>>Unicode</option>
 	  <option value="Unicode big endian"  <#if fileCode??&&fileCode=='Unicode big endian' >selected="selected"</#if> >Unicode big endian</option>
 	  <option value="" <#if fileCode??&&fileCode=='' >selected="selected"</#if>>自动识别</option>

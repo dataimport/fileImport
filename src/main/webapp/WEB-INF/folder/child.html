@@ -15,7 +15,10 @@
         </select>
    			<!--  &nbsp; <a href="list.htm" target="_blank">添加目录</a> -->   
         </div>  
-        
+ 
+ <form id="child_form" actoin="child.htm" method="post">
+ <input id="folderPath_form" name="folderPath" type="hidden" value=""/>
+ </form>       
 <#if folderChild??>
 			
      <div id="container">  
@@ -26,8 +29,9 @@
 					  </br>
 					<#list folderChild as file>	  
 			            <#if (file.isDirectory()!)>
-			          <a  title="" href="child.htm?folderPath=${file.absolutePath!}">
-			           		 <span class=pnav-letter>							
+			            <#assign absolutePath =file.absolutePath?replace('\\','\\\\' )]		
+			          <a  title="" href="javascript:void(0)" onClick="getChild('${absolutePath!}')">
+			           		 <span class=pnav-letter >							
 								${file.name?trim}
 							</span>
 			           	</a>
@@ -155,8 +159,12 @@ function showTaskDetail(id){
 	$("#detailInfo_"+id).show(1000)
 }
 
+function getChild(folderPath){
+	$("#folderPath_form").val(folderPath);
+	$("#child_form").submit();
+}
 
-function getChild(folderPath){	
+function getChild2(folderPath){	
 	 $.ajax(  
              {  
                  url:'child.htm', 
