@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
+import com.mongodb.CommandResult;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
@@ -236,4 +237,22 @@ public class TaskRepository implements BaseRepository<Task> {
 		}		
 	}
 
+	
+	/**
+	 * 获取所有保存数据的表
+	 * @return
+	 */
+    public CommandResult getDBStats() {
+    	try{
+    		DBCollection coll = mongoTemplate.getCollection(AllCollectionName.ALLFILEINFO_COLLECTIONNAME);
+    		CommandResult commandResult = 	mongoTemplate.getDb().getStats();
+    		return commandResult;      
+    		//int totalTableSize = coll.distinct("tableNameAlias").size();        
+        	}catch(Exception ex){
+    		ex.printStackTrace();
+    	}
+    	return null;        
+    }
+    
+    
 }

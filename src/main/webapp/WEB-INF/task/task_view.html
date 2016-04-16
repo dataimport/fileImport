@@ -155,7 +155,7 @@
 	  </P>
 	  <br>
       <P>
- 		目录<input  id="catalog" value="" size="20"></input>
+ 		目录<input  id="catalog" value="<#if task??>${task.catalog!}</#if>" size="20"></input>
 	  </P>	  
 	  <br>
       <P>
@@ -255,6 +255,9 @@ $("#submit").bind("click",function(){
 	var origin = $("#origin").val();
 	//if (origin=="") return;
 	
+	var catalog = $("#catalog").val();
+	//if (origin=="") return;
+	
 	
 	var runTime  = "";
 	
@@ -298,12 +301,18 @@ $("#submit").bind("click",function(){
 			alert("第 "+columnChecked.get(i).value+" 列列名不能为空")
 			return;
 		}	
+		temp = temp.replace(',','');//列名中不能有逗号
+
+		if(columnName.indexOf(temp)>=0){
+			alert("有相同列名");
+			return ;
+		}
 		
 		columnName = (columnName + temp) + (((i + 1)== columnChecked.length) ? '':','); 
 		columnNameTag = (columnNameTag + tagTemp) + (((i + 1)== columnChecked.length) ? '':','); 
 		dataType= (dataType + dataTypeTemp) + (((i + 1)== columnChecked.length) ? '':','); 
 	}	
-	
+		
 	$('#submit').attr('disabled','true');  
 	//$('#loading').html("<img src='../resources/images/loading.gif'/>");
 	$('#processbar').show();
@@ -326,7 +335,7 @@ $("#submit").bind("click",function(){
 	                url:'../task/o_task.htm', 
 	                type:"post",  
 	                async:true,  
-	                data:{'tableName':tableName,'firstLineIgnore':'${firstLineIgnore}','separator':"${separator!}",'filePath':$("#filePath").val(),'fileCode':'${fileCode!}','tags':tagName,'origin':origin,'runTime':runTime,'columnName':columnName,'dataType':dataType,'columnNameTag':columnNameTag,'columnIndex':columnIndex,'cleanOrAppend':cleanOrAppend},  
+	                data:{'tableName':tableName,'firstLineIgnore':'${firstLineIgnore}','separator':"${separator!}",'filePath':$("#filePath").val(),'fileCode':'${fileCode!}','tags':tagName,'origin':origin,'catalog':catalog,'runTime':runTime,'columnName':columnName,'dataType':dataType,'columnNameTag':columnNameTag,'columnIndex':columnIndex,'cleanOrAppend':cleanOrAppend},  
 	                dataType:"json",  
 	                timeout:"1000000",  
 	                error:function(){

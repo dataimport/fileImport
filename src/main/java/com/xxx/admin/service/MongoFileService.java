@@ -1,16 +1,12 @@
 package com.xxx.admin.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.annotation.Resource;
 
@@ -70,6 +66,21 @@ public class MongoFileService {
 		
 		return map;
 		
+	}
+	
+	/**
+	 * 根据目录查看mongodb 表信息
+	 * @param pageNo
+	 * @param pageSize
+	 * @param collectionName
+	 * @return
+	 */
+	public Map getTableByCataLog(String catalog) {
+		return 	fileInMongoRepository.getTableByCataLog(catalog);		
+	}
+	
+	public Pagination getTaskByCataLog(Integer pageNo, Integer pageSize,String catalog) {
+		return fileInMongoRepository.getTaskByCataLog(pageNo, pageSize, catalog);		 
 	}
 
 

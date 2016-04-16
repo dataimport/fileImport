@@ -49,7 +49,7 @@
     		<%}else if(type!=null && type.trim().equals("folder_list.htm")){ %>
     			<iframe src="folder/list.htm" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
     		<%}else if(type!=null && type.trim().equals("folder_child.htm")){ %>
-    			<iframe src="folder/child.htm" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
+    			<iframe src="folder/child.htm" frameborder="0" scrolling="auto" width="100%" height="850"></iframe>
     		<%}else if(type!=null && type.trim().equals("mongo_allCollections.htm")){ %>
     			<iframe src="mongo/allCollections.htm" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
     		<%}else{ %>

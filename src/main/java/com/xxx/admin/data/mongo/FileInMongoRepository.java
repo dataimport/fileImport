@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -15,11 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.mapreduce.GroupBy;
+import org.springframework.data.mongodb.core.mapreduce.GroupByResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
- 
+
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -397,4 +401,45 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 		page.setList(list);
 		return page;
 	}
+	
+	public Map getTableByCataLog(String catalog) {
+		try{			
+			 String reduce = "function(doc, catalog){" + "catalog.count += 1;" + "        }";
+			 BasicDBObject queryObject = new BasicDBObject();
+			 
+		     DBObject result = mongoTemplate.getCollection(AllCollectionName.ALLFILEINFO_COLLECTIONNAME).group(new BasicDBObject("catalog", 1), queryObject,
+		                new BasicDBObject("count", 0), reduce);//对mongo数据库进行分组统计查询
+		      
+		     return result.toMap(); 
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		
+        return null;
+	}
+	
+	public Pagination getTaskByCataLog(Integer pageNo, Integer pageSize,String catalog) {
+		if(pageNo==null){
+			pageNo =1;
+		}
+		if(pageSize==null){
+			pageSize=20;
+		}		
+
+		try{
+			Query query = new Query();
+			Criteria criteria = Criteria.where("catalog").is(catalog);
+			query.addCriteria(criteria);
+			long totalCount  = mongoTemplate.count(query,Task.class);		
+			query.with(new Sort(Direction.ASC,"startDate"));
+
+			List<Task> list =  mongoTemplate.find(query, Task.class);
+			Pagination page = new Pagination(pageNo, pageSize, totalCount); 
+			page.setList(list);
+			return page;
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return null;
+		}
 }

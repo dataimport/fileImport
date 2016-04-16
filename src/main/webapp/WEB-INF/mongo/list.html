@@ -1,140 +1,82 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>列表</title>
-<style type="text/css">
-table.gridtable {
-	font-family: verdana,arial,sans-serif;
-	font-size:11px;
-	color:#333333;
-	border-width: 1px;
-	border-color: #666666;
-	border-collapse: collapse;
-}
-table.gridtable th {
-	border-width: 1px;
-	padding: 8px;
-	border-style: solid;
-	border-color: #666666;
-	background-color: #dedede;
-}
-table.gridtable td {
-	border-width: 1px;
-	padding: 8px;
-	border-style: solid;
-	border-color: #666666;
-	background-color: #ffffff;
-}
+<!DOCTYPE HTML PUBliC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+<TITLE>目录</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=utf-8">
+<liNK href="../resources/images/style.css" type=text/css rel=stylesheet>
+</HEAD>
+<BODY>
+<div id="wrap">  
+          
+<#if catalog??>
 			
-.jPaginate{
-    height:34px;
-    position:relative;
-    color:#a5a5a5;
-    font-size:small;   
-	width:100%;
-}
-.jPaginate a{
-    line-height:15px;
-    height:18px;
-    cursor:pointer;
-    padding:2px 5px;
-    margin:2px;
-    float:left;
-}
-.jPag-control-back{
-	position:absolute;
-	left:0px;
-}
-.jPag-control-front{
-	position:absolute;
-	top:0px;
-}
-.jPaginate span{
-    cursor:pointer;
-}
-ul.jPag-pages{
-    float:left;
-    list-style-type:none;
-    margin:0px 0px 0px 0px;
-    padding:0px;
-}
-ul.jPag-pages li{
-    display:inline;
-    float:left;
-    padding:0px;
-    margin:0px;
-}
-ul.jPag-pages li a{
-    float:left;
-    padding:2px 5px;
-}
-span.jPag-current{
-    cursor:default;
-    font-weight:normal;
-    line-height:15px;
-    height:18px;
-    padding:2px 5px;
-    margin:2px;
-    float:left;
-}
-
-
-</style>
-</head>
-<body>
-<table class="gridtable">
-<tr>
-<th>id</th>
- <#list fields as field >
- <#if field_index!=0>	
-  <th>${field!}</th>
- </#if>
- </#list>
-</tr>
-
-
-<#list list as obiect > 	
-    <tr> 
-     <td> ${obiect_index+1!}</td> 	    
-		<#list fields as field >
-		<#if field_index!=0>	
-		   <#if obiect[field]??>		   
-		    <td>${obiect[field]!}  </td> 
-		    <#else>
-	    	<td></td> 
-		   </#if>
-		</#if>
-     </#list>    
-    </tr> 	    
- </#list>
-   
-</table>
-<div id="page">       </div>
-<script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
-<script type="text/javascript" src="../js/jquery/jquery.paginate.js" id="st-main"></script>
-<script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
-<script type="text/javascript" src="../js/jquery/jquery.paginate.js" id="st-main"></script>
-
-<script type="text/javascript">
-		$(function() {
-			$("#page").paginate({
-				count 		: ${page.totalPage!},
-				start 		: ${pageNo!},
-				display     : 12,
-				border					: false,
-				text_color  			: '#888',
-				background_color    	: '#EEE',	
-				text_hover_color  		: 'black',
-				background_hover_color	: '#CFCFCF',
-				mouse		: 'press',
-				onChange  : function(page){
-					window.location.href="list.htm?collectionName=${collectionName}&pageNo="+page;					
-				  }
+<div id="container">  
+         <div id="left_side">
+			 <div class="pnav-box" id=letter-a>
+					 <div class=box-title>
+					目录：  </br>
+					 <#list catalog as ca>       
+	                <a href="#" onclic="findByCatalog()"> ${ca!}</a>
+                    </br>
+                    </#list>
 					
-			});
+				</div>
+			 </div>
+		  </div>  
+
+<div id="content">    
+	<table class="gridtable" style="width:100%;">
+	<tr>
+	<th>表名</th><th>记录数</th><th>来源</th><th>创建时间</th><th>数据日期</th><th>标签</th><th>操作</th>
+	</tr>
 	
-		});
-		</script>
-</body>
-</html>
+	<#list taskList as task>
+	<tr>
+	   <td>
+		 ${task.tableName!}
+		</td>
+		 <td>
+		 ${task.tableName!}
+		</td>
+		<td>
+		 ${task.origin!}
+		</td>
+	   <td>
+		创建
+		</td>
+		<td>
+		 数据
+		</td>
+		<td>
+		 标签
+		</td>
+		<td>
+		操作
+		</td>
+	</tr> 			
+</#list>
+
+	
+	</table>
+	</br>
+	<div id="page"> </div>
+</div>  
+   
+</#if>         
+    </div>  
+    
+<form id="previewForm" action="../file/preview.htm" method="post">
+<input type="hidden" name="filePath" id="filePath" value=""/>
+</form>
+
+<SCRIPT src="../js/js.js" type=text/javascript></SCRIPT> 
+<script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
+<script type="text/javascript" src="../js/jquery/jquery.paginate.js" id="st-main"></script>
+
+<script>
+
+</script>
+
+
+</BODY>
+</HTML>

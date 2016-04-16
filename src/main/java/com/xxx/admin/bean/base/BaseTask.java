@@ -21,6 +21,7 @@ public abstract class BaseTask implements Serializable {
 	private String tableNameAlias;
 	private String origin;
 	private String tags;
+	private String catalog;
 	private String[] columnName;
 	private String[] columnNameTag;
 	private Integer[] columnIndex;
@@ -226,12 +227,21 @@ public abstract class BaseTask implements Serializable {
 	public void setDataType(String[] dataType) {
 		this.dataType = dataType;
 	}
+	
+
+	public String getCatalog() {
+		return catalog;
+	}
+
+	public void setCatalog(String catalog) {
+		this.catalog = catalog;
+	}
 
 	public BaseTask(){
 		  
 	  }
 
-	public BaseTask(String uid, String tableName, String tableNameAlias, String origin, String tags,
+	public BaseTask(String uid, String tableName, String tableNameAlias, String origin, String catelog, String tags,
 			String[] columnName, String[] columnNameTag, Integer[] columnIndex, String separator, String runTime,
 			String startDate, String endDate, String filePath, String fileName, String fileCode, long fileSize,
 			String leftTime, long totalCount, int taskStatus, String timeUse, int runNum, String cleanOrAppend,
@@ -242,6 +252,7 @@ public abstract class BaseTask implements Serializable {
 		this.tableNameAlias = tableNameAlias;
 		this.origin = origin;
 		this.tags = tags;
+		this.catalog = catelog;
 		this.columnName = columnName;
 		this.columnNameTag = columnNameTag;
 		this.columnIndex = columnIndex;

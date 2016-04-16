@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.mongodb.CommandResult;
 import com.xxx.admin.bean.AllCollectionName;
 import com.xxx.admin.bean.MongoInToErrorLog;
 import com.xxx.admin.bean.MongoSolrInfo;
@@ -81,7 +82,7 @@ public class TaskService {
 			//TODO 其实在这个环节，写入，有些不妥，应该在入mongo任务完成后
 			
 			
-			SolrTask slorTask = new SolrTask(task.getUid(), task.getTableName(),task.getTableNameAlias(), task.getOrigin(), task.getTags(),
+			SolrTask slorTask = new SolrTask(task.getUid(), task.getTableName(),task.getTableNameAlias(), task.getOrigin(), task.getTags(),task.getCatalog(),
 					task.getColumnName(),task.getColumnNameTag(), task.getColumnIndex(), task.getSeparator(),
 					task.getRunTime(), task.getStartDate(), task.getEndDate(), task.getFilePath(),
 					task.getFileName(),task.getFileCode(), task.getFileSize(), task.getLeftTime(),task.getTotalCount(),
@@ -206,6 +207,10 @@ public class TaskService {
 		File file  = new File(task.getFilePath());
 		task.setFileSize(file.length());
 		task.setFileName(file.getName());
+	}	
+	
+	  public CommandResult getDBStats() {
+		return taskRepository.getDBStats();
 	}	
 	
     @Resource(name = "task")
