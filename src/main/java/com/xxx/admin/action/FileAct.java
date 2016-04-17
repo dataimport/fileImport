@@ -87,10 +87,11 @@ public class FileAct {
 				}catch(Exception ex){
 					ex.printStackTrace();
 					model.put("list", new ArrayList<Object>());
+					model.put("fileCode", fileCode);
 					model.put("extension", extension);
 					model.put("filePath", filePath);
-					model.put("filePathShow","");
-					model.put("fileCode", "");
+					model.put("filePathShow","");	
+					model.put("error","yes");		
 				}
 			
 			}else if("xlsx".equals(extension.toLowerCase())||"xls".equals(extension.toLowerCase())){

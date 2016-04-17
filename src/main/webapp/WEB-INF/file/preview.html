@@ -10,8 +10,7 @@
 <div align="center">
 <br>
 <#if extension="txt">
-	<#assign size = list?size>		
-	<#if (size>0)>
+
 <table width="100%"  class="gridtable">
  <tr>
     <th width="10%">导入文件</th>
@@ -19,6 +18,12 @@
 </tr>
  <tr>
     <th rowspan="${(list?size)+1}">预览内容</th>
+   
+     <#if error??>      
+		<td>	  
+			 <span style="color:red" id="blink"><b>默认编码预览失败，请尝试选择其他文件编码预览</b></span>
+	    </td>
+     </#if>
      
 	<#list list as file>
 		   <#if file??&&file!="">
@@ -50,7 +55,10 @@
      <td>
 	 <select name="fileCode" onchange="reload(this.value);" >		
 	  <option value ="UTF-8"   <#if fileCode??&&fileCode=='UTF-8' >selected="selected"</#if>>UTF-8</option>
-	  <option value ="GBK"   <#if fileCode??&&fileCode=='ANSI' >selected="selected"</#if> >ANSI</option>
+	  <option value ="GBK"   <#if fileCode??&&fileCode=='GBK' >selected="selected"</#if> >ANSI/GBK</option>
+	  <option value ="EUC_CN"   <#if fileCode??&&fileCode=='EUC_CN' >selected="selected"</#if>>GB2312</option>
+	  <option value ="GB18030"   <#if fileCode??&&fileCode=='GB18030' >selected="selected"</#if>>GB18030</option>
+	  <option value ="ISO-8859-1"   <#if fileCode??&&fileCode=='ISO-8859-1' >selected="selected"</#if>>ISO-8859-1</option>
 	  <option value="Unicode" <#if fileCode??&&fileCode=='Unicode' >selected="selected"</#if>>Unicode</option>
 	  <option value="Unicode big endian"  <#if fileCode??&&fileCode=='Unicode big endian' >selected="selected"</#if> >Unicode big endian</option>
 	  <option value="" <#if fileCode??&&fileCode=='' >selected="selected"</#if>>自动识别</option>
@@ -76,11 +84,9 @@
 	 </td>
 </tr>
 </table>
-	<#else>
-	此文件无内容
-	</#if>
-<#else>
+	
 <!-- excele -->
+<#else>
 <form  id="form" name="form" action="../task/v_excelTask.htm"  method="post">
 	<input type="hidden" id="filePath" name="filePath" value="${filePath!}">
 <table class="gridtable">
