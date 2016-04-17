@@ -165,6 +165,12 @@
 	  <P>
  		标签<input  id="tagName" value="<#if task??>${task.tags!}</#if>" size="20"></input>
 	  </P>
+	   <br>
+	   <P>
+	   数据日期
+	   <input type="text" id="dataTime" size="20" value="<#if task??>${task.dataTime!}</#if>"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-%d'})">
+ 		
+	  </P>
     </div>
     
     <div class="investment_con_list">    
@@ -256,7 +262,9 @@ $("#submit").bind("click",function(){
 	//if (origin=="") return;
 	
 	var catalog = $("#catalog").val();
-	//if (origin=="") return;
+
+	var dataTime = $("#dataTime").val();
+	
 	
 	
 	var runTime  = "";
@@ -335,7 +343,7 @@ $("#submit").bind("click",function(){
 	                url:'../task/o_task.htm', 
 	                type:"post",  
 	                async:true,  
-	                data:{'tableName':tableName,'firstLineIgnore':'${firstLineIgnore}','separator':"${separator!}",'filePath':$("#filePath").val(),'fileCode':'${fileCode!}','tags':tagName,'origin':origin,'catalog':catalog,'runTime':runTime,'columnName':columnName,'dataType':dataType,'columnNameTag':columnNameTag,'columnIndex':columnIndex,'cleanOrAppend':cleanOrAppend},  
+	                data:{'tableName':tableName,'firstLineIgnore':'${firstLineIgnore}','separator':"${separator!}",'filePath':$("#filePath").val(),'fileCode':'${fileCode!}','tags':tagName,'origin':origin,'catalog':catalog,'dataTime':dataTime,'runTime':runTime,'columnName':columnName,'dataType':dataType,'columnNameTag':columnNameTag,'columnIndex':columnIndex,'cleanOrAppend':cleanOrAppend},  
 	                dataType:"json",  
 	                timeout:"1000000",  
 	                error:function(){

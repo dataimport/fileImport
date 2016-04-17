@@ -3,11 +3,9 @@ package com.xxx.admin.data.mongo;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -16,22 +14,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.mapreduce.GroupBy;
-import org.springframework.data.mongodb.core.mapreduce.GroupByResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 import com.xxx.admin.bean.AllCollectionName;
+import com.xxx.admin.bean.AllFileInfo;
 import com.xxx.admin.bean.Task;
-import com.xxx.admin.service.TaskService;
 import com.xxx.mongo.repository.base.BaseRepository;
 import com.xxx.utils.Pagination;
 import com.xxx.utils.StrUtils;
@@ -430,16 +425,64 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 			Query query = new Query();
 			Criteria criteria = Criteria.where("catalog").is(catalog);
 			query.addCriteria(criteria);
-			long totalCount  = mongoTemplate.count(query,Task.class);		
+			long totalCount  = mongoTemplate.count(query,AllFileInfo.class);		
 			query.with(new Sort(Direction.ASC,"startDate"));
 
-			List<Task> list =  mongoTemplate.find(query, Task.class);
+			List<AllFileInfo> list =  mongoTemplate.find(query, AllFileInfo.class);
 			Pagination page = new Pagination(pageNo, pageSize, totalCount); 
 			page.setList(list);
+			
+//			DBCollection dbColleciton =mongoTemplate.getCollection(collectionName); 	
+//			long totalCount = dbColleciton.count();
+//			Pagination page = new Pagination(pageNo, pageSize, totalCount); 		
+//		    DBCursor cursor = dbColleciton.find().skip(page.getFirstResult()).limit(pageSize);
+//		    Iterator<DBObject> it = cursor.iterator();
+//			List list = new ArrayList();
+//			while (it.hasNext()) {	
+//				list.add(it.next().toString());
+//			}
+//			page.setList(list);
+			
 			return page;
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
 		return null;
 		}
+	
+    public AllFileInfo getByUidFromAllFileInfo(String uid) {
+        Query query = new Query();
+		Criteria criteria = Criteria.where("uid").is(uid);
+		query.addCriteria(criteria);
+		return   mongoTemplate.findOne(query, AllFileInfo.class);
+    }
+    
+	
+    public List<AllFileInfo> getByTableNameAliasFromAllFileInfo(String tableNameAlias) {      
+        Query query = new Query();
+		Criteria criteria = Criteria.where("tableNameAlias").is(tableNameAlias);
+		query.addCriteria(criteria);
+		return   mongoTemplate.find(query, AllFileInfo.class);
+    }
+    
+    public Pagination getFromTable(String tableNameAlias,Integer pageNo, Integer pageSize) {      
+    	if(pageNo==null){
+			pageNo =1;
+		}
+		if(pageSize==null){
+			pageSize=20;
+		}		
+		DBCollection dbColleciton =mongoTemplate.getCollection(tableNameAlias); 	
+		long totalCount = dbColleciton.count();
+		Pagination page = new Pagination(pageNo, pageSize, totalCount); 		
+	    DBCursor cursor = dbColleciton.find().skip(page.getFirstResult()).limit(pageSize);
+	    Iterator<DBObject> it = cursor.iterator();
+		List list = new ArrayList();
+		while (it.hasNext()) {	
+			list.add(it.next().toString());
+		}
+		page.setList(list);
+		return page;
+  }
+    
 }

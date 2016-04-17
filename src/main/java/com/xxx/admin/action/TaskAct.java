@@ -221,12 +221,14 @@ public class TaskAct {
 
 	@RequestMapping(value = "o_task.htm")
 	public String o_task(Task task,ModelMap model,HttpServletRequest request,HttpServletResponse response) {	
+		String nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 		task.setUid(UUID.randomUUID().toString().replaceAll("-", ""));
 		task.setCreateUser(createUser);
+		task.setCreateTime(nowTime);		
 		if("0000-00-00 00:00:00".equals(task.getRunTime()))//立即执行
 		{	
-			task.setStartDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-			task.setRunTime(task.getStartDate());
+			task.setStartDate(nowTime);
+			task.setRunTime(nowTime);
 			task.setTaskStatus(1);//执行中
 			boolean result = taskService.createTask(task);//创建任务
 			

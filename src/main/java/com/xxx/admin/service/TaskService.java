@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import com.mongodb.CommandResult;
 import com.xxx.admin.bean.AllCollectionName;
+import com.xxx.admin.bean.AllFileInfo;
 import com.xxx.admin.bean.MongoInToErrorLog;
 import com.xxx.admin.bean.MongoSolrInfo;
 import com.xxx.admin.bean.SolrTask;
@@ -84,7 +85,7 @@ public class TaskService {
 			
 			SolrTask slorTask = new SolrTask(task.getUid(), task.getTableName(),task.getTableNameAlias(), task.getOrigin(), task.getTags(),task.getCatalog(),
 					task.getColumnName(),task.getColumnNameTag(), task.getColumnIndex(), task.getSeparator(),
-					task.getRunTime(), task.getStartDate(), task.getEndDate(), task.getFilePath(),
+					task.getRunTime(), task.getStartDate(), task.getEndDate(),task.getDataTime(),task.getCreateTime(), task.getFilePath(),
 					task.getFileName(),task.getFileCode(), task.getFileSize(), task.getLeftTime(),task.getTotalCount(),
 					BaseTask.TASK_STATUS_SOLR_WAITING,
 					task.getTimeUse(), task.getRunNum(), "0",
@@ -209,9 +210,10 @@ public class TaskService {
 		task.setFileName(file.getName());
 	}	
 	
-	  public CommandResult getDBStats() {
+    public CommandResult getDBStats() {
 		return taskRepository.getDBStats();
 	}	
+	  
 	
     @Resource(name = "task")
     TaskRepository taskRepository;    

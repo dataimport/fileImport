@@ -28,16 +28,18 @@ public class MongoSolrFinishTask extends BaseTask{
 	public MongoSolrFinishTask(){
 		super();
 	}
-	public MongoSolrFinishTask(String uid, String tableName, String tableNameAlias, String origin, String catelog,
-			String tags, String[] columnName, String[] columnNameTag, Integer[] columnIndex, String separator,
-			String runTime, String startDate, String endDate, String filePath, String fileName, String fileCode,
-			long fileSize, String leftTime, long totalCount, int taskStatus, String timeUse, int runNum,
-			String cleanOrAppend, int beginLineNum, String createUser, boolean firstLineIgnore, String[] dataType) {
-		super(uid, tableName, tableNameAlias, origin, catelog, tags, columnName, columnNameTag, columnIndex, separator, runTime,
-				startDate, endDate, filePath, fileName, fileCode, fileSize, leftTime, totalCount, taskStatus, timeUse, runNum,
-				cleanOrAppend, beginLineNum, createUser, firstLineIgnore, dataType);
+	public MongoSolrFinishTask(String uid, String tableName, String tableNameAlias, String origin, String tags,
+			String catalog, String[] columnName, String[] columnNameTag, Integer[] columnIndex, String separator,
+			String runTime, String startDate, String endDate, String dataTime, String createTime, String filePath,
+			String fileName, String fileCode, long fileSize, String leftTime, long totalCount, int taskStatus,
+			String timeUse, int runNum, String cleanOrAppend, int beginLineNum, String createUser,
+			boolean firstLineIgnore, String[] dataType) {
+		super(uid, tableName, tableNameAlias, origin, tags, catalog, columnName, columnNameTag, columnIndex, separator, runTime,
+				startDate, endDate, dataTime, createTime, filePath, fileName, fileCode, fileSize, leftTime, totalCount,
+				taskStatus, timeUse, runNum, cleanOrAppend, beginLineNum, createUser, firstLineIgnore, dataType);
 		// TODO Auto-generated constructor stub
 	}
+	
 	
 
 }

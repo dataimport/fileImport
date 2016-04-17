@@ -29,6 +29,8 @@ public abstract class BaseTask implements Serializable {
 	private String runTime;
 	private String startDate="";
 	private String endDate="";
+	private String dataTime="";//数据日期
+	private String createTime="";//创建时间
 	private String filePath;
 	private String fileName;
 	private String fileCode;
@@ -236,23 +238,41 @@ public abstract class BaseTask implements Serializable {
 	public void setCatalog(String catalog) {
 		this.catalog = catalog;
 	}
+	
+	
+	public String getDataTime() {
+		return dataTime;
+	}
+
+	public void setDataTime(String dataTime) {
+		this.dataTime = dataTime;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
 
 	public BaseTask(){
 		  
 	  }
 
-	public BaseTask(String uid, String tableName, String tableNameAlias, String origin, String catelog, String tags,
+	public BaseTask(String uid, String tableName, String tableNameAlias, String origin, String tags, String catalog,
 			String[] columnName, String[] columnNameTag, Integer[] columnIndex, String separator, String runTime,
-			String startDate, String endDate, String filePath, String fileName, String fileCode, long fileSize,
-			String leftTime, long totalCount, int taskStatus, String timeUse, int runNum, String cleanOrAppend,
-			int beginLineNum, String createUser, boolean firstLineIgnore, String[] dataType) {
+			String startDate, String endDate, String dataTime, String createTime, String filePath, String fileName,
+			String fileCode, long fileSize, String leftTime, long totalCount, int taskStatus, String timeUse,
+			int runNum, String cleanOrAppend, int beginLineNum, String createUser, boolean firstLineIgnore,
+			String[] dataType) {
 		super();
 		this.uid = uid;
 		this.tableName = tableName;
 		this.tableNameAlias = tableNameAlias;
 		this.origin = origin;
 		this.tags = tags;
-		this.catalog = catelog;
+		this.catalog = catalog;
 		this.columnName = columnName;
 		this.columnNameTag = columnNameTag;
 		this.columnIndex = columnIndex;
@@ -260,6 +280,8 @@ public abstract class BaseTask implements Serializable {
 		this.runTime = runTime;
 		this.startDate = startDate;
 		this.endDate = endDate;
+		dataTime = dataTime;
+		this.createTime = createTime;
 		this.filePath = filePath;
 		this.fileName = fileName;
 		this.fileCode = fileCode;

@@ -13,11 +13,15 @@ import javax.annotation.Resource;
 import net.sf.json.JSONObject;
 
 import org.springframework.stereotype.Service;
+
+import com.xxx.admin.bean.AllFileInfo;
 import com.xxx.admin.bean.MongoSolrInfo;
 import com.xxx.admin.bean.NoRepeatColls;
+import com.xxx.admin.bean.Task;
 import com.xxx.admin.data.mongo.FileInMongoRepository;
 import com.xxx.admin.data.mongo.MongoCollRepository;
 import com.xxx.admin.data.mongo.MongoToSolrRepository;
+import com.xxx.admin.data.mongo.TaskRepository;
 import com.xxx.utils.Pagination;
 
 @Service("mongofileService")
@@ -83,7 +87,23 @@ public class MongoFileService {
 		return fileInMongoRepository.getTaskByCataLog(pageNo, pageSize, catalog);		 
 	}
 
-
+	public AllFileInfo getByUidFromAllFileInfo(String uid) {
+		return fileInMongoRepository.getByUidFromAllFileInfo(uid);
+		//return null;
+	}
+	
+	public  List<AllFileInfo> getByTableNameAliasFromAllFileInfo(String tableNameAlias) {
+		return fileInMongoRepository.getByTableNameAliasFromAllFileInfo(tableNameAlias);
+		//return null;
+	}
+	
+	public  Pagination getFromTable(String tableNameAlias,Integer pageNo, Integer pageSize) {
+		return fileInMongoRepository.getFromTable(tableNameAlias,pageNo,pageSize);
+		//return null;
+	}
+	
+    @Resource(name = "task")
+    TaskRepository taskRepository;   
     @Resource
     MongoToSolrRepository mongoToSolrRepository;
     @Resource

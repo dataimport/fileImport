@@ -19,6 +19,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 import com.xxx.admin.bean.AllCollectionName;
+import com.xxx.admin.bean.AllFileInfo;
 import com.xxx.admin.bean.Task;
 import com.xxx.mongo.repository.base.BaseRepository;
 import com.xxx.utils.Pagination;
@@ -153,6 +154,7 @@ public class TaskRepository implements BaseRepository<Task> {
 		return mongoTemplate.findOne(query, Task.class,AllCollectionName.ALLFILEINFO_COLLECTIONNAME);
 	}
 	
+
 	@Override
 	public boolean deleteObject(Task object) {
 		WriteResult result = mongoTemplate.remove(object);		
