@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBliC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+<TITLE>目录</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=utf-8">
+<liNK href="../resources/images/style.css" type=text/css rel=stylesheet>
+</HEAD>
+<BODY>
+<div id="wrap" style="width:680px;margin:0px 0px 0px 3px">  
+<#if task??>
+</br>
+<div id="container" style="width:100%;margin:0px 0px 0px 0px">  
+
+<div id="content" style="width:100%;margin:0px 0px 0px 0px">    
+表名： ${task.tableName!}
+</br>
+来源： ${task.origin!}
+</br>
+标签组： ${task.tags!}
+</br>
+数组日期：  ${task.dataTime!}
+</br>
+	<table class="gridtable" style="width:100%;">
+	<tr>
+	<th>字段名称</th><th>类型</th><th>标签</th>
+	</tr>
+	
+	<#list task.columnName as columnName>
+	<tr>
+	   <td>
+		 ${columnName!}
+		</td>
+		 <td>
+		<#if (task.dataType[columnName_index]=="string")>字符 
+		<#elseif task.dataType[columnName_index]=="number">数值
+		<#elseif task.dataType[columnName_index]=="date">日期
+		</#if>
+		</td>
+		<td>
+		${task.columnNameTag[columnName_index]!}
+		</td>
+	   
+	</tr> 			
+</#list>
+	</table>
+	</br>
+<a href= "# " onclick= "history.go(-1) ">返回 <a> 
+</div>  
+</#if>       
+    </div>  
+    
+
+</BODY>
+</HTML>
