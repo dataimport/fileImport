@@ -2,7 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
-<link href="../resources/images/style.css" type=text/css rel=stylesheet>
+<link href="../static_bootstrap/css/bootstrap-treeview.css" type=text/css rel=stylesheet>
+<link href="../static_bootstrap/css/bootstrap-3.3.5.min.css" rel="stylesheet">
+<link href="../static_bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link id="base-style-responsive" href="../static_bootstrap/css/style-responsive.css" rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
 <title>导入文档预览</title>
 <style type="text/css">
 .radioText {
@@ -25,7 +29,7 @@
 <BODY>
 <#assign columnsSize=columns?size>
 <#assign listSize=text?size>
-<table width="100%"  class="gridtable">
+<table width="100%"  class="table table-bordered table-striped">
    <#if errorMessage??&&errorMessage!="">
   <tr>
     <th>提醒</th>    
@@ -59,17 +63,27 @@
     <th>列名</th>
     <#list columns as column>
  	<td>
- 	 <div align="center"> 
+ 	 <div> 
  	 	 <#if (firstLineIgnore=="true")>
- 	 	  <input style="width:150px" name="columnName"  id="columnName_${(column_index+1)}"   onblur="checkboxChange('${(column_index+1)}')"
+ 	 	 <form class="form-inline">
+ 	 	  <input class="form-control"  name="columnName"  id="columnName_${(column_index+1)}"   onblur="checkboxChange('${(column_index+1)}')"
  			value="${column?trim}" >
  		 </input>
+ 		 <div class="checkbox">
+         <label>
  		  <input name="import" type="checkbox" id="isImport_${(column_index+1)}" checked='checked'  value="${(column_index+1)}">导入
+ 		 </label>
+         </div>
+ 		 </form>
  	 	 <#else>
- 	 	 <input style="width:150px" name="columnName"  id="columnName_${(column_index+1)}"  onblur="checkboxChange('${(column_index+1)}')"
- 			value="" >
- 		 </input>
- 		  <input name="import" type="checkbox" id="isImport_${(column_index+1)}"   value="${(column_index+1)}">导入
+ 	 	 <form class="form-inline">
+ 	 	 <input class="form-control"  id="exampleInputEmail1" name="columnName"  id="columnName_${(column_index+1)}"  onblur="checkboxChange('${(column_index+1)}')"
+ 			value="">
+ 	     <div class="checkbox">
+         <label>
+ 		 <input name="import" type="checkbox" id="isImport_${(column_index+1)}"   value="${(column_index+1)}">导入</form>
+ 		 </label>
+         </div>
  	 	 </#if> 	 	 
  	 </div>
  	</td>
@@ -80,11 +94,7 @@
     <th>列标签</th>
     <#list columns as column>
  	<td>
- 	 <div align="center"> 
- 	  <input  style="width:150px" name="columnNameTag"  id="columnNameTag_${(column_index+1)}"   	 	 
- 	 </input>
- 	  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- 	 </div>
+ 	  <input class="form-control"  name="columnNameTag"  id="columnNameTag_${(column_index+1)}">   	 	 
  	</td>
 	</#list>
   </tr>
@@ -93,13 +103,11 @@
     <th>数据类型</th>
    	<#list 1..columnsSize as i>
  	<td>
-       <div align="center">
-       <select name="columnDataType" id="columnDataType_${i}">
+       <select name="columnDataType" id="columnDataType_${i}"  class="form-control">
 		  <option value ="string">字符</option>
 		  <option value ="number">数值</option>
 		  <option value="date">日期</option>
 	   </select>
-       </div>
  	</td>
 	</#list>
   </tr>
@@ -151,33 +159,50 @@
   <div class="investment_con">
     <div class="investment_con_list">
      <P>
- 		表名<input  id="tableName" value="<#if task??>${task.tableName!}</#if>" size="20" onchange="tableNameChange(this.value)" ></input> <span id="tableInfo"></span>
+     	<form class="form-inline">
+ 		<label>表名</label>
+ 		<input  class="form-control" id="tableName" value="<#if task??>${task.tableName!}</#if>" size="20" onchange="tableNameChange(this.value)" > <span id="tableInfo"></span>
+ 		</form>
 	  </P>
 	  <br>
       <P>
- 		目录<input  id="catalog" value="<#if task??>${task.catalog!}</#if>" size="20"></input>
+      	<form class="form-inline">
+ 		<label>目录</label>
+ 		<input class="form-control" id="catalog" value="<#if task??>${task.catalog!}</#if>" size="20">
+ 		</form>
 	  </P>	  
 	  <br>
       <P>
- 		来源<input  id="origin" value="<#if task??>${task.origin!}</#if>" size="20"></input>
+      	<form class="form-inline">
+ 		<label>来源</label>
+ 		<input class="form-control" id="origin" value="<#if task??>${task.origin!}</#if>" size="20">
+ 		</form>
 	  </P>
 	   <br>
 	  <P>
- 		标签<input  id="tagName" value="<#if task??>${task.tags!}</#if>" size="20"></input>
+	  	<form class="form-inline">
+ 		<label>标签</label>
+ 		<input class="form-control" id="tagName" value="<#if task??>${task.tags!}</#if>" size="20">
+ 		</form>
 	  </P>
 	   <br>
 	   <P>
-	   数据日期
-	   <input type="text" id="dataTime" size="20" value="<#if task??>${task.dataTime!}</#if>"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})">
+	   	<form class="form-inline">
+	  <label>数据日期</label>
+	   <input class="form-control" type="text" id="dataTime" size="20" value="<#if task??>${task.dataTime!}</#if>"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-%d'})">
+	   </form>
  		
 	  </P>
     </div>
     
     <div class="investment_con_list">    
-      <P>      
- 		<input  id="search" value="" size="20"></input>&nbsp;&nbsp;<input type="button" id="searchSubmit" value="查询" onclick="searchCollction()">
+      <P> 
+      	
+      <form class="form-inline">
+ 		<input class="form-control" id="search" value="" size="20"></input>&nbsp;&nbsp;<input type="button" class="btn btn-primary" id="searchSubmit" value="查询" onclick="searchCollction()">
+ 		</form>
         
-<table class="gridtable" id="gridtable" style="display:none">
+<table class="table table-bordered table-striped" id="gridtable" style="display:none">
 <tr id="searchCollectionInfo">
 <th>表名</th><th>目录</th><th>来源</th><th>标签</th><th>操作</th> 
 </tr>
@@ -200,11 +225,24 @@
     <th>操作</th> 	
  		<td  colspan="${columnsSize}">
  		<div class="radioText">
-			<input id="run0" name="runType"  type="radio" value="0000-00-00 00:00:00"  onclick="runTypeChange('0')" checked=''/>立即执行导入任务<br/>
-			<input id="run" name="runType"  type="radio" value="1"  onclick="runTypeChange('1')"/>计划执行时间<br/>
-			<input type="text" id="run1" value="" style="display:none" readonly="readonly" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-%d'})">
-			<input name="sameRule" type="checkbox" id="sameRule" value="sameRule"> 以相同规则导入下一文件<br/>
-			<input type="button" onclick="javascript:history.go(-1);" value="返回上一步">  &nbsp;&nbsp; <input type="button" id="submit" disabled="true" value="提交任务">
+ 			<div class="radio">
+            <label>
+			<input id="run0" name="runType"  type="radio" value="0000-00-00 00:00:00"  onclick="runTypeChange('0')" checked=''/>立即执行导入任务
+			</label>
+            </div>
+            <div class="radio">
+            <label>
+			<input id="run" name="runType"  type="radio" value="1"  onclick="runTypeChange('1')"/>计划执行时间
+			</label>
+            </div>
+            
+			<input type="text" class="form-control" id="run1" value="" style="display:none" readonly="readonly" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-%d'})">
+			<div class="checkbox">
+            <label>
+			<input name="sameRule" type="checkbox" id="sameRule" value="sameRule"> 以相同规则导入下一文件
+			 </label>
+            </div>
+			<input type="button" class="btn btn-info" onclick="javascript:history.go(-1);" value="返回上一步">  &nbsp;&nbsp; <input type="button" class="btn btn-success" id="submit" disabled="true" value="提交任务">
 			<div id="processbar" style="display:none">
 		  	<div class="finish" style="width:0%"></div>
 		  	</div>
@@ -311,7 +349,7 @@ $("#submit").bind("click",function(){
 		}	
 		temp = temp.replace(',','');//列名中不能有逗号
 
-		if(temp!=""&&columnName.indexOf(temp)>=0){
+		if(columnName.indexOf(temp)>=0){
 			alert("有相同列名");
 			return ;
 		}
@@ -420,11 +458,10 @@ $("#submit").bind("click",function(){
 	                {  
 	                	if(data.code==100){
 	                		//$("#tableInfo")。text("存在"+collectionName);
-	                		$("#tableInfo").html("&nbsp;&nbsp; 已经存在表： "+collectionName+"&nbsp;&nbsp; "+
+	                		$("#tableInfo").html("&nbsp;&nbsp; 已经存在表： "+collectionName+"&nbsp;&nbsp;  <a href='#'>浏览</a>"+
 	                				"&nbsp;&nbsp;  <input id='cleanOrAppend1' type='radio' name='cleanOrAppend' value='clean' checked=''>清空并追加"+
 	                				"&nbsp;&nbsp;  <input id='cleanOrAppend2' type='radio' name='cleanOrAppend' value='append'  >追加到此表 "
 	                				);  
-	                		$('#submit').attr('disabled',false);
 	                	}else{
 	                		$('#submit').attr('disabled',false); 
 	                		$("#tableInfo").html("");
