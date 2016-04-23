@@ -18,10 +18,11 @@
 		<div class="row">
 			<h4 style="font-weight: bold;margin-top: 0px;">当前任务总数:&nbsp;&nbsp;${list?size}</h4>
 			<div class="progress">
-				<div class="label-success label-progress" style="width: 30%;">执行中4/30%</div>
+				<div class="label-success label-progress" style="width: 30%;" onclick="showList(1)">
+				执行中4/30%</div>
 				<div class="label-info label-progress" style="width: 40%;">等待5/40%</div>
-				<div class="label-warning label-progress" style="width: 15%;">暂停2/15%</div>
-				<div class="label-default label-progress" style="width: 15%;">未启动2/15%</div>
+				<div class="label-danger label-progress" style="width: 15%;" onclick="showList(-2)">失败2/15%</div>
+				<div class="label-default label-progress" style="width: 15%;"  onclick="showList(0)">未启动2/15%</div>
 			</div>
 		</div>
 		</#if>
