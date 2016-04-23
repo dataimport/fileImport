@@ -1,80 +1,125 @@
 <!DOCTYPE HTML PUBliC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
 <HTML xmlns="http://www.w3.org/1999/xhtml">
 <HEAD>
-<TITLE>目录</TITLE>
+<TITLE>Mongo数据维护</TITLE>
 <META http-equiv=Content-Type content="text/html; charset=utf-8">
-<liNK href="../resources/images/style.css" type=text/css rel=stylesheet>
-<style>
-.current {
-    border-radius: 4px;
-    box-shadow:inset 0 0 5px 25px #ccc;
-}
-</style>
+<script src="../static_bootstrap/js/jquery-1.9.1.min.js"></script>
+<script src="../static_bootstrap/js/jquery-migrate-1.0.0.min.js"></script>
+<script src="../static_bootstrap/js/bootstrap-treeview.js"></script>
+<link href="../static_bootstrap/css/bootstrap-treeview.css" type=text/css rel=stylesheet>
+<link href="../static_bootstrap/css/bootstrap-3.3.5.min.css" rel="stylesheet">
+<link href="../static_bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link id="base-style-responsive" href="../static_bootstrap/css/style-responsive.css" rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
 </HEAD>
 <BODY>
-<div id="wrap">  
-          
-<#if catalogList??>
-			</br>
-<div id="container">  
-         <div id="left_side" style="width:10%">
-			 <div class="pnav-box" id=letter-a>
-					 <div class=box-title>
-					目录：  </br>
-					 <#list catalogList as ca>       
-	               <#if ca==catalog>
-	                <a class="current" href="javascript:findByCatalog('${ca!}')"> ${ca!}</a>
-	                <#else>
-	                    <a href="javascript:findByCatalog('${ca!}')"> ${ca!}</a>
-	                </#if>
-                    </br>
-                    </#list>
-					
-				</div>
-			 </div>
-		  </div>  
+<div class="container" style="width: 100%;">
+<div class="row">
+			<div class="col-md-2">
+				<div id="treeview1" class="treeview">
+			  <ul class="list-group">
+			  
+			    <#list catalogList as ca> 
+			    <li onclick="findByCatalog('${ca!}')" class="list-group-item node-treeview1" data-nodeid="${ca_index}" style="">
+			      <span class="expand-collapse click-collapse glyphicon glyphicon-minus">
+			      </span>			      
+			      ${ca!}
+			    </li>
+			   
+			    </#list>
+			  </ul>
+			</div>
+			</div>
+			<div div class="col-md-10">
+				<form class="form-inline"> 
+				  <div class="form-group">
+				    <div class="form-group">
+				      <select  class="form-control" style="margin:5px 5px 5px 5px;">
+				        <option>名称</option>
+				        <option>目录</option>
+				        <option>文件名</option>
+				        <option>标签</option>
+				        <option>目录</option>
+				      </select>
+				    </div>
+				    <input class="form-control" placeholder="请输入查找内容" style="width: 300px;">
+				  </div>
+				  <button type="submit" class="btn btn-primary">查找</button>
+				  <button type="submit" class="btn btn-success">显示全部</button>
+				  <div class="checkbox">
+				    <label>
+				      <input type="checkbox" style="margin-left: 10px;">仅显示停用数据表
+				    </label>
+				  </div>
+				  
+				</form>
+				<table class="table table-bordered" style="margin-top: 10px;margin-left: 5px;">
+							  <thead>
+								  <tr class="active">
+									  <th>表名/状态</th>
+									  <th>记录数</th>
+									  <th>来源</th>
+									  <th>创建时间/最后更新时间</th>
+									  <th>数据日期</th>
+									  <th>标签组</th>
+									  <th>操作</th>
+								  </tr>
+							  </thead>   
+							  <tbody>
+								<#list taskList as task>
+									<tr>
+									   <td>
+										 ${task.tableName!}
+										</td>
+										 <td>
+										 ${task.totalCount!}
+										</td>
+										<td>
+										 ${task.origin!}
+										</td>
+									   <td>
+										 ${task.createTime!}/${task.startDate!}
+										</td>
+										<td>
+									    ${task.dataTime!}
+										</td>
+										<td>
+										  ${task.tags!}
+										</td>
+										<td>
+										<a href="javascript:showValues('${task.uid!}','${task.tableNameAlias!}')">浏览数据</a>&nbsp;&nbsp;
+										<a href="javascript:showTableInfo('${task.uid!}')">查看表信息</a>&nbsp;&nbsp;
+										</td>
+									</tr> 			
+								</#list>
+							  </tbody>
+						 </table>  
+						 <nav style="margin: 0 auto;text-align: center;">
+						  <ul class="pagination">
+						    <li>
+						      <a href="#" aria-label="Previous">
+						        <span aria-hidden="true">&laquo;</span>
+						      </a>
+						    </li>
+						    <li><a href="#">1</a></li>
+						    <li><a href="#">2</a></li>
+						    <li><a href="#">3</a></li>
+						    <li><a href="#">4</a></li>
+						    <li><a href="#">5</a></li>
+						    <li>
+						      <a href="#" aria-label="Next">
+						        <span aria-hidden="true">&raquo;</span>
+						      </a>
+						    </li>
+						  </ul>
+						</nav>
+				
+			             </div>
+			         </div>
+ </div>			         
 
-<div id="content" style="width:90%;margin:0px 190px 0px 180px">    
-	<table class="gridtable" style="width:100%;">
-	<tr>
-	<th>表名</th><th>记录数</th><th>来源</th><th>创建时间/最后更新时间</th><th>数据日期</th><th>标签组</th><th>操作</th>
-	</tr>
-	
-	<#list taskList as task>
-	<tr>
-	   <td>
-		 ${task.tableName!}
-		</td>
-		 <td>
-		 ${task.totalCount!}
-		</td>
-		<td>
-		 ${task.origin!}
-		</td>
-	   <td>
-		 ${task.createTime!}/${task.startDate!}
-		</td>
-		<td>
-	    ${task.dataTime!}
-		</td>
-		<td>
-		  ${task.tags!}
-		</td>
-		<td>
-		<a href="javascript:showValues('${task.uid!}','${task.tableNameAlias!}')">浏览数据</a>&nbsp;&nbsp;
-		<a href="javascript:showTableInfo('${task.uid!}')">查看表信息</a>&nbsp;&nbsp;
-		</td>
-	</tr> 			
-</#list>
-	</table>
-	</br>
-	<div id="page"> </div>
-	
-</div>  
+<script src="../static_bootstrap/js/ie10-viewport-bug-workaround.js"></script>
 
-</#if>         
-    </div>  
-    
 <form id="showValues" action="tableValues.htm" method="post">
 <input type="hidden" name="uid" id="uid" value=""/>
 <input type="hidden" name="tableNameAlias" id="tableNameAlias" value=""/>
@@ -89,11 +134,7 @@
 </form>
 
 
-<SCRIPT src="../js/js.js" type=text/javascript></SCRIPT> 
-<script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
-<script type="text/javascript" src="../js/jquery/jquery.paginate.js" id="st-main"></script>
-<script type="text/javascript" src="../js/zDialog/zDialog.js" id="st-main"></script>
-<script type="text/javascript" src="../js/zDialog/zDrag.js" id="st-main"></script>
+<script type="text/javascript" src="../js/jquery/jquery.paginate.js"></script>
 <script>
 
 function findByCatalog(catalog) {     	    
@@ -135,7 +176,7 @@ $(function() {
 });
 
 </script>
-
-
+    
+    
 </BODY>
 </HTML>
