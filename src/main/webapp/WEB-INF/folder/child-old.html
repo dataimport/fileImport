@@ -1,0 +1,271 @@
+<!DOCTYPE HTML PUBliC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+<TITLE>目录</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=utf-8">
+<liNK href="../resources/images/style.css" type=text/css rel=stylesheet>
+</HEAD>
+<BODY>
+<div id="wrap">  
+        <div id="header">
+        <select id="filePathSelect" style="width:350px">
+       	 <#list folderList as folder>
+          <option value="${folder.folderId!}"  <#if (folderPath??&&folderPath==folder.folderPath)> selected="selected"</#if>>${folder.folderPath!}</option>
+          </#list>
+        </select>
+   			<!--  &nbsp; <a href="list.htm" target="_blank">添加目录</a> -->   
+        </div>  
+ 
+ <form id="child_form" actoin="child.htm" method="post">
+ <input id="folderPath_form" name="folderPath" type="hidden" value=""/>
+ </form>       
+<#if folderChild??>
+			
+     <div id="container">  
+         <div id="left_side">
+			 <div class="pnav-box" id=letter-a>
+					 <div class=box-title>
+					  文件夹：
+					  </br>
+					<#list folderChild as file>	  
+			            <#if (file.isDirectory()!)>
+			            <#assign absolutePath =file.absolutePath?replace('\\','\\\\' )]		
+			          <a  title="" href="javascript:void(0)" onClick="getChild('${absolutePath!}')">
+			           		 <span class=pnav-letter >							
+								${file.name?trim}
+							</span>
+			           	</a>
+			           </br>
+			            </#if>        
+			    
+			      </#list>        
+				</div>
+			 </div>
+		  </div>  
+
+<div id="content">
+    
+<table class="gridtable" style="width:100%;">
+<tr>
+<th>文件名</th><th>修改时间</th><th>文件大小</th><th>入库状态</th><th>操作</th>
+</tr>
+
+<#list fileTaskList as task>
+<#if !(folderChild[task_index].isDirectory())>
+	<tr>
+	   <td style= "cursor:pointer; " onclick="showTaskDetail(${task_index})" >${folderChild[task_index].name}</td>
+		<td>
+		 ${(folderChild[task_index].lastModified())?number_to_datetime?string('yyyy-MM-dd HH:mm')}
+		</td>	
+		<td>
+		<#assign size =folderChild[task_index].length()?number]		
+		 <#if ((size/1073741824)>1)>
+		  ${(size/1073741824)?string("0.##")} G		
+		 <#elseif ((size/1048576)>1)>
+		  ${(size/1048576)?string("0.##")} M
+		 <#elseif ((size/1024)>1)>
+		  ${(size/1024)?string("0.##")} KB		
+		 <#else>
+		   ${size?string("0.##")} B	
+		 </#if>		 
+		</td>	
+		
+	   <#if task.filePath??>
+	      <#if task.taskStatus==0>
+		<td> <font color="#FF0000">未执行</font></td>
+		<td> 执行</td>
+		  <#elseif task.taskStatus==1>
+		 <td><font color="#0066CC">  执行中</font></td>
+		 <td> </td>
+		  <#elseif task.taskStatus==2>
+		 <td><font color="#2520EF">  已入库</font></td>
+		  <td><a  name="previewClick" data-path="${folderChild[task_index].path!}" href="#">重新导入</a> </td>
+		  <#elseif task.taskStatus==-2>
+		<td>  <font color="#26FA79">执行失败</font></td>
+		<td>重新导入 </td>
+		 </#if>		 
+	   <#else>
+	     <td> <font color="#FF990">	未添加到计划任务中</font></td>
+	     <td><a name="previewClick" data-path="${folderChild[task_index].path!}" href="#">添加到任务</a> </td>
+	   </#if>	
+		
+		
+	</tr> 	
+</#if>     		
+</#list>
+
+</table>
+</br>
+<div id="page"> </div>
+      </div>  
+    <div id="right_side" style="display:none;" >
+         <#list fileTaskList as task>
+         <#if !(folderChild[task_index].isDirectory())>
+           <div id="detailInfo_${task_index}"  <#if task_index!=1> style="display:none;"</#if>>             
+				  文件信息  </br> 
+		       <#if task.filePath??>				
+					状态： 
+					<#if task.taskStatus==0>
+							 未执行
+							  <#elseif task.taskStatus==1>
+							  执行中
+							  <#elseif task.taskStatus==2>
+							  已入库
+							  <#elseif task.taskStatus==-2>
+							  执行失败
+					</#if>		
+					<br> 
+					表名: ${task.tableName!},  记录数：${task.totalCount!}
+					<br>入库时间：${task.startDate!}
+					<br>完成时间：${task.endDate!}
+					<br>源文件名称：${task.filePath!}
+					<br>数据时间：
+					<br>标签组：${task.tags!}
+             <#else>
+	     	未添加到计划任务中
+	   		</#if>	
+             </div>
+         </#if>  
+         </#list>
+            </div>  
+        </div>  
+ </#if>         
+    </div>  
+    
+<form id="previewForm" action="../file/preview.htm" method="post">
+<input type="hidden" name="filePath" id="filePath" value=""/>
+</form>
+
+<SCRIPT src="../js/js.js" type=text/javascript></SCRIPT> 
+<script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
+<script type="text/javascript" src="../js/jquery/jquery.paginate.js" id="st-main"></script>
+
+<script>
+
+$('#filePathSelect').change(function(){ 
+	window.location.href="child.htm?folderId="+$(this).val();
+}) 
+	
+function getFolderChild(){	
+	//this.options[this.options.selectedIndex].value
+	
+
+}
+
+
+function showTaskDetail(id){	
+	$("div[id^='detailInfo']").hide();
+	$("#right_side").show();
+	$("#detailInfo_"+id).show(1000)
+}
+
+function getChild(folderPath){
+	$("#folderPath_form").val(folderPath);
+	$("#child_form").submit();
+}
+
+function getChild2(folderPath){	
+	 $.ajax(  
+             {  
+                 url:'child.htm', 
+                 type:"post",  
+                 async:true,  
+                 data:{'folderPath':folderPath,'append':true},  
+                 dataType:"html",  
+                 timeout:"100000",  
+                 error:function(){alert("获取文件失败");},  
+                 success:function(data)  
+                 {  
+                	$("#content").html(data);  
+                 }  
+             }  
+         );  
+
+}
+
+
+
+function getFileTaskInfo(filePath){	
+	 $.ajax(  
+             {  
+                 url:'../file/fileTaskInfo.htm', 
+                 type:"post",  
+                 async:true,  
+                 data:{'filePath':filePath},  
+                 dataType:"html",  
+                 timeout:"100000",  
+                 error:function(){alert("获取文件失败");},  
+                 success:function(data)  
+                 {  
+                	$("#content").html(data);  
+                 }  
+             }  
+         );  
+
+}
+
+$("a[name='previewClick'").click(function(){
+	var path= encodeURIComponent($(this).attr("data-path"));
+	$("#filePath").val(path);
+	$("#previewForm").submit();
+});
+
+$(function() {
+	$("#page").paginate({
+		count 		: ${page.totalPage!},
+		start 		: ${page.pageNo!},
+		display     : 12,
+		border					: false,
+		text_color  			: '#888',
+		background_color    	: '#EEE',	
+		text_hover_color  		: 'black',
+		background_hover_color	: '#CFCFCF',
+		mouse		: 'press',
+		onChange  : function(page){
+			window.location.href="child.htm?pageNo="+page+"&folderId=${folderId!}";		
+		  }
+			
+	});
+
+});
+
+</script>
+
+<SCRIPT type=text/javascript>
+(function(){
+NTES("span.photo-search input[type=text]").addEvent("focus", function(){ this.value == this.defaultValue && (this.value = ""); }).addEvent("blur", function(){ this.value == "" && (this.value = this.defaultValue); });
+	NTES("div.pnav-box div.box-title a.btn-fold").addEvent("click", function(e){
+		e.preventDefault();
+		var eleTitle = NTES(this.parentNode);
+		NTES(this).addCss("hidden");
+		eleTitle.$("a.btn-unfold").removeCss("hidden");
+		NTES(eleTitle.parentNode).$("ul.box-list").removeCss("hidden");
+	});
+	NTES("div.pnav-box div.box-title a.btn-unfold").addEvent("click", function(e){
+		e.preventDefault();
+		var eleTitle = NTES(this.parentNode);
+		NTES(this).addCss("hidden");
+		eleTitle.$("a.btn-fold").removeCss("hidden");
+		NTES(eleTitle.parentNode).$("ul.box-list").addCss("hidden");
+	});
+//	NTES("div.pnav-box ul.box-list a.btn-fold").addEvent("click", function(e){
+//		e.preventDefault();
+//		var eleTitle = NTES(this.parentNode);
+//		NTES(this).addCss("hidden");
+//		eleTitle.$("a.btn-unfold").removeCss("hidden");
+//		eleTitle.$("h2").removeCss("hidden");
+//	});
+	NTES("div.pnav-box ul.box-list a.btn-unfold").addEvent("click", function(e){
+		e.preventDefault();
+		var eleTitle = NTES(this.parentNode);
+		NTES(this).addCss("hidden");
+		eleTitle.$("a.btn-fold").removeCss("hidden");
+		eleTitle.$("h2").addCss("hidden");
+	});
+	new NTES.ui.Slide(NTES("ul.photo-snav li"), NTES("div.photo-scnt"), "active", "mouseover", 6000);
+})();
+
+</SCRIPT> 
+
+</BODY>
+</HTML>

@@ -18,9 +18,8 @@
 		<div class="row">
 			<h4 style="font-weight: bold;margin-top: 0px;">当前任务总数:&nbsp;&nbsp;${list?size}</h4>
 			<div class="progress">
-				<div class="label-success label-progress" style="width: 30%;" onclick="showList(1)">
+				<div class="label-info label-progress" style="width: 30%;" onclick="showList(1)">
 				执行中4/30%</div>
-				<div class="label-info label-progress" style="width: 40%;">等待5/40%</div>
 				<div class="label-danger label-progress" style="width: 15%;" onclick="showList(-2)">失败2/15%</div>
 				<div class="label-default label-progress" style="width: 15%;"  onclick="showList(0)">未启动2/15%</div>
 			</div>
@@ -54,11 +53,11 @@
 									     <#if task.taskStatus==0>
 										    <span class="label label-default">未启动</span>
 										 <#elseif task.taskStatus==1>
-									    	<span class="label label-success">执行中</span>									    
+									    	<span class="label label-info">执行中</span>									    
 									    <#elseif task.taskStatus==-2>
 									        <span class="label label-danger">异常</span>
 									    <#elseif task.taskStatus==2>
-									        <span class="label label-info">已完成</span>
+									        <span class="label label-success">已完成</span>
 									    </#if>
 									</td>  
 									<td class="center">${task.runTime!}</td>

@@ -3,141 +3,294 @@
 <HEAD>
 <TITLE>目录</TITLE>
 <META http-equiv=Content-Type content="text/html; charset=utf-8">
-<liNK href="../resources/images/style.css" type=text/css rel=stylesheet>
+<script src="../static_bootstrap/js/jquery-1.9.1.min.js"></script>
+<script src="../static_bootstrap/js/jquery-migrate-1.0.0.min.js"></script>
+<script src="../static_bootstrap/js/bootstrap-treeview.js"></script>
+<link href="../static_bootstrap/css/bootstrap-treeview.css" type=text/css rel=stylesheet>
+<link href="../static_bootstrap/css/bootstrap-3.3.5.min.css" rel="stylesheet">
+<link href="../static_bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link id="base-style-responsive" href="../static_bootstrap/css/style-responsive.css" rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
 </HEAD>
 <BODY>
-<div id="wrap">  
-        <div id="header">
-        <select id="filePathSelect" style="width:350px">
-       	 <#list folderList as folder>
-          <option value="${folder.folderId!}"  <#if (folderPath??&&folderPath==folder.folderPath)> selected="selected"</#if>>${folder.folderPath!}</option>
-          </#list>
-        </select>
-   			<!--  &nbsp; <a href="list.htm" target="_blank">添加目录</a> -->   
-        </div>  
- 
- <form id="child_form" actoin="child.htm" method="post">
- <input id="folderPath_form" name="folderPath" type="hidden" value=""/>
- </form>       
-<#if folderChild??>
-			
-     <div id="container">  
-         <div id="left_side">
-			 <div class="pnav-box" id=letter-a>
-					 <div class=box-title>
-					  文件夹：
-					  </br>
-					<#list folderChild as file>	  
-			            <#if (file.isDirectory()!)>
-			            <#assign absolutePath =file.absolutePath?replace('\\','\\\\' )]		
-			          <a  title="" href="javascript:void(0)" onClick="getChild('${absolutePath!}')">
-			           		 <span class=pnav-letter >							
-								${file.name?trim}
-							</span>
-			           	</a>
-			           </br>
-			            </#if>        
-			    
-			      </#list>        
-				</div>
-			 </div>
-		  </div>  
+	<div class="container" style="width: 100%;">
+		<div class="row">
+			<div class="form-group" style="width:400px;margin-left:15px;">
+		      <label >选择文件</label>
+		      <select id="filePathSelect" class="form-control">
+		       	 <#list folderList as folder>
+		          <option value="${folder.folderId!}"  <#if (folderPath??&&folderPath==folder.folderPath)> selected="selected"</#if>>${folder.folderPath!}</option>
+		          </#list>
+		     </select>
+		    </div>
+		</div>
+		<div class="row">
+			<div class="col-md-2">
+				<div id="treeview1" class="treeview">
+			  <ul class="list-group">
+			    <li class="list-group-item node-treeview1" data-nodeid="0" style="">
+			      <span class="expand-collapse click-collapse glyphicon glyphicon-minus">
+			      </span>
+			      <span class="icon glyphicon glyphicon-stop">
+			      </span>
+			      Parent 1
+			    </li>
+			    <li class="list-group-item node-treeview1" data-nodeid="1" style="">
+			      <span class="indent">
+			      </span>
+			      <span class="expand-collapse click-collapse glyphicon glyphicon-minus">
+			      </span>
+			      <span class="icon glyphicon glyphicon-stop">
+			      </span>
+			      Child 1
+			    </li>
+			    <li class="list-group-item node-treeview1" data-nodeid="2" style="">
+			      <span class="indent">
+			      </span>
+			      <span class="indent">
+			      </span>
+			      <span class="expand-collapse glyphicon">
+			      </span>
+			      <span class="icon glyphicon glyphicon-stop">
+			      </span>
+			      Grandchild 1
+			    </li>
+			    <li class="list-group-item node-treeview1" data-nodeid="3" style="">
+			      <span class="indent">
+			      </span>
+			      <span class="indent">
+			      </span>
+			      <span class="expand-collapse glyphicon">
+			      </span>
+			      <span class="icon glyphicon glyphicon-stop">
+			      </span>
+			      Grandchild 2
+			    </li>
+			    <li class="list-group-item node-treeview1" data-nodeid="4" style="">
+			      <span class="indent">
+			      </span>
+			      <span class="expand-collapse glyphicon">
+			      </span>
+			      <span class="icon glyphicon glyphicon-stop">
+			      </span>
+			      Child 2
+			    </li>
+			    <li class="list-group-item node-treeview1" data-nodeid="5" style="">
+			      <span class="expand-collapse glyphicon">
+			      </span>
+			      <span class="icon glyphicon glyphicon-stop">
+			      </span>
+			      Parent 2
+			    </li>
+			    <li class="list-group-item node-treeview1" data-nodeid="6" style="">
+			      <span class="expand-collapse glyphicon">
+			      </span>
+			      <span class="icon glyphicon glyphicon-stop">
+			      </span>
+			      Parent 3
+			    </li>
+			    <li class="list-group-item node-treeview1" data-nodeid="7" style="">
+			      <span class="expand-collapse glyphicon">
+			      </span>
+			      <span class="icon glyphicon glyphicon-stop">
+			      </span>
+			      Parent 4
+			    </li>
+			    <li class="list-group-item node-treeview1" data-nodeid="8" style="">
+			      <span class="expand-collapse glyphicon">
+			      </span>
+			      <span class="icon glyphicon glyphicon-stop">
+			      </span>
+			      Parent 5
+			    </li>
+			  </ul>
+			</div>
+			</div>
+			<div div class="col-md-6">
+				<table class="table table-bordered">
+							  <thead>
+								  <tr class="active">
+									  <th>文件名</th>
+									  <th>修改日期</th>
+									  <th>文件大小</th>                                          
+									  <th>入库状态</th>
+									  <th>操作</th>
+								  </tr>
+							  </thead>   
+							  <tbody>
+								<#list fileTaskList as task>
+									<#if !(folderChild[task_index].isDirectory())>
+										<tr>
+										   <td style= "cursor:pointer; " onclick="showTaskDetail(${task_index})" >${folderChild[task_index].name}</td>
+											<td>
+											 ${(folderChild[task_index].lastModified())?number_to_datetime?string('yyyy-MM-dd HH:mm')}
+											</td>	
+											<td>
+											<#assign size =folderChild[task_index].length()?number]		
+											 <#if ((size/1073741824)>1)>
+											  ${(size/1073741824)?string("0.##")} G		
+											 <#elseif ((size/1048576)>1)>
+											  ${(size/1048576)?string("0.##")} M
+											 <#elseif ((size/1024)>1)>
+											  ${(size/1024)?string("0.##")} KB		
+											 <#else>
+											   ${size?string("0.##")} B	
+											 </#if>		 
+											</td>	
+											
+										   <#if task.filePath??>
+										      <#if task.taskStatus==0>
+											<td> <span class="label label-default">未启动</span></td>
+											<td> 执行</td>
+											  <#elseif task.taskStatus==1>
+											 <td><span class="label label-info">执行中</span></td>
+											 <td> </td>
+											  <#elseif task.taskStatus==2>
+											 <td><span class="label label-success">已入库</span></td>
+											  <td><a  name="previewClick" data-path="${folderChild[task_index].path!}" href="#">重新导入</a> </td>
+											  <#elseif task.taskStatus==-2>
+											<td><span class="label label-danger">异  常</span></td>
+											<td>重新导入 </td>
+											 </#if>		 
+										   <#else>
+										     <td> <span class="label label-warning">未添加</span></td>
+										     <td><a name="previewClick" data-path="${folderChild[task_index].path!}" href="#">添加到任务</a> </td>
+										   </#if>	
+											
+											
+										</tr> 	
+									</#if>     		
+									</#list>
+								                               
+							  </tbody>
+						 </table>  
+						 <nav style="margin: 0 auto;text-align: center;">
+						  <ul class="pagination">
+						    <li>
+						      <a href="#" aria-label="Previous">
+						        <span aria-hidden="true">&laquo;</span>
+						      </a>
+						    </li>
+						    <li><a href="#">1</a></li>
+						    <li><a href="#">2</a></li>
+						    <li><a href="#">3</a></li>
+						    <li><a href="#">4</a></li>
+						    <li><a href="#">5</a></li>
+						    <li>
+						      <a href="#" aria-label="Next">
+						        <span aria-hidden="true">&raquo;</span>
+						      </a>
+						    </li>
+						  </ul>
+						</nav>
+				
+			             </div>
+			<div class="col-md-4" id="right_side" style="display:none;">
+			 <#list fileTaskList as task>
+         		<#if !(folderChild[task_index].isDirectory())>
+					<ul class="list-group" id="detailInfo_${task_index}" <#if task_index!=1> style="display:none;"</#if>>
+					  <li class="list-group-item active">文件信息</li>
+					  <#if task.filePath??>
+						  <li class="list-group-item">状态：
+							    <#if task.taskStatus==0>
+								    <span class="label label-default">未启动</span>
+								<#elseif task.taskStatus==1>
+							    	<span class="label label-info">执行中</span>									    
+							    <#elseif task.taskStatus==-2>
+							        <span class="label label-danger">异  常</span>
+							    <#elseif task.taskStatus==2>
+							        <span class="label label-success">已入库</span>
+							    </#if>	
+						  </li> 
+						  <li class="list-group-item">表名： ${task.tableName!}</li>
+						  <li href="#" class="list-group-item">记录数：${task.totalCount!} &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary  btn-xs" type="button">浏览</button></li>
+						  <li class="list-group-item">入库时间：${task.startDate!}</li>
+						  <li class="list-group-item">完成时间：${task.endDate!}</li>
+						  <li class="list-group-item">来源:${task.origin!}</li>
+						  <li class="list-group-item">源文件名称:${task.filePath!}</li>
+						  <li class="list-group-item">数据时间：2009年12月</li>
+						  <li class="list-group-item">标签组：${task.tags!}</li>
+					  <#else>
+						  <li class="list-group-item"><span class="label label-warning">未添加到计划任务中</span></li>
+					    </#if>
+					</ul>
+				</#if>  
+             </#list>
+			</div>
+		</div>
+	</div>
 
-<div id="content">
-    
-<table class="gridtable" style="width:100%;">
-<tr>
-<th>文件名</th><th>修改时间</th><th>文件大小</th><th>入库状态</th><th>操作</th>
-</tr>
+</BODY>
+<script src="../static_bootstrap/js/ie10-viewport-bug-workaround.js"></script>
 
-<#list fileTaskList as task>
-<#if !(folderChild[task_index].isDirectory())>
-	<tr>
-	   <td style= "cursor:pointer; " onclick="showTaskDetail(${task_index})" >${folderChild[task_index].name}</td>
-		<td>
-		 ${(folderChild[task_index].lastModified())?number_to_datetime?string('yyyy-MM-dd HH:mm')}
-		</td>	
-		<td>
-		<#assign size =folderChild[task_index].length()?number]		
-		 <#if ((size/1073741824)>1)>
-		  ${(size/1073741824)?string("0.##")} G		
-		 <#elseif ((size/1048576)>1)>
-		  ${(size/1048576)?string("0.##")} M
-		 <#elseif ((size/1024)>1)>
-		  ${(size/1024)?string("0.##")} KB		
-		 <#else>
-		   ${size?string("0.##")} B	
-		 </#if>		 
-		</td>	
-		
-	   <#if task.filePath??>
-	      <#if task.taskStatus==0>
-		<td> <font color="#FF0000">未执行</font></td>
-		<td> 执行</td>
-		  <#elseif task.taskStatus==1>
-		 <td><font color="#0066CC">  执行中</font></td>
-		 <td> </td>
-		  <#elseif task.taskStatus==2>
-		 <td><font color="#2520EF">  已入库</font></td>
-		  <td><a  name="previewClick" data-path="${folderChild[task_index].path!}" href="#">重新导入</a> </td>
-		  <#elseif task.taskStatus==-2>
-		<td>  <font color="#26FA79">执行失败</font></td>
-		<td>重新导入 </td>
-		 </#if>		 
-	   <#else>
-	     <td> <font color="#FF990">	未添加到计划任务中</font></td>
-	     <td><a name="previewClick" data-path="${folderChild[task_index].path!}" href="#">添加到任务</a> </td>
-	   </#if>	
-		
-		
-	</tr> 	
-</#if>     		
-</#list>
+<script type="text/javascript">
+        $(function () {
+            var defaultData = [
+            {
+                text: 'Parent 1',
+                href: '#parent1',
+                tags: ['4'],
+                nodes: [
+                {
+                    text: 'Child 1',
+                    href: '#child1',
+                    tags: ['2'],
+                    nodes: [
+                    {
+                        text: 'Grandchild 1',
+                        href: '#grandchild1',
+                        tags: ['0']
+                    },
+                    {
+                        text: 'Grandchild 2',
+                        href: '#grandchild2',
+                        tags: ['0']
+                    }
+                  ]
+                },
+                {
+                    text: 'Child 2',
+                    href: '#child2',
+                    tags: ['0']
+                }
+              ]
+            },
+            {
+                text: 'Parent 2',
+                href: '#parent2',
+                tags: ['0']
+            },
+            {
+                text: 'Parent 3',
+                href: '#parent3',
+                tags: ['0']
+            },
+            {
+                text: 'Parent 4',
+                href: '#parent4',
+                tags: ['0']
+            },
+            {
+                text: 'Parent 5',
+                href: '#parent5',
+                tags: ['0']
+            }
+          ];
 
-</table>
-</br>
-<div id="page"> </div>
-      </div>  
-    <div id="right_side" style="display:none;" >
-         <#list fileTaskList as task>
-         <#if !(folderChild[task_index].isDirectory())>
-           <div id="detailInfo_${task_index}"  <#if task_index!=1> style="display:none;"</#if>>             
-				  文件信息  </br> 
-		       <#if task.filePath??>				
-					状态： 
-					<#if task.taskStatus==0>
-							 未执行
-							  <#elseif task.taskStatus==1>
-							  执行中
-							  <#elseif task.taskStatus==2>
-							  已入库
-							  <#elseif task.taskStatus==-2>
-							  执行失败
-					</#if>		
-					<br> 
-					表名: ${task.tableName!},  记录数：${task.totalCount!}
-					<br>入库时间：${task.startDate!}
-					<br>完成时间：${task.endDate!}
-					<br>源文件名称：${task.filePath!}
-					<br>数据时间：
-					<br>标签组：${task.tags!}
-             <#else>
-	     	未添加到计划任务中
-	   		</#if>	
-             </div>
-         </#if>  
-         </#list>
-            </div>  
-        </div>  
- </#if>         
-    </div>  
-    
+            $('#treeview1').treeview({
+                color: "#428bca",
+                showBorder: true,
+                data: defaultData
+            });
+
+           
+        });
+</script>
+
 <form id="previewForm" action="../file/preview.htm" method="post">
 <input type="hidden" name="filePath" id="filePath" value=""/>
 </form>
 
-<SCRIPT src="../js/js.js" type=text/javascript></SCRIPT> 
-<script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
 <script type="text/javascript" src="../js/jquery/jquery.paginate.js" id="st-main"></script>
 
 <script>
@@ -229,43 +382,6 @@ $(function() {
 
 });
 
-</script>
-
-<SCRIPT type=text/javascript>
-(function(){
-NTES("span.photo-search input[type=text]").addEvent("focus", function(){ this.value == this.defaultValue && (this.value = ""); }).addEvent("blur", function(){ this.value == "" && (this.value = this.defaultValue); });
-	NTES("div.pnav-box div.box-title a.btn-fold").addEvent("click", function(e){
-		e.preventDefault();
-		var eleTitle = NTES(this.parentNode);
-		NTES(this).addCss("hidden");
-		eleTitle.$("a.btn-unfold").removeCss("hidden");
-		NTES(eleTitle.parentNode).$("ul.box-list").removeCss("hidden");
-	});
-	NTES("div.pnav-box div.box-title a.btn-unfold").addEvent("click", function(e){
-		e.preventDefault();
-		var eleTitle = NTES(this.parentNode);
-		NTES(this).addCss("hidden");
-		eleTitle.$("a.btn-fold").removeCss("hidden");
-		NTES(eleTitle.parentNode).$("ul.box-list").addCss("hidden");
-	});
-//	NTES("div.pnav-box ul.box-list a.btn-fold").addEvent("click", function(e){
-//		e.preventDefault();
-//		var eleTitle = NTES(this.parentNode);
-//		NTES(this).addCss("hidden");
-//		eleTitle.$("a.btn-unfold").removeCss("hidden");
-//		eleTitle.$("h2").removeCss("hidden");
-//	});
-	NTES("div.pnav-box ul.box-list a.btn-unfold").addEvent("click", function(e){
-		e.preventDefault();
-		var eleTitle = NTES(this.parentNode);
-		NTES(this).addCss("hidden");
-		eleTitle.$("a.btn-fold").removeCss("hidden");
-		eleTitle.$("h2").addCss("hidden");
-	});
-	new NTES.ui.Slide(NTES("ul.photo-snav li"), NTES("div.photo-scnt"), "active", "mouseover", 6000);
-})();
-
-</SCRIPT> 
-
-</BODY>
+</script>	   
+		
 </HTML>
