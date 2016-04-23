@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBliC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+<TITLE>目录</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=utf-8">
+<liNK href="../resources/images/style.css" type=text/css rel=stylesheet>
+</HEAD>
+<BODY >
+
+<div align="center">
+<br>
+<#if extension="txt">
+
+<table width="100%"  class="gridtable">
+ <tr>
+    <th width="10%">导入文件</th>
+    <td width="90%">${filePathShow!}</td>
+</tr>
+ <tr>
+    <th rowspan="${(list?size)+1}">预览内容</th>
+   
+     <#if error??>      
+		<td>	  
+			 <span style="color:red" id="blink"><b>默认编码预览失败，请尝试选择其他文件编码预览</b></span>
+	    </td>
+     </#if>
+     
+	<#list list as file>
+		   <#if file??&&file!="">
+			<tr>	
+				<td>	  
+			   ${file?replace('<', '&lt;' )?replace(">","&gt;")?replace('\n', '' )}
+			    </td>
+			</tr> 		
+			</#if>	
+	</#list>
+
+</tr>
+ <tr>
+    <th>分隔符</th>
+     <td>
+	<input id="fengefu_1" type="radio" name="fgf" value=""checked="" >无分隔符
+	<input id="fengefu_2" type="radio" name="fgf" value=",">逗号
+	<input id="fengefu_3" type="radio" name="fgf" value="\t"  >制表符
+	<input id="fengefu_4" type="radio" name="fgf" value=";" >分号
+	<input id="fengefu_5" type="radio" name="fgf" value=" ">空格
+	<input id="fengefu_6" type="radio" name="fgf" value="自定义" >自定义分隔符
+	<input id="fengefu_7" type="text"  style='display:none;' size="8" >
+	&nbsp;&nbsp;&nbsp;<input id="biaotou" type="checkbox" name="biaotou" value="true" >首行为表头
+	</td>
+</tr>
+
+<tr>
+    <th>文件编码</th>
+     <td>
+	 <select name="fileCode" onchange="reload(this.value);" >		
+	  <option value ="UTF-8"   <#if fileCode??&&fileCode=='UTF-8' >selected="selected"</#if>>UTF-8</option>
+	  <option value ="GBK"   <#if fileCode??&&fileCode=='GBK' >selected="selected"</#if> >ANSI/GBK</option>
+	  <option value ="EUC_CN"   <#if fileCode??&&fileCode=='EUC_CN' >selected="selected"</#if>>GB2312</option>
+	  <option value ="GB18030"   <#if fileCode??&&fileCode=='GB18030' >selected="selected"</#if>>GB18030</option>
+	  <option value ="ISO-8859-1"   <#if fileCode??&&fileCode=='ISO-8859-1' >selected="selected"</#if>>ISO-8859-1</option>
+	  <option value="Unicode" <#if fileCode??&&fileCode=='Unicode' >selected="selected"</#if>>Unicode</option>
+	  <option value="Unicode big endian"  <#if fileCode??&&fileCode=='Unicode big endian' >selected="selected"</#if> >Unicode big endian</option>
+	  <option value="" <#if fileCode??&&fileCode=='' >selected="selected"</#if>>自动识别</option>
+	</select>
+	 </td>
+</tr>
+
+<tr>
+    <th>操作</th>
+     <td>
+    <form  id="form" name="form" action="../task/v_task.htm"  method="post">
+	<input type="hidden" id="filePath" name="filePath" value="${filePath!}">
+	<input type="hidden" id="separator" name="separator" value="">
+	<input type="hidden" id="fileCode" name="fileCode" value="">
+	<input type="hidden" id="firstLineIgnore" name="firstLineIgnore" value="false">	
+	<#list list as file>
+	 <#if file??&&file!="">
+	 <input  type="hidden" type="text" name="lines" value="${file?trim}">
+	 </#if>	
+	</#list>	     
+	<button id="txtButton">下一步</button>
+	</form>
+	 </td>
+</tr>
+</table>
+	
+<!-- excele -->
+<#else>
+<form  id="form" name="form" action="../task/v_excelTask.htm"  method="post">
+	<input type="hidden" id="filePath" name="filePath" value="${filePath!}">
+<table class="gridtable">
+	<tr>
+	<#if (cellTotalMax>1)>
+		<th>序号</th>
+		<#list 1..cellTotalMax as t>
+			<th>列${t}</th> 
+		</#list>
+	</#if>
+	</tr>
+	
+	<#list list as cells>
+		<tr>
+	  	<td>${cells_index+1}</td>
+	  	<#list 0..(cellTotalMax-1) as t>
+	  		<td>${cells[t]!} </td>
+	  	</#list>
+		  	  
+		</tr> 
+	</#list>
+	</table>
+	
+	<br><br>
+	<hr>
+&nbsp;&nbsp;&nbsp;<input id="biaotou" type="checkbox" name="biaotou" value="true" >首行为表头
+<input type="hidden" id="firstLineIgnore" name="firstLineIgnore" value="false">
+<button id="excelButton">确定</button>
+</form>	
+</#if>
+</div>
+
+<script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+	 $("#txtButton").click(function(){
+		 var fgf = $('input[name="fgf"]:checked').val();
+			if(fgf=="自定义"){
+				fgf = $("#fengefu_7").val();
+			}			
+		$("#separator").val(fgf);
+		
+		var biaotou = $('input[name="biaotou"]:checked').val();
+		
+		if(biaotou=="true"){
+			$("#firstLineIgnore").val("true");
+		}
+		
+		var fileCode = $("select[name='fileCode']").val();
+		$("#fileCode").val(fileCode);
+	  //  $("form").submit();
+	  });  
+	 
+	
+	 $("#excelButton").click(function(){		
+		var biaotou = $('input[name="biaotou"]:checked').val();
+		if(biaotou=="true"){
+			$("#firstLineIgnore").val("true");
+		}
+	  });  
+	 
+	});
+	
+$(function(){
+	  $(":radio").click(function(){
+		  if($(this).val()=="自定义"){
+			  $("#fengefu_7").show();
+		  }	else{
+			  $("#fengefu_7").hide();
+		  }		
+	  });
+});
+
+function reload(fileCode){
+	$("#previewForm_fileCode").val(fileCode);
+	$("#previewForm").submit();
+}
+	 
+</script>
+<form id="previewForm" action="../file/preview.htm" method="post">
+<input type="hidden" name="filePath" id="previewForm_filePath" value="${filePath!}"/>
+<input type="hidden" name="fileCode" id="previewForm_fileCode" value=""/>
+</form>
+</BODY>
+</HTML>
