@@ -141,7 +141,12 @@ span.jPag-current{
 		
 	   <td>
 	   <#if task.totalCount??&&task.totalCount!=0>
-	   <#assign percent = ((task.runNum!/task.totalCount!)*100)?string("0.#")>
+	   
+	   <#if task.firstLineIgnore=true>
+	      <#assign percent = (((task.runNum+1)!/task.totalCount!)*100)?string("0.##")>
+	   <#else>
+	      <#assign percent = ((task.runNum!/task.totalCount!)*100)?string("0.##")>
+	   </#if>
 	   <#if percent=="100">
 	    <font color="#0D3EEF">${percent!}%</font> 
 	   <#else>
