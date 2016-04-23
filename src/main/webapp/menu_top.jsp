@@ -1,36 +1,43 @@
 <%@page contentType="text/html; charset=UTF-8"%>
-<div class="container-fluid">
-	<div class="container-fluid">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed"
-				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
-				aria-controls="navbar">
-				<span class="sr-only">Toggle navigation</span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span> <span
-					class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="index.jsp">天眼数据系统 Beta1.0</a>
-		</div>
-		<div id="navbar" class="navbar-collapse collapse">
-
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="#"> [当前用户：<font color="red">Qiyb</font>
+<div class="navbar">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".top-nav.nav-collapse,.sidebar-nav.nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href="index.jsp"><span>天眼数据系统 Beta1.0</span></a>
+								
+				<!-- start: Header Menu -->
+				<div class="nav-no-collapse header-nav">
+					<ul class="nav pull-right">
+						<li class="hidden-phone"><a href="index.jsp">系统总览</a></li>
+						<li class="hidden-phone"><a href="#">|</a></li>
+				        <li class="hidden-phone"><a href="data_frame.jsp?t=task_list.htm_not_finish">入库任务监控</a></li>
+				        <li class="hidden-phone"><a href="#">|</a></li>
+				        <li class="hidden-phone"><a href="elastic.jsp?t=0">入索引任务监控</a></li>
+				        <li class="hidden-phone"><a href="#">|</a></li>
+				        <li class="hidden-phone"><a href="data_frame.jsp?t=mongo_allCollections.htm">Mongo数据维护</a></li>
+						<!-- start: User Dropdown -->
+						<li class="dropdown">
+							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+								[当前用户：<font color="red">Qiyb</font>
 						角色：系统管理员]
-				</a></li>
-			</ul>
-
-			<ul class="nav navbar-nav navbar-right">
-				<li><a href="index.jsp">系统总览</a></li>
-				<li><a href="data_frame.jsp?t=task_list.htm_not_finish">入库任务监控</a></li>
-				<li><a href="elastic.jsp?t=0">入索引任务监控</a></li>
-				<li><a href="data_frame.jsp?t=mongo_allCollections.htm">Mongo数据维护</a></li>
-
-			</ul>
-
-
-			<!--  <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form> -->
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li class="dropdown-menu-title">
+ 									<span>账号设置</span>
+								</li>
+								<li><a href="#" style="color: #000000 !;">退出</a></li>
+							</ul>
+						</li>
+						<!-- end: User Dropdown -->
+					</ul>
+				</div>
+				<!-- end: Header Menu -->
+				
+			</div>
 		</div>
 	</div>
-</div>

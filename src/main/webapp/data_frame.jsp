@@ -11,36 +11,59 @@
 
     <title>天眼数据系统</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="static/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="static/css/dashboard.css" rel="stylesheet">
-
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="static/js/ie-emulation-modes-warning.js"></script>
+    <script src="static_bootstrap/js/ie-emulation-modes-warning.js"></script>
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+	
+	<!-- start: CSS -->
+	<link id="bootstrap-style" href="static_bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="static_bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+	<link id="base-style" href="static_bootstrap/css/style.css" rel="stylesheet">
+	<link id="base-style-responsive" href="static_bootstrap/css/style-responsive.css" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
+	<!-- end: CSS -->
+		
+	<!-- start: Favicon -->
+	<link rel="shortcut icon" href="static_bootstrap/img/favicon.ico">
+	<!-- end: Favicon -->
   </head>
 
   <body>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-       <%@ include  file="menu_top.jsp"%>
-    </nav>
+    		<!-- start: Header -->
+	<%@ include  file="menu_top.jsp"%>
+	<!-- start: Header -->
+	
+		<div class="container-fluid-full">
+			<div class="row-fluid">		
+			<!-- start: Main Menu -->
+    <%@ include  file="menu_left.jsp"%>
+			<!-- end: Main Menu -->
+			
+			<noscript>
+				<div class="alert alert-block span10">
+					<h4 class="alert-heading">Warning!</h4>
+					<p>You need to have <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a> enabled to use this site.</p>
+				</div>
+			</noscript>
+			
+			<!-- start: Content -->
+			<div id="content" class="span10">
+			
+			
+			<ul class="breadcrumb">
+				<li>
+					<i class="icon-home"></i>
+					<a href="#">系统总览&nbsp;&nbsp;></a> 
+					
+				</li>
+				<li><a href="#">入库任务监控</a></li>
+			</ul>
 
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-           <%@ include  file="menu_left.jsp"%>
-        </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <% String type = request.getParameter("t");
+			<div class="row-fluid">
+				
+				<% String type = request.getParameter("t");
     		   if(type!=null && type.trim().equals("task_list.htm_not_finish")){
     		%>       
     		    <iframe src="task/list.htm?status=888" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
@@ -55,16 +78,78 @@
     		<%}else{ %>
             	<iframe src="task/list.htm?status=888" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
             <%} %>
-        </div>
-      </div>
-    </div>
+				
+			</div>	
+		</div>
+	</div>
+	</div>
+
+			
+			
+	
+	<footer style="position: fixed;bottom:0;left:0;width:100%;">
+			<div style="margin: 0 auto;text-align: center;">&copy; 2016 <a href="http://x.news.cn">北京傲思信息技术有限公司</a></div>
+	</footer>
+
+
 
      <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="static/js/jquery/1.11.3/jquery.min.js"></script>
-    <script src="static/js/bootstrap.min.js"></script>  
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <script src="static/js/ie10-viewport-bug-workaround.js"></script>
+    <script src="static_bootstrap/js/ie10-viewport-bug-workaround.js"></script>
+		<script src="static_bootstrap/js/jquery-1.9.1.min.js"></script>
+	<script src="static_bootstrap/js/jquery-migrate-1.0.0.min.js"></script>
+	
+		<script src="static_bootstrap/js/jquery-ui-1.10.0.custom.min.js"></script>
+	
+		<script src="static_bootstrap/js/jquery.ui.touch-punch.js"></script>
+	
+		<script src="static_bootstrap/js/modernizr.js"></script>
+	
+		<script src="static_bootstrap/js/bootstrap.min.js"></script>
+	
+		<script src="static_bootstrap/js/jquery.cookie.js"></script>
+	
+		<script src='static_bootstrap/js/fullcalendar.min.js'></script>
+	
+		<script src='static_bootstrap/js/jquery.dataTables.min.js'></script>
+
+		<script src="static_bootstrap/js/excanvas.js"></script>
+	<script src="static_bootstrap/js/jquery.flot.js"></script>
+	<script src="static_bootstrap/js/jquery.flot.pie.js"></script>
+	<script src="static_bootstrap/js/jquery.flot.stack.js"></script>
+	<script src="static_bootstrap/js/jquery.flot.resize.min.js"></script>
+	
+		<script src="static_bootstrap/js/jquery.chosen.min.js"></script>
+	
+		<script src="static_bootstrap/js/jquery.uniform.min.js"></script>
+		
+		<script src="static_bootstrap/js/jquery.cleditor.min.js"></script>
+	
+		<script src="static_bootstrap/js/jquery.noty.js"></script>
+	
+		<script src="static_bootstrap/js/jquery.elfinder.min.js"></script>
+	
+		<script src="static_bootstrap/js/jquery.raty.min.js"></script>
+	
+		<script src="static_bootstrap/js/jquery.iphone.toggle.js"></script>
+	
+		<script src="static_bootstrap/js/jquery.uploadify-3.1.min.js"></script>
+	
+		<script src="static_bootstrap/js/jquery.gritter.min.js"></script>
+	
+		<script src="static_bootstrap/js/jquery.imagesloaded.js"></script>
+	
+		<script src="static_bootstrap/js/jquery.masonry.min.js"></script>
+	
+		<script src="static_bootstrap/js/jquery.knob.modified.js"></script>
+	
+		<script src="static_bootstrap/js/jquery.sparkline.min.js"></script>
+	
+		<script src="static_bootstrap/js/counter.js"></script>
+	
+		<script src="static_bootstrap/js/retina.js"></script>
+
+		<script src="static_bootstrap/js/custom.js"></script>
   </body>
 </html>
