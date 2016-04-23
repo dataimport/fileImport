@@ -3,23 +3,30 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>添加目录</title>
-<link href="../resources/images/style.css" type=text/css rel=stylesheet>
+<script src="../static_bootstrap/js/jquery-1.9.1.min.js"></script>
+<script src="../static_bootstrap/js/jquery-migrate-1.0.0.min.js"></script>
+<script src="../static_bootstrap/js/bootstrap-treeview.js"></script>
+<link href="../static_bootstrap/css/bootstrap-treeview.css" type=text/css rel=stylesheet>
+<link href="../static_bootstrap/css/bootstrap-3.3.5.min.css" rel="stylesheet">
+<link href="../static_bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link id="base-style-responsive" href="../static_bootstrap/css/style-responsive.css" rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&subset=latin,cyrillic-ext,latin-ext' rel='stylesheet' type='text/css'>
 </head>
 <body>
 
 <div id="base" class="">
 
-<table width="60%"  class="gridtable">
+<table width="60%"  class="table table-bordered table-striped">
 <tr>
-    <th  width="40%" >文件路径</th>    
- 	<td width="60%" >
+    <th  width="10%" >文件路径</th>    
+ 	<td width="90%" >
  	  <input id="folderPath" type="text" value="" size="50">
  	  <input id="folderId" type="hidden" value="" >
  	</td> 	
 </tr>
 <tr>
-    <th width="40%" >已添加</th>    
- 	<td width="60%" >
+    <th width="10%" >已添加</th>    
+ 	<td width="80%" >
  	 <div>    
 	        <select id="folderPathSelect" style="width:100%;" size="10" onchange="setSeparator(this.options[this.options.selectedIndex].value,this.options[this.options.selectedIndex].text)">    
 	       	  <#list list as folder>
@@ -30,16 +37,15 @@
  	</td> 	
 </tr>
 <tr>
-    <th width="40%" >操作</th>    
- 	<td width="60%" >
- 	 <input id="addButton" type="button" value="添加">&nbsp;&nbsp;
-     <input id="delButton" type="button" value="删除">
+    <th width="10%" >操作</th>    
+ 	<td width="90%" >
+ 	 <input id="addButton" type="button" class="btn btn-primary" value="添加">&nbsp;&nbsp;
+     <input id="delButton" type="button" class="btn btn-danger" value="删除">
  	</td> 	
 </tr>
 </table>
  </div>
 </body>
-<script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
 
 <script>
 //添加

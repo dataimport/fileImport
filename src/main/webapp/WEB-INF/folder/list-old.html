@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>添加目录</title>
+<link href="../resources/images/style.css" type=text/css rel=stylesheet>
+</head>
+<body>
+
+<div id="base" class="">
+
+<table width="60%"  class="gridtable">
+<tr>
+    <th  width="40%" >文件路径</th>    
+ 	<td width="60%" >
+ 	  <input id="folderPath" type="text" value="" size="50">
+ 	  <input id="folderId" type="hidden" value="" >
+ 	</td> 	
+</tr>
+<tr>
+    <th width="40%" >已添加</th>    
+ 	<td width="60%" >
+ 	 <div>    
+	        <select id="folderPathSelect" style="width:100%;" size="10" onchange="setSeparator(this.options[this.options.selectedIndex].value,this.options[this.options.selectedIndex].text)">    
+	       	  <#list list as folder>
+	         	 <option value="${folder.folderId!}">${folder.folderPath!}</option>
+	          </#list>
+	        </select>
+	      </div>
+ 	</td> 	
+</tr>
+<tr>
+    <th width="40%" >操作</th>    
+ 	<td width="60%" >
+ 	 <input id="addButton" type="button" value="添加">&nbsp;&nbsp;
+     <input id="delButton" type="button" value="删除">
+ 	</td> 	
+</tr>
+</table>
+ </div>
+</body>
+<script type="text/javascript" src="../js/jquery/plugins/jquery.min.js" id="st-main"></script>
+
+<script>
+//添加
+$("#addButton").bind("click",function(){
+	var addPath = $("#folderPath").val();
+	if(addPath==""){
+		alert("请填写路径");
+		return;
+	}
+	
+	 $.ajax(  
+             {  
+                 url:'add.htm', 
+                 type:"post",  
+                 async:true,  
+                 data:{'folderPath':addPath},  
+                 dataType:"json",  
+                 timeout:"100000",  
+                 error:function(){alert("服务出错");},  
+                 success:function(data)  
+                 { 
+                	 if(data.code==200){
+                		 jQuery("#folderPathSelect").append("<option value='"+addPath+"'>"+addPath+"</option>");
+                	 }else{
+                		 alert(data.msg);
+                	 }
+           			
+                 }  
+             }  
+         );  
+	 
+	});
+
+//删除
+$("#delButton").bind("click",function(){
+	var id = $("#folderId").val();
+	if(id==""){
+		alert("请在已添加路径中双击鼠标，选择需要删除的路径");
+		return;
+	}
+	
+	 $.ajax(  
+             {  
+                 url:'delete.htm', 
+                 type:"post",  
+                 async:true,  
+                 data:{'id':id},  
+                 dataType:"json",  
+                 timeout:"100000",  
+                 error:function(){alert("服务出错");},  
+                 success:function(data)  
+                 {  
+                	 if(data.code==200){
+                		 jQuery("#folderPathSelect option[value='"+id+"']").remove();
+                	 }else{
+                		 alert(data.msg);
+                	 }
+                	 
+                 }  
+             }  
+         );  
+	 
+	});  
+	
+function setSeparator(id,text){	
+	$("#folderId").val(id);	
+	$("#folderPath").val(text);	
+}
+</script>
+</html>
