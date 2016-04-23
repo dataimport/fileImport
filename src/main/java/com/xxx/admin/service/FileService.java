@@ -178,6 +178,9 @@ public class FileService {
 		  int successNum = 0;
 		  if(file.length()/1048576>TxtFileAnalysis.FILESIZE_TIPPINGPOINT){//大文件		
 			  int runNum=0;
+			  if(t.getFirstLineIgnore()){
+				  runNum=1;
+			  }
 			  try {
 				  FileChannel fcin = new RandomAccessFile(file, "r").getChannel();			
 				  ByteBuffer rBuffer = ByteBuffer.allocate(TxtFileAnalysis.BUFFER_SIZE);
@@ -228,11 +231,11 @@ public class FileService {
 				  List<String> lines = txtFileAnalysis.readSmallFile(t.getFilePath(),txtFileAnalysis.getCharset(t.getFilePath(),t.getFileCode()));
 				  successNum = fmRepository.FilePushToMongo(t, lines,0,0);
 				  
-				  //更新状态为导入完毕
-				  String[] keys = new String[]{"taskStatus"};
-				  Object[] values = new Object[]{BaseTask.TASK_STATUS_SUCCESS};			
+				  //更新状态为导入完毕,再更新一次导入总数，修正上面方法由于各种不符合入库条件的数据提前跳出循环造成的数据不准确问题
+				  String[] keys = new String[]{"taskStatus","runNum"};
+				  Object[] values = new Object[]{BaseTask.TASK_STATUS_SUCCESS,successNum};			
 				  fmRepository.updateFileInfoByField(t.getUid(), keys, values);
-				  
+					
 				//更新solrTask为等待状态
 				  solrTaskRepository.updateTaskByField(t.getUid(), 
 						    new String[]{"taskStatus","totalCount"},
