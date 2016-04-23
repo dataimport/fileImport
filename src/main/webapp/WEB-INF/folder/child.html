@@ -24,85 +24,28 @@
 		     </select>
 		    </div>
 		</div>
+		
+		 <form id="child_form" actoin="child.htm" method="post">
+		 <input id="folderPath_form" name="folderPath" type="hidden" value=""/>
+		 </form>   
+		
+			    <#if folderChild??>
 		<div class="row">
-			<div class="col-md-2">
+			<div id="container" class="col-md-2">
 				<div id="treeview1" class="treeview">
-			  <ul class="list-group">
-			    <li class="list-group-item node-treeview1" data-nodeid="0" style="">
+			  <ul id="left_side" class="list-group">
+			  
+			    <#list folderChild as file>	  
+			            <#if (file.isDirectory()!)>
+			            <#assign absolutePath =file.absolutePath?replace('\\','\\\\' )]	
+			    <li onclick="getChild('${absolutePath!}')" class="list-group-item node-treeview1" data-nodeid="0" style="">
 			      <span class="expand-collapse click-collapse glyphicon glyphicon-minus">
-			      </span>
-			      <span class="icon glyphicon glyphicon-stop">
-			      </span>
-			      Parent 1
+			      </span>			     
+			      ${file.name?trim}
 			    </li>
-			    <li class="list-group-item node-treeview1" data-nodeid="1" style="">
-			      <span class="indent">
-			      </span>
-			      <span class="expand-collapse click-collapse glyphicon glyphicon-minus">
-			      </span>
-			      <span class="icon glyphicon glyphicon-stop">
-			      </span>
-			      Child 1
-			    </li>
-			    <li class="list-group-item node-treeview1" data-nodeid="2" style="">
-			      <span class="indent">
-			      </span>
-			      <span class="indent">
-			      </span>
-			      <span class="expand-collapse glyphicon">
-			      </span>
-			      <span class="icon glyphicon glyphicon-stop">
-			      </span>
-			      Grandchild 1
-			    </li>
-			    <li class="list-group-item node-treeview1" data-nodeid="3" style="">
-			      <span class="indent">
-			      </span>
-			      <span class="indent">
-			      </span>
-			      <span class="expand-collapse glyphicon">
-			      </span>
-			      <span class="icon glyphicon glyphicon-stop">
-			      </span>
-			      Grandchild 2
-			    </li>
-			    <li class="list-group-item node-treeview1" data-nodeid="4" style="">
-			      <span class="indent">
-			      </span>
-			      <span class="expand-collapse glyphicon">
-			      </span>
-			      <span class="icon glyphicon glyphicon-stop">
-			      </span>
-			      Child 2
-			    </li>
-			    <li class="list-group-item node-treeview1" data-nodeid="5" style="">
-			      <span class="expand-collapse glyphicon">
-			      </span>
-			      <span class="icon glyphicon glyphicon-stop">
-			      </span>
-			      Parent 2
-			    </li>
-			    <li class="list-group-item node-treeview1" data-nodeid="6" style="">
-			      <span class="expand-collapse glyphicon">
-			      </span>
-			      <span class="icon glyphicon glyphicon-stop">
-			      </span>
-			      Parent 3
-			    </li>
-			    <li class="list-group-item node-treeview1" data-nodeid="7" style="">
-			      <span class="expand-collapse glyphicon">
-			      </span>
-			      <span class="icon glyphicon glyphicon-stop">
-			      </span>
-			      Parent 4
-			    </li>
-			    <li class="list-group-item node-treeview1" data-nodeid="8" style="">
-			      <span class="expand-collapse glyphicon">
-			      </span>
-			      <span class="icon glyphicon glyphicon-stop">
-			      </span>
-			      Parent 5
-			    </li>
+			    </#if> 
+			   </#list> 
+			     
 			  </ul>
 			</div>
 			</div>
@@ -219,73 +162,10 @@
 			</div>
 		</div>
 	</div>
-
+</#if>
 </BODY>
 <script src="../static_bootstrap/js/ie10-viewport-bug-workaround.js"></script>
 
-<script type="text/javascript">
-        $(function () {
-            var defaultData = [
-            {
-                text: 'Parent 1',
-                href: '#parent1',
-                tags: ['4'],
-                nodes: [
-                {
-                    text: 'Child 1',
-                    href: '#child1',
-                    tags: ['2'],
-                    nodes: [
-                    {
-                        text: 'Grandchild 1',
-                        href: '#grandchild1',
-                        tags: ['0']
-                    },
-                    {
-                        text: 'Grandchild 2',
-                        href: '#grandchild2',
-                        tags: ['0']
-                    }
-                  ]
-                },
-                {
-                    text: 'Child 2',
-                    href: '#child2',
-                    tags: ['0']
-                }
-              ]
-            },
-            {
-                text: 'Parent 2',
-                href: '#parent2',
-                tags: ['0']
-            },
-            {
-                text: 'Parent 3',
-                href: '#parent3',
-                tags: ['0']
-            },
-            {
-                text: 'Parent 4',
-                href: '#parent4',
-                tags: ['0']
-            },
-            {
-                text: 'Parent 5',
-                href: '#parent5',
-                tags: ['0']
-            }
-          ];
-
-            $('#treeview1').treeview({
-                color: "#428bca",
-                showBorder: true,
-                data: defaultData
-            });
-
-           
-        });
-</script>
 
 <form id="previewForm" action="../file/preview.htm" method="post">
 <input type="hidden" name="filePath" id="filePath" value=""/>
@@ -335,7 +215,6 @@ function getChild2(folderPath){
          );  
 
 }
-
 
 
 function getFileTaskInfo(filePath){	
