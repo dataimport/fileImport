@@ -1,0 +1,15 @@
+.label-progress
+{
+	 border-radius: 0px !important;
+	 height: 30px !important;
+	 float: left;
+	 color: #FFF;
+	 line-height: 30px;
+	 padding: 0 10px;
+	 text-align: center;
+}
+
+.progress
+{
+	width: 100%;height:30px;border: 1px solid #eee;
+}
