@@ -194,8 +194,9 @@ public class FileService {
 					  lines = txtFileAnalysis.LoopBigFileByBuffer(fromIndex, endIndex, rSize,
 								bs,enterStr,line,strBuf,
 								fcin,rBuffer,lines,charset);	 					 
-					 successNum+=fmRepository.FilePushToMongo(t, lines,true,runNum,System.currentTimeMillis()-start);		
-					 //runNum+=lines.size();
+					 successNum+=fmRepository.FilePushToMongo(t, lines,true,runNum,successNum,System.currentTimeMillis()-start);		
+					 runNum+=lines.size();
+					 System.out.println("runNum " +runNum);
 				  }					
 
 				  //更新状态为导入完毕
@@ -225,7 +226,7 @@ public class FileService {
 		  }else{//小文件
 			  try{
 				  List<String> lines = txtFileAnalysis.readSmallFile(t.getFilePath(),txtFileAnalysis.getCharset(t.getFilePath(),t.getFileCode()));
-				  successNum = fmRepository.FilePushToMongo(t, lines,0);
+				  successNum = fmRepository.FilePushToMongo(t, lines,0,0);
 				  
 				  //更新状态为导入完毕
 				  String[] keys = new String[]{"taskStatus"};
