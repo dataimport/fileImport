@@ -77,7 +77,7 @@ public class TaskAct {
 		}
 		model.put("columns", columns);
 		int columnsSize = columns.length; 
-		
+		//System.out.println(columnsSize);
 		//多个空格替换成一个
 		int num =10;
 		int lenght = lines.length;
@@ -117,7 +117,7 @@ public class TaskAct {
 			model.put("firstLineIgnore", "false");
 		}		
 		if(message.length()>0){
-			model.put("errorMessage", "提醒：此文件的 第： "+message.toString()+" ...... 行的列数与第一行的列数不相等，显示的时候已经忽略，导入数据的时候也会被忽略");
+			model.put("errorMessage", "提醒：此文件的 第： "+message.toString()+" ...... 行的列数与第一行的列数不相等，显示的时候已经忽略，如果勾选不相等的列，导入数据的时候也会被忽略");
 		}
 		model.put("fileCode", fileCode);
 		return "task/task_view";

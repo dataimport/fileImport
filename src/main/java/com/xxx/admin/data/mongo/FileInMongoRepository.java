@@ -169,11 +169,11 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 	}
 	
 	
-	public int FilePushToMongo(Task task,List<String> list,int runNum){	
-		return FilePushToMongo(task,list,false,runNum,null);
+	public int FilePushToMongo(Task task,List<String> list,int runNum,int totalSuccessNum){	
+		return FilePushToMongo(task,list,false,runNum,totalSuccessNum,null);
 	}
 	
-	public int FilePushToMongo(Task task,List<String> list,Boolean isBigFile,Integer runNum,Long time){	
+	public int FilePushToMongo(Task task,List<String> list,Boolean isBigFile,int runNum,int totalSuccessNum,Long time){	
 		long start = System.currentTimeMillis();
 		if(task.getFirstLineIgnore()){
 			list.remove(0);
@@ -191,7 +191,7 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 		Object[] values = new Object[2];
 		String timeUse = "0 秒";
 		long l=0l;
-		
+		boolean failCollectionRemoveOld = true;
 		String separator = task.getSeparator();
 		if(StringUtils.isBlank(separator)){
 			separator="\\s+"; //代表多个空格			
@@ -200,55 +200,67 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 				separator = StrUtils.separatorCheck(separator);//特殊字符特换
 			}			
 		}
+		
+		
 		for(int i=0;i<valuesSize;i++){
 			runNum++;
 			try{//加上异常处理，这样个别数据有问题，不会影响整体数据的导入
 				data = new BasicDBObject(); 
-				//System.out.println(list.get(i).trim());
+				
 				lineSeparator = list.get(i).trim().split(separator,-1);	
+				
 				if(lineSeparator.length>=columnIndexSize){//处理虽然有换行但是没有数据的情况，或者数据分割后，总数跟填写的字段数不匹配。 --//如果当前行的列数与设置的列名数一致 则导入
 					//if(lineSeparator.length>=columnIndexSize){//处理虽然有换行但是没有数据的情况，或者数据分割后，总数跟填写的字段数不匹配。
 						for(int j=0;j<columnIndexSize;j++){
-							data.put(columns[j], lineSeparator[columnIndex[j]-1]);
+							if(lineSeparator.length>=columnIndex[j]-1){
+								data.put(columns[j], lineSeparator[columnIndex[j]-1]);
+							}else{												
+									saveFailData(task,runNum, list.get(i),failCollectionRemoveOld);//没导入，记录到失败记录表里
+									failCollectionRemoveOld = false;
+								continue;
+							}							
 						}			
 						
-						dbColleciton.insert(data);		
-						if(isBigFile!=null&&!isBigFile){//不是大文件 按行数更新
-									
-							if(runNum==valuesSize||runNum%10==0){//每10条更新一次任务表进度
+						dbColleciton.insert(data);	
+						successNum++;
+						if(isBigFile!=null&&!isBigFile){//不是大文件 按行数更新		
+							System.out.println("successNum: "+successNum +" valuesSize :"+valuesSize +" i: "+i );
+							if(i==valuesSize||successNum==valuesSize||successNum%10==0){//每10条更新一次任务表进度
 								l=System.currentTimeMillis()-start;
 								timeUse = getTimeUse(l);
-								values[0]=String.valueOf(runNum);
+								values[0]=String.valueOf(successNum);
 								values[1]=timeUse;					
-								if(runNum==valuesSize){;
+								//if(i==valuesSize||successNum==valuesSize){
 									 keys = new String[]{"runNum","timeUse","endDate","taskStatus"};
 									 values = new Object[5];
-									 values[0]=runNum;
+									 values[0]=successNum;
 									 values[1]=timeUse;	
 									 values[2]=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 									 values[3]=2;
 									 //values[4]=valuesSize;
-								}
+								//}
 								updateFileInfoByField(task.getUid(),keys,values);
 							}				
 						}	
-						successNum++;
+						
 					//}			
 				}else{
 					//System.out.println(" run " +runNum +" ### "+  list.get(i).trim()	);
-					saveFailData(task,runNum, list.get(i).trim());//没导入，记录到失败记录表里
+					saveFailData(task,runNum, list.get(i),failCollectionRemoveOld);//没导入，记录到失败记录表里
+					failCollectionRemoveOld = false;
 				}
 				
 			}catch(Exception ex){
 				ex.printStackTrace();
 				runNum++;//错误记录也加入到导入行中，否则算百分比的时候不正确。
-				saveFailData(task,runNum, list.get(i).trim());
+				saveFailData(task,runNum, list.get(i),failCollectionRemoveOld);
+				failCollectionRemoveOld = false;
 			}			
 		}	
 		
 		if(isBigFile){//大文件 按buffer更新
 			timeUse = getTimeUse(time);		
-			values[0]=runNum;
+			values[0]=totalSuccessNum+successNum;
 			values[1]=timeUse;	
 			updateFileInfoByField(task.getUid(),keys,values);
 		}	
@@ -284,6 +296,7 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 		String timeUse = "0 秒";
 		long l=0l;
 		int excelRowCellNum = 0;
+		boolean failCollectionRemoveOld = true;
 		for(int i=0;i<valuesSize;i++){
 			try{//加上异常处理，这样个别数据有问题，不会影响整体数据的导入
 				data = new BasicDBObject(); 
@@ -316,8 +329,9 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 				 }				
 				successNum++;
 			}catch(Exception ex){
-				ex.printStackTrace();
-				saveFailData(task,runNum+i,"");
+				ex.printStackTrace();				
+				saveFailData(task,runNum+i,"",failCollectionRemoveOld);
+				failCollectionRemoveOld = false;
 			}			
 		}	
 		
@@ -335,8 +349,11 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 	 * 保存失败的记录
 	 * @param task
 	 */
-	private void saveFailData(Task task,int failNum,String value){
+	private void saveFailData(Task task,int failNum,String value,boolean removeOld){
 		DBCollection dbColleciton =mongoTemplate.getCollection(task.getTableNameAlias()+"_falie"); 
+		if(removeOld){
+			dbColleciton.remove(new BasicDBObject());	
+		}		
 		DBObject data = new BasicDBObject();
 		data.put("num", failNum);
 		data.put("value", value);

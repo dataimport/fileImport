@@ -311,7 +311,7 @@ $("#submit").bind("click",function(){
 		}	
 		temp = temp.replace(',','');//列名中不能有逗号
 
-		if(columnName.indexOf(temp)>=0){
+		if(temp!=""&&columnName.indexOf(temp)>=0){
 			alert("有相同列名");
 			return ;
 		}
@@ -420,10 +420,11 @@ $("#submit").bind("click",function(){
 	                {  
 	                	if(data.code==100){
 	                		//$("#tableInfo")。text("存在"+collectionName);
-	                		$("#tableInfo").html("&nbsp;&nbsp; 已经存在表： "+collectionName+"&nbsp;&nbsp;  <a href='#'>浏览</a>"+
+	                		$("#tableInfo").html("&nbsp;&nbsp; 已经存在表： "+collectionName+"&nbsp;&nbsp; "+
 	                				"&nbsp;&nbsp;  <input id='cleanOrAppend1' type='radio' name='cleanOrAppend' value='clean' checked=''>清空并追加"+
 	                				"&nbsp;&nbsp;  <input id='cleanOrAppend2' type='radio' name='cleanOrAppend' value='append'  >追加到此表 "
 	                				);  
+	                		$('#submit').attr('disabled',false);
 	                	}else{
 	                		$('#submit').attr('disabled',false); 
 	                		$("#tableInfo").html("");
