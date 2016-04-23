@@ -97,98 +97,52 @@
 								</#if>
 							  </tbody>
 						 </table>  
-						 <nav style="margin: 0 auto;text-align: center; width: 100%;">
-						  <ul class="pagination">
-						    <li>
-						      <a href="#" aria-label="Previous">
-						        <span aria-hidden="true">&laquo;</span>
-						      </a>
-						    </li>
-						    <li><a href="#">1</a></li>
-						    <li><a href="#">2</a></li>
-						    <li><a href="#">3</a></li>
-						    <li><a href="#">4</a></li>
-						    <li><a href="#">5</a></li>
-						    <li>
-						      <a href="#" aria-label="Next">
-						        <span aria-hidden="true">&raquo;</span>
-						      </a>
-						    </li>
-						  </ul>
-						  <button type="button" class="btn btn-primary" style="float:left;margin-top: 15px;">查看入库任务日志</button>
-						</nav>
-						
 
-			
 		</div>
+		<div id="page"> </div>
+		<form id="previewForm" action="../file/preview.htm" method="post">
+			<input type="hidden" name="filePath" id="filePath" value=""/>
+		</form>	
 	</div>
 
 </BODY>
 <script src="../static_bootstrap/js/ie10-viewport-bug-workaround.js"></script>
+<script type="text/javascript" src="../js/jquery/jquery.paginate.js" id="st-main"></script>
+<script>
+function showList(status){
+	window.location.href="list.htm?status="+status;
+ 	 
+}
 
-<script type="text/javascript">
-        $(function () {
-            var defaultData = [
-            {
-                text: 'Parent 1',
-                href: '#parent1',
-                tags: ['4'],
-                nodes: [
-                {
-                    text: 'Child 1',
-                    href: '#child1',
-                    tags: ['2'],
-                    nodes: [
-                    {
-                        text: 'Grandchild 1',
-                        href: '#grandchild1',
-                        tags: ['0']
-                    },
-                    {
-                        text: 'Grandchild 2',
-                        href: '#grandchild2',
-                        tags: ['0']
-                    }
-                  ]
-                },
-                {
-                    text: 'Child 2',
-                    href: '#child2',
-                    tags: ['0']
-                }
-              ]
-            },
-            {
-                text: 'Parent 2',
-                href: '#parent2',
-                tags: ['0']
-            },
-            {
-                text: 'Parent 3',
-                href: '#parent3',
-                tags: ['0']
-            },
-            {
-                text: 'Parent 4',
-                href: '#parent4',
-                tags: ['0']
-            },
-            {
-                text: 'Parent 5',
-                href: '#parent5',
-                tags: ['0']
-            }
-          ];
+$("a[name='previewClick'").click(function(){
+	var path= encodeURIComponent($(this).attr("data-path"));
+	$("#filePath").val(path);
+	$("#previewForm").submit();
+});
 
-            $('#treeview1').treeview({
-                color: "#428bca",
-                showBorder: true,
-                data: defaultData
-            });
+$(function() {
+	$("#page").paginate({
+		count 		: ${page.totalPage!},
+		start 		: ${pageNo!},
+		display     : 12,
+		border					: false,
+		text_color  			: '#888',
+		background_color    	: '#EEE',	
+		text_hover_color  		: 'black',
+		background_hover_color	: '#CFCFCF',
+		mouse		: 'press',
+		onChange  : function(page){
+			<#if status??>
+				window.location.href="list.htm?status=${status}&pageNo="+page;
+			<#else>
+				window.location.href="list.htm?pageNo="+page;
+			</#if>
+			
+		  }
+			
+	});
 
-           
-        });
-    </script>
-	   
+});
+</script>
 		
 </HTML>
