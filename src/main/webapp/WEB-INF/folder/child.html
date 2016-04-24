@@ -34,13 +34,12 @@
 			<div id="container" class="col-md-2">
 				<div id="treeview1" class="treeview">
 			  <ul id="left_side" class="list-group">
-			  
+			    <li class="list-group-item active">文件夹</li>
 			    <#list folderChild as file>	  
 			            <#if (file.isDirectory()!)>
 			            <#assign absolutePath =file.absolutePath?replace('\\','\\\\' )]	
 			    <li onclick="getChild('${absolutePath!}')" class="list-group-item node-treeview1" data-nodeid="0" style="">
-			      <span class="expand-collapse click-collapse glyphicon glyphicon-minus">
-			      </span>			     
+			      		     
 			      ${file.name?trim}
 			    </li>
 			    </#if> 
@@ -55,8 +54,8 @@
 								  <tr class="active">
 									  <th>文件名</th>
 									  <th>修改日期</th>
-									  <th>文件大小</th>                                          
-									  <th>入库状态</th>
+									  <th>大小</th>                                          
+									  <th>状态</th>
 									  <th>操作</th>
 								  </tr>
 							  </thead>   
@@ -161,6 +160,8 @@
 						  <li class="list-group-item">数据时间：2009年12月</li>
 						  <li class="list-group-item">标签组：${task.tags!}</li>
 					  <#else>
+					      <li class="list-group-item">源文件名称:${folderChild[task_index].name}</li>
+					      <li class="list-group-item">修改时间：${(folderChild[task_index].lastModified())?number_to_datetime?string('yyyy-MM-dd HH:mm:ss')}</li>
 						  <li class="list-group-item"><span class="label label-warning">未添加到计划任务中</span></li>
 					    </#if>
 					</ul>
@@ -194,9 +195,9 @@ function getFolderChild(){
 
 
 function showTaskDetail(id){	
-	$("div[id^='detailInfo']").hide();
+	$("ul[id^='detailInfo']").hide();
 	$("#right_side").show();
-	$("#detailInfo_"+id).show(1000)
+	$("#detailInfo_"+id).show(300);
 }
 
 function getChild(folderPath){
