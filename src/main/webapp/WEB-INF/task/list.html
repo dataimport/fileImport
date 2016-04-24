@@ -85,7 +85,7 @@
 									   /${task.runNum!}</td>
 									<td class="center">${task.totalCount!}</td> 
 									<td class="center">
-										<button type="button" id="previewClick"  data-path="${task.filePath!}" class="btn btn-primary btn-xs">重新导入</button>
+										<button type="button" name="previewClick"  data-path="${task.filePath!}" class="btn btn-primary btn-xs">重新导入</button>
 								</td>                                     
 								</tr>
 								</#list>
@@ -134,7 +134,9 @@
  
 	</div>
 </div>
-
+<form id="previewForm" action="../file/preview.htm" method="post">
+<input type="hidden" name="filePath" id="filePath" value=""/>
+</form>
 </BODY>
 <script src="../static_bootstrap/js/ie10-viewport-bug-workaround.js"></script>
 <script>
@@ -147,6 +149,12 @@ function showList(status){
 	}
  	 
 }
+
+$("button[name='previewClick'").click(function(){
+	var path= encodeURIComponent($(this).attr("data-path"));
+	$("#filePath").val(path);
+	$("#previewForm").submit();
+});
 
 </script>
 		
