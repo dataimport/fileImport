@@ -50,7 +50,7 @@ public class MongoAct {
 		
 		if(StringUtils.isBlank(catalog)){
 			if(list.size()>0){
-			    catalog = list.get(0);   	
+			    catalog = list.get(0).substring(0,  list.get(0).lastIndexOf("("));   	
 			 }
 		}		
 		
