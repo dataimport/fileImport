@@ -35,13 +35,15 @@ public class MongoAct {
 //	}
 
 	@RequestMapping(value = "list.htm")
-	public String list(ModelMap model,String catalog,Integer pageNo, Integer pageSize,HttpServletRequest request,HttpServletResponse response) {
+	public String list(ModelMap model,String searchField,String searchValue,String catalog,Integer pageNo, Integer pageSize,HttpServletRequest request,HttpServletResponse response) {		
 		Map map = mongoFileService.getTableByCataLog(catalog);
 		List<String> list = new ArrayList<String>();
 		if(map!=null){				
-		    for (Object value : map.values()) {  		
+		    for (Object value : map.values()) {  
 		    	Map mapV = (Map<String,String>)JSON.parse(String.valueOf(value));
-		    	list.add(mapV.get("catalog")+"");
+		    	String count = String.valueOf(mapV.get("count"));
+		    	count  = count.substring(0,count.lastIndexOf("."));
+		    	list.add(mapV.get("catalog")+"("+count+")");
 		    }  
 		}
 		model.put("catalogList", list);	
@@ -51,13 +53,21 @@ public class MongoAct {
 			    catalog = list.get(0);   	
 			 }
 		}		
-		Pagination page = mongoFileService.getTaskByCataLog(pageNo,pageSize,catalog);
+		
+		Pagination page = null;
+		if(StringUtils.isNotBlank(searchField)){
+			page = mongoFileService.getTaskByField(pageNo, pageSize, searchField, searchValue);
+		}else{
+			page = mongoFileService.getTaskByCataLog(pageNo,pageSize,catalog);
+		}		
+		
 		if(page!=null){
 			List<Task> taskList = page.getList();
 			model.put("taskList", taskList);			
 		}else{
 			model.put("taskList", new ArrayList<Task>());
 		}		
+		model.put("searchField", searchField);
 		model.put("page", page);
 		model.put("catalog", catalog);
 		return "mongo/list";

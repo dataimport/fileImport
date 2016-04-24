@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import com.mongodb.DBObject;
 import com.mongodb.WriteResult;
 import com.xxx.admin.bean.AllCollectionName;
 import com.xxx.admin.bean.AllFileInfo;
+import com.xxx.admin.bean.MongoSolrInfo;
 import com.xxx.admin.bean.Task;
 import com.xxx.mongo.repository.base.BaseRepository;
 import com.xxx.utils.Pagination;
@@ -444,9 +446,8 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 			query.addCriteria(criteria);
 			long totalCount  = mongoTemplate.count(query,AllFileInfo.class);		
 			query.with(new Sort(Direction.ASC,"startDate"));
-
-			List<AllFileInfo> list =  mongoTemplate.find(query, AllFileInfo.class);
 			Pagination page = new Pagination(pageNo, pageSize, totalCount); 
+			List<AllFileInfo> list =  mongoTemplate.find(query, AllFileInfo.class);			
 			page.setList(list);
 			
 //			DBCollection dbColleciton =mongoTemplate.getCollection(collectionName); 	
@@ -460,6 +461,38 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 //			}
 //			page.setList(list);
 			
+			return page;
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return null;
+		}
+	
+	
+	
+	public Pagination getTaskByField(Integer pageNo, Integer pageSize,String field,Object value) {
+		if(pageNo==null){
+			pageNo =1;
+		}
+		if(pageSize==null){
+			pageSize=20;
+		}		
+
+		try{
+			Query query = new Query();
+			Criteria criatira = new Criteria();
+			criatira.orOperator(
+					Criteria.where(field).regex(Pattern.compile(
+					"^.*" + value + ".*$", Pattern.CASE_INSENSITIVE))
+			);						
+			query.addCriteria(criatira);
+			long totalCount  = mongoTemplate.count(query,AllFileInfo.class);		
+			query.with(new Sort(Direction.ASC,"startDate"));
+
+			List<AllFileInfo> list =  mongoTemplate.find(query, AllFileInfo.class);
+			Pagination page = new Pagination(pageNo, pageSize, totalCount); 
+			page.setList(list);
+
 			return page;
 		}catch(Exception ex){
 			ex.printStackTrace();

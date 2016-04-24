@@ -86,7 +86,13 @@ public class MongoFileService {
 	public Pagination getTaskByCataLog(Integer pageNo, Integer pageSize,String catalog) {
 		return fileInMongoRepository.getTaskByCataLog(pageNo, pageSize, catalog);		 
 	}
+	
+	
+	public Pagination getTaskByField(Integer pageNo, Integer pageSize,String field,Object value) {
+		return fileInMongoRepository.getTaskByField(pageNo, pageSize, field,value);		 
+	}
 
+	
 	public AllFileInfo getByUidFromAllFileInfo(String uid) {
 		return fileInMongoRepository.getByUidFromAllFileInfo(uid);
 		//return null;

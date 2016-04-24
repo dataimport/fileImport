@@ -30,18 +30,17 @@
 			</div>
 			</div>
 			<div div class="col-md-10">
-				<form class="form-inline"> 
+				<form class="form-inline" action="list.htm" method="post"> 
 				  <div class="form-group">
 				    <div class="form-group">
-				      <select  class="form-control" style="margin:5px 5px 5px 5px;">
-				        <option>名称</option>
-				        <option>目录</option>
-				        <option>文件名</option>
-				        <option>标签</option>
-				        <option>目录</option>
+				      <select  name="searchField" class="form-control" style="margin:5px 5px 5px 5px;">
+				        <option value="tableName" <#if searchField??&&searchField=='tableName' >selected="selected"</#if>>表名</option>				    
+				        <option value="fileName" <#if searchField??&&searchField=='fileName' >selected="selected"</#if>>>文件名</option>
+				        <option value="tags" <#if searchField??&&searchField=='tags' >selected="selected"</#if>>>标签</option>
+				        <option value="catalog" <#if searchField??&&searchField=='catalog' >selected="selected"</#if>>>目录</option>
 				      </select>
 				    </div>
-				    <input class="form-control" placeholder="请输入查找内容" style="width: 300px;">
+				    <input class="form-control" placeholder="请输入查找内容" name="searchValue" style="width: 300px;">
 				  </div>
 				  <button type="submit" class="btn btn-primary">查找</button>
 				  <button type="submit" class="btn btn-success">显示全部</button>
