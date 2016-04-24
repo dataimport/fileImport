@@ -39,10 +39,22 @@ public class TaskAct {
 		Pagination page = taskService.getTaskByStatus(pageNo,pageSize,status);
 		//System.out.println(page.getTotalPage()+" ######");
 		//System.out.println( page.getList().size()+" ## page.getList()####");
+		
+		long totalCount = taskService.getTotalCountByStatus(null);
+		long runingCount = taskService.getTotalCountByStatus(1);
+		long failedCount = taskService.getTotalCountByStatus(-2);
+		long waitCount = taskService.getTotalCountByStatus(0);
+		
 		model.put("list", page.getList());
 		model.put("page", page);
 		model.put("status", status);
 		model.put("pageNo", page.getPageNo());
+		
+		model.put("totalCount", totalCount);
+		model.put("runingCount", runingCount);
+		model.put("failedCount", failedCount);
+		model.put("waitCount", waitCount);
+		
 		return "task/list";
 	}
 	
@@ -117,7 +129,7 @@ public class TaskAct {
 			model.put("firstLineIgnore", "false");
 		}		
 		if(message.length()>0){
-			model.put("errorMessage", "提醒：此文件的 第： "+message.toString()+" ...... 行的列数与第一行的列数不相等，显示的时候已经忽略，如果勾选不相等的列，导入数据的时候也会被忽略");
+			model.put("errorMessage", "提醒：此文件的 第： "+message.toString()+" ...... 行的列数与第一行的列数不相等，显示的时候已经忽略，如果勾选了不相等的列，导入数据的时候也会被忽略");
 		}
 		model.put("fileCode", fileCode);
 		return "task/task_view";

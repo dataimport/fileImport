@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -145,6 +146,16 @@ public class TaskRepository implements BaseRepository<Task> {
 		page.setList(mongoTemplate.find(query, Task.class,AllCollectionName.ALLFILEINFO_COLLECTIONNAME));
 		return page;
 	}
+	
+	public long getTotalCountByStatus(Integer status) {
+		Query query = new Query();
+		if(status!=null){
+			Criteria criteriaStatus = Criteria.where("taskStatus").is(status);
+			query.addCriteria(criteriaStatus);
+		}		
+		long totalCount = this.mongoTemplate.count(query, Task.class,AllCollectionName.ALLFILEINFO_COLLECTIONNAME);		
+		return totalCount;
+	}
 
 	public Task getObjectsByFilePath(String filePath) {
 		Query query = new Query();
@@ -246,15 +257,33 @@ public class TaskRepository implements BaseRepository<Task> {
 	 */
     public CommandResult getDBStats() {
     	try{
-    		DBCollection coll = mongoTemplate.getCollection(AllCollectionName.ALLFILEINFO_COLLECTIONNAME);
+    		//DBCollection coll = mongoTemplate.getCollection(AllCollectionName.ALLFILEINFO_COLLECTIONNAME);
     		CommandResult commandResult = 	mongoTemplate.getDb().getStats();
     		return commandResult;      
     		//int totalTableSize = coll.distinct("tableNameAlias").size();        
-        	}catch(Exception ex){
+        }catch(Exception ex){
     		ex.printStackTrace();
     	}
     	return null;        
     }
     
+    /**
+     * 获取半年内的数据总行数
+     * @return
+     */
+    public Double getFileTotalCount(){  
+    	try{
+    		DBCollection coll= mongoTemplate.getCollection(AllCollectionName.ALLFILEINFO_COLLECTIONNAME);
+    		DBObject match=new BasicDBObject("$match", new BasicDBObject());
+    		DBObject group=new BasicDBObject("$group",new BasicDBObject("_id",null).append("total", new BasicDBObject("$sum","$totalCount")));
+    		List<DBObject> list=(List<DBObject>)coll.aggregate(match,group).results();
+    		if(list.size()>0){
+    			return Double.valueOf(list.get(0).get("total").toString());
+    		}
+    	}catch(Exception ex){
+    		ex.printStackTrace();
+    	}    	
+		return 0D;		      
+    }  
     
 }

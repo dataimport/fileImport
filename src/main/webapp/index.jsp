@@ -77,9 +77,9 @@
 			<div style="float:left;width:200px;">
 				<h1>入库数据</h1>
 				<img alt="" src="resources/project_img/data.png" border="0">
-				<p class="label-success">数据表:22455</p>
-				<p class="label-warning">记录行数:22455</p>
-				<p class="label-info">存储容量:22455</p>
+				<p class="label-success" id="mongo_collections" >数据表</p>
+				<p class="label-warning" id="mongo_lines" >记录行数</p>
+				<p class="label-info" id="mongo_storageSize" >存储容量</p>
 			</div>
 			<div style="float:left;width:200px;margin-top: 60px;">
 				<p class="label label-important">未完成索引任务12345</p>
@@ -98,9 +98,6 @@
 	</div>
 	</div>
 
-			
-			
-	
 	<footer style="position: fixed;bottom:0;left:0;width:100%;">
 			<div style="margin: 0 auto;text-align: center;">&copy; 2016   北京傲思信息技术有限公司</div>
 	</footer>
@@ -162,6 +159,35 @@
 
 		<script src="static_bootstrap/js/custom.js"></script>
 	<!-- end: JavaScript-->
-	
+<script>
+$.ajax(  
+        {  
+            url:'./index/index.htm', 
+            type:"post",             
+            data:{},  
+            dataType:"json",  
+            timeout:"10000",  
+            error:function(){
+            	
+            },  
+            success:function(data)  
+            {  	   
+	            $("#mongo_collections").text("数据表:"+data.collections);
+	            $("#mongo_lines").text("记录行数:"+data.totalCount);            	
+	            var storageSizeShow="0";
+				 if(data.storageSize>=1073741824){//GB
+					 storageSizeShow =  (data.storageSize/1073741824).toFixed(2)+" GB";
+				 }else if(data.storageSize>=1048576){//MB
+					 storageSizeShow = (data.storageSize/1048576).toFixed(2)+" MB";
+				 }else if(data.storageSize>=1024){//kb
+				 	storageSizeShow = (data.storageSize/1024).toFixed(2)+" KB";
+				 }else{
+					 storageSizeShow = (data.storageSize).toFixed(2)+" B";
+				 }
+				 $("#mongo_storageSize").text("存储容量:"+storageSizeShow);
+	            }  
+        }  
+    ); 
+</script>
 </body>
 </html>
