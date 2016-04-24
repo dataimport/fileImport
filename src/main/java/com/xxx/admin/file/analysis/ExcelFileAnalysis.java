@@ -57,7 +57,7 @@ public class ExcelFileAnalysis  {
 	 * @throws IOException 
 	 * @throws FileNotFoundException
 	 */
-	public int getFileLineNum(String filePath){
+	public String getFileLineNum(String filePath){
 		String excelVersion  = filePath.substring(filePath.lastIndexOf(".")+1, filePath.length());
 		try{
 			if("xls".equals(excelVersion.toLowerCase())){//2003
@@ -65,18 +65,18 @@ public class ExcelFileAnalysis  {
 				POIFSFileSystem fs = new POIFSFileSystem(input);
 				HSSFWorkbook wb = new HSSFWorkbook(fs);
 				HSSFSheet sheet = wb.getSheetAt(0);
-				return sheet.getLastRowNum();
+				return String.valueOf(sheet.getLastRowNum());
 			}else{//2007
 				 XSSFWorkbook wbs = new XSSFWorkbook(new FileInputStream(filePath));
 		         XSSFSheet sheet = wbs.getSheetAt(0);
-		         return sheet.getLastRowNum();
+		         return String.valueOf(sheet.getLastRowNum());
 			}		
 		}catch(Exception ex){
 			ex.printStackTrace();
 			log.error("获取excel文件总行数异常： ",ex);
 		}
 		
-		return 1;
+		return "1";
 		
 	}
 	

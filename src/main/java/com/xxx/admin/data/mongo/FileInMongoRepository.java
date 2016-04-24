@@ -224,7 +224,7 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 						dbColleciton.insert(data);	
 						successNum++;
 						if(isBigFile!=null&&!isBigFile){//不是大文件 按行数更新		
-							System.out.println("successNum: "+successNum +" valuesSize :"+valuesSize +" i: "+i );
+							//System.out.println("successNum: "+successNum +" valuesSize :"+valuesSize +" i: "+i );
 							if(i==valuesSize||successNum==valuesSize||successNum%10==0){//每10条更新一次任务表进度
 								l=System.currentTimeMillis()-start;
 								timeUse = getTimeUse(l);

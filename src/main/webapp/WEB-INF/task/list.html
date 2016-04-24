@@ -67,7 +67,7 @@
 									<td class="center">${task.startDate!}</td>
 									<td class="center">${task.timeUse!}</td> 
 									<td class="center">
-									<#if task.totalCount??&&task.totalCount!=0>
+									<#if task.totalCount??&&task.totalCount!=0&&(task.totalCount!>=task.runNum!)>
 	   
 									   <#if task.firstLineIgnore=true>
 									      <#assign percent = (((task.runNum+1)!/task.totalCount!)*100)?string("0.##")>

@@ -272,7 +272,7 @@ public class TxtFileAnalysis  {
 	 * @param file
 	 * @throws FileNotFoundException
 	 */
-	public int getBigFileLineNumByCommand(String filePath){
+	public String getBigFileLineNumByCommand(String filePath){
 		long start = System.currentTimeMillis();
 		String command ="";
 		boolean isWindows = false;
@@ -285,26 +285,36 @@ public class TxtFileAnalysis  {
 	
 		Runtime runtime=Runtime.getRuntime();
 		String temp;
-		int number=1;
+		String number="1";
 		try{
-			Process process  = runtime.exec(command);
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					process.getInputStream()));		
-			while ((temp = br.readLine()) != null) {
-				if(StringUtils.isNotBlank(temp)){					
-					//System.out.println(" result : " + temp.substring(temp.lastIndexOf(":")+1).trim());
-					if(isWindows){
-						number = Integer.valueOf(temp.substring(temp.lastIndexOf(":")+1).trim());
-					}else{
-						number = Integer.valueOf(temp);
-					}
-					
-					break;
+			String[] cmdA = { "/bin/sh", "-c", command };
+			Process process  = runtime.exec(cmdA);				 
+			BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));	
+			temp = br.readLine();		
+			if(temp!=null){				
+				if(isWindows){
+					number = temp.substring(temp.lastIndexOf(":")+1).trim();
+				}else{
+					number = temp;
 				}				
-			}
+			}			
+//			while ((temp = br.readLine()) != null) {
+//				System.out.println(" #getBigFileLineNumByCommand command result: ##　"+temp);
+//				if(StringUtils.isNotBlank(temp)){					
+//					//System.out.println(" result : " + temp.substring(temp.lastIndexOf(":")+1).trim());
+//					if(isWindows){
+//						number = temp.substring(temp.lastIndexOf(":")+1).trim();
+//					}else{
+//						number = temp;
+//					}
+//					
+//					break;
+//				}				
+//			}
+			br.close();
 		}catch(Exception e){
 			e.printStackTrace();	
-			return 1;
+			return "1";
 		}
 		long end = System.currentTimeMillis();	 
         System.out.println("读取文件行数耗时：" + (end - start) + "毫秒");

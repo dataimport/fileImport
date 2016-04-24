@@ -137,20 +137,20 @@ public class FileService {
 		
 	}
 		
-	public int getFileLineNumber(String filePath){
+	public String getFileLineNumber(String filePath){
 		String extension  = filePath.substring(filePath.lastIndexOf(".")+1, filePath.length());
 		if("txt".equals(extension.toLowerCase())){
 			return txtFileAnalysis.getBigFileLineNumByCommand(filePath);
 		}else if("xlsx".equals(extension.toLowerCase())||"xls".equals(extension.toLowerCase())){
 			return excelFileAnalysis.getFileLineNum(filePath);
 		}
-		return 1;
+		return "1";
 	}
 	
 	
 	@Async
 	public void getAndUpdateFileTotalCount(String uid,String filePath){
-		int count = getFileLineNumber(filePath);
+		String count = getFileLineNumber(filePath);
 		fmRepository.updateFileInfoByField(uid, new String[]{"totalCount"},
 				new Object[]{count});
 	}
@@ -267,8 +267,8 @@ public class FileService {
 	 */
 	private int[] excelFileImport(Task t) throws Exception{
 		int successNum = -1;
-		int totalNumber = excelFileAnalysis.getFileLineNum(t.getFilePath());
-		Map<String,Object> map= excelFileAnalysis.readAllLines(t.getFilePath(),totalNumber);
+		String totalNumber = excelFileAnalysis.getFileLineNum(t.getFilePath());
+		Map<String,Object> map= excelFileAnalysis.readAllLines(t.getFilePath(),Integer.valueOf(totalNumber));
 		List<String[]>  list = ( List<String[]>)map.get("list");
 		successNum = fmRepository.excelFilePushToMongo(t, list);
 		  //更新状态为导入完毕
