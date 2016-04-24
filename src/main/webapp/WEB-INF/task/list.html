@@ -14,7 +14,7 @@
 <BODY>
 	<div class="container" style="width: 100%;">
 	    
-	    <#if status??&&status==888>
+	    <#if status??&&(status==888 || status==0 || status==1 || status==-2)>
 		<div class="row">
 			<h4 style="font-weight: bold;margin-top: 0px;">当前任务总数:&nbsp;&nbsp;${list?size}</h4>
 			<div class="progress">
@@ -50,14 +50,14 @@
 									<td class="center">${task.tableName!}-${task.origin!}</td>
 									<td class="center">${task.createUser!}</td>  
 									<td class="center">
-									     <#if task.taskStatus==0>
-										    <span class="label label-default">未启动</span>
-										 <#elseif task.taskStatus==1>
-									    	<span class="label label-info">执行中</span>									    
+									    <#if task.taskStatus==0>
+										    <span onclick="showList(0)" class="label label-default">未启动</span>
+										<#elseif task.taskStatus==1>
+									    	<span onclick="showList(1)" class="label label-info">执行中</span>									    
 									    <#elseif task.taskStatus==-2>
-									        <span class="label label-danger">异常</span>
+					 				        <span onclick="showList(-2)" class="label label-danger">异常</span>
 									    <#elseif task.taskStatus==2>
-									        <span class="label label-success">已完成</span>
+									        <span onclick="showList(2)" class="label label-success">已完成</span>
 									    </#if>
 									</td>  
 									<td class="center">${task.runTime!}</td>
@@ -82,9 +82,7 @@
 									   /${task.runNum!}</td>
 									<td class="center">${task.totalCount!}</td> 
 									<td class="center">
-										<button type="button" class="btn btn-success btn-xs">启动</button>
-										<button type="button" class="btn btn-danger btn-xs">删除</button>
-										<button type="button" class="btn btn-primary btn-xs">变更启动时间</button>
+										<button type="button" id="previewClick"  data-path="${task.filePath!}" class="btn btn-primary btn-xs">重新导入</button>
 								</td>                                     
 								</tr>
 								</#list>
@@ -114,7 +112,7 @@ function showList(status){
  	 
 }
 
-$("a[name='previewClick'").click(function(){
+$("#previewClick").click(function(){
 	var path= encodeURIComponent($(this).attr("data-path"));
 	$("#filePath").val(path);
 	$("#previewForm").submit();
