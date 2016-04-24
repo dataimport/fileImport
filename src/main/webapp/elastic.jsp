@@ -69,7 +69,7 @@
     		%>       
     		    <iframe src="solrTask/list.htm?status=888" frameborder="0" scrolling="auto" width="100%" height="550"></iframe>
     		<%}else if(type!=null && type.trim().equals("1")){ %>
-    			<iframe src="solrTask/list.htm" frameborder="0" scrolling="auto" width="100%" height="550"></iframe>
+    			<iframe src="solrTask/list.htm?pageSize=2" frameborder="0" scrolling="auto" width="100%" height="550"></iframe>
     		<%}else{ %>
             	<iframe src="http://localhost:9200/_plugin/head/" frameborder="0" scrolling="auto" width="100%" height="550"></iframe>
             <%} %>

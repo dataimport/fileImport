@@ -112,9 +112,9 @@
   	<li>
   </#if>
     <#if status??>
-		<a href="list.htm?status=${status}&pageNo=${pageCur}">${pageCur} <span class="sr-only">(current)</span></a>
+		<a href="list.htm?status=${status}&pageNo=${pageCur}&pageSize=${page.pageSize}">${pageCur} <span class="sr-only">(current)</span></a>
 	<#else>
-	    <a href="list.htm?pageNo=${pageCur}">${pageCur} <span class="sr-only">(current)</span></a>
+	    <a href="list.htm?pageNo=${pageCur}&pageSize=${page.pageSize}">${pageCur} <span class="sr-only">(current)</span></a>
 	</#if>
   </#list>
    <li>
@@ -123,7 +123,9 @@
       </a>
     </li>
   </ul>
+   <#if status??&&(status==888 || status==0 || status==1 || status==-2)>
   <button type="button" onclick="showList()" class="btn btn-primary" style="float:left;margin-top: 15px;">查看入库任务日志</button>
+  </#if>
 </nav>
 		
 	</div>
