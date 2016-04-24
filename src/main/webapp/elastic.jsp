@@ -54,17 +54,38 @@
 			
 			
 			<ul class="breadcrumb">
-				<li>
+			
+			<% String type = request.getParameter("t");
+    		   if(type!=null && type.trim().equals("0")){
+    		%>       
+    		    <li>
 					<i class="icon-home"></i>
-					<a href="index.html">索引管理&nbsp;&nbsp;></a> 
+					<a href="elastic.jsp?t=1">索引管理&nbsp;&nbsp;></a> 
 					
 				</li>
 				<li><a href="#">入索引任务监控</a></li>
+    		<%}else if(type!=null && type.trim().equals("1")){ %>
+    			<li>
+					<i class="icon-home"></i>
+					<a href="elastic.jsp?t=1">索引管理&nbsp;&nbsp;></a> 
+					
+				</li>
+				<li><a href="#">入索引任务日志</a></li>
+    		<%}else{ %>
+            	<li>
+					<i class="icon-home"></i>
+					<a href="elastic.jsp?t=1">索引管理&nbsp;&nbsp;></a> 
+					
+				</li>
+				<li><a href="#">索引数据维护</a></li>
+            <%} %>
+			
+				
 			</ul>
 
 			<div class="row-fluid" style="margin: 0 auto;text-align: center;">
 
-            <% String type = request.getParameter("t");
+            <% 
     		   if(type!=null && type.trim().equals("0")){
     		%>       
     		    <iframe src="solrTask/list.htm?status=888" frameborder="0" scrolling="auto" width="100%" height="550"></iframe>
@@ -83,7 +104,7 @@
 			
 	
 	<footer style="position: fixed;bottom:0;left:0;width:100%;">
-			<div style="margin: 0 auto;text-align: center;">&copy; 2016 <a href="#">北京傲思信息技术有限公司</a></div>
+			<div style="margin: 0 auto;text-align: center;">&copy; 2016   北京傲思信息技术有限公司</div>
 	</footer>
 	
 	<!-- start: JavaScript-->

@@ -53,17 +53,57 @@
 			
 			
 			<ul class="breadcrumb">
+				
+			<% String type = request.getParameter("t");
+    		   if(type!=null && type.trim().equals("task_list.htm_not_finish")){
+    		%>       
 				<li>
 					<i class="icon-home"></i>
-					<a href="#">系统总览&nbsp;&nbsp;></a> 
+					<a href="index.jsp">系统总览&nbsp;&nbsp;></a>
 					
 				</li>
-				<li><a href="#">入库任务监控</a></li>
+    		    <li><a href="#">入库任务监控</a></li>
+    		<%}else if(type!=null && type.trim().equals("task_list.htm")){ %>
+    			<li>
+					<i class="icon-home"></i>
+					<a href="index.jsp">系统总览&nbsp;&nbsp;></a>
+					
+				</li>
+    		    <li><a href="#">入库任务日志</a></li>
+    		<%}else if(type!=null && type.trim().equals("folder_list.htm")){ %>
+    			<li>
+					<i class="icon-home"></i>
+					<a href="data_frame.jsp?t=mongo_allCollections.htm">数据维护&nbsp;&nbsp;></a>
+					
+				</li>
+    		    <li><a href="#">路径注册</a></li>
+    		<%}else if(type!=null && type.trim().equals("folder_child.htm")){ %>
+    			<li>
+					<i class="icon-home"></i>
+					<a href="data_frame.jsp?t=mongo_allCollections.htm">数据维护&nbsp;&nbsp;></a>
+					
+				</li>
+    		    <li><a href="#">数据入库</a></li>
+    		<%}else if(type!=null && type.trim().equals("mongo_allCollections.htm")){ %>
+    			<li>
+					<i class="icon-home"></i>
+					<a href="data_frame.jsp?t=mongo_allCollections.htm">数据维护&nbsp;&nbsp;></a>
+					
+				</li>
+    		    <li><a href="index.jsp">数据表管理</a></li>
+    		<%}else{ %>
+            	<li>
+					<i class="icon-home"></i>
+					<a href="index.jsp">系统总览&nbsp;&nbsp;></a>
+					
+				</li>
+            <%} %>
+				
 			</ul>
 
 			<div class="row-fluid">
 				
-			<% String type = request.getParameter("t");
+			<% 
 			   Integer pageSize=2; //每页数据条数
     		   if(type!=null && type.trim().equals("task_list.htm_not_finish")){
     		%>       
@@ -89,7 +129,7 @@
 			
 	
 	<footer style="position: fixed;bottom:0;left:0;width:100%;">
-			<div style="margin: 0 auto;text-align: center;">&copy; 2016 <a href="http://x.news.cn">北京傲思信息技术有限公司</a></div>
+			<div style="margin: 0 auto;text-align: center;">&copy; 2016   北京傲思信息技术有限公司</div>
 	</footer>
 
 

@@ -45,7 +45,7 @@
 			<noscript>
 				<div class="alert alert-block span10">
 					<h4 class="alert-heading">Warning!</h4>
-					<p>You need to have <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a> enabled to use this site.</p>
+					<p>You need to have JavaScript enabled to use this site.</p>
 				</div>
 			</noscript>
 			
@@ -56,7 +56,7 @@
 			<ul class="breadcrumb">
 				<li>
 					<i class="icon-home"></i>
-					<a href="index.html">系统总览&nbsp;&nbsp;></a> 
+					<a href="index.jsp">系统总览&nbsp;&nbsp;></a> 
 					
 				</li>
 				<li><a href="#">当前环境信息</a></li>
@@ -102,7 +102,7 @@
 			
 	
 	<footer style="position: fixed;bottom:0;left:0;width:100%;">
-			<div style="margin: 0 auto;text-align: center;">&copy; 2016 <a href="#">北京傲思信息技术有限公司</a></div>
+			<div style="margin: 0 auto;text-align: center;">&copy; 2016   北京傲思信息技术有限公司</div>
 	</footer>
 	
 	<!-- start: JavaScript-->
