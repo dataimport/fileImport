@@ -152,10 +152,11 @@
  	<td colspan="${columnsSize}" >
  	
 <div class="investment_f">
-  <div class="investment_title">
-    <div class="on">导入到新建表</div>
-    <div>追加到现有表</div>  
-  </div>
+ 
+  <ul class="nav nav-tabs investment_title">
+  <li role="presentation" class="active"><a href="#">导入到新建表</a></li>
+  <li role="presentation"><a href="#">追加到现有表</a></li>
+  </ul>
   <div class="investment_con">
     <div class="investment_con_list">
      <P>
@@ -164,28 +165,24 @@
  		<input  class="form-control" id="tableName" value="<#if task??>${task.tableName!}</#if>" size="20" onchange="tableNameChange(this.value)" > <span id="tableInfo"></span>
  		</form>
 	  </P>
-	  <br>
       <P>
       	<form class="form-inline">
  		<label>目录</label>
  		<input class="form-control" id="catalog" value="<#if task??>${task.catalog!}</#if>" size="20">
  		</form>
 	  </P>	  
-	  <br>
       <P>
       	<form class="form-inline">
  		<label>来源</label>
  		<input class="form-control" id="origin" value="<#if task??>${task.origin!}</#if>" size="20">
  		</form>
 	  </P>
-	   <br>
 	  <P>
 	  	<form class="form-inline">
  		<label>标签</label>
  		<input class="form-control" id="tagName" value="<#if task??>${task.tags!}</#if>" size="20">
  		</form>
 	  </P>
-	   <br>
 	   <P>
 	   	<form class="form-inline">
 	  <label>数据日期</label>
