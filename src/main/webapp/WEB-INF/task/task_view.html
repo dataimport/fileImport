@@ -66,22 +66,22 @@
  	 <div> 
  	 	 <#if (firstLineIgnore=="true")>
  	 	 <form class="form-inline">
- 	 	  <input class="form-control"  name="columnName"  id="columnName_${(column_index+1)}"   onblur="checkboxChange('${(column_index+1)}')"
+ 	 	  <input class="form-control"  name="columnName" style="width:70%;"  id="columnName_${(column_index+1)}"   onblur="checkboxChange('${(column_index+1)}')"
  			value="${column?trim}" >
  		 </input>
  		 <div class="checkbox">
          <label>
- 		  <input name="import" type="checkbox" id="isImport_${(column_index+1)}" checked='checked'  value="${(column_index+1)}">导入
+ 		  <input name="import" type="checkbox" style="width:30px;" id="isImport_${(column_index+1)}" checked='checked'  value="${(column_index+1)}">导入
  		 </label>
          </div>
  		 </form>
  	 	 <#else>
  	 	 <form class="form-inline">
- 	 	 <input class="form-control"  id="exampleInputEmail1" name="columnName"  id="columnName_${(column_index+1)}"  onblur="checkboxChange('${(column_index+1)}')"
+ 	 	 <input class="form-control"  id="exampleInputEmail1" name="columnName" style="width:70%;" id="columnName_${(column_index+1)}"  onblur="checkboxChange('${(column_index+1)}')"
  			value="">
  	     <div class="checkbox">
          <label>
- 		 <input name="import" type="checkbox" id="isImport_${(column_index+1)}"   value="${(column_index+1)}">导入</form>
+ 		 <input name="import" type="checkbox" id="isImport_${(column_index+1)}" style="width:30px;"  value="${(column_index+1)}">导入</form>
  		 </label>
          </div>
  	 	 </#if> 	 	 
