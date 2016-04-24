@@ -94,25 +94,39 @@
 								</#list>
 							  </tbody>
 						 </table>  
-						 <nav style="margin: 0 auto;text-align: center;">
-						  <ul class="pagination">
-						    <li>
-						      <a href="#" aria-label="Previous">
-						        <span aria-hidden="true">&laquo;</span>
-						      </a>
-						    </li>
-						    <li><a href="#">1</a></li>
-						    <li><a href="#">2</a></li>
-						    <li><a href="#">3</a></li>
-						    <li><a href="#">4</a></li>
-						    <li><a href="#">5</a></li>
-						    <li>
-						      <a href="#" aria-label="Next">
-						        <span aria-hidden="true">&raquo;</span>
-						      </a>
-						    </li>
-						  </ul>
-						</nav>
+						 <#if (page.totalPage>1)> 
+<nav style="margin: 0 auto;text-align: center; width: 100%;">
+  <ul class="pagination">
+   <li>
+      <a href="list.htm?status=${status!}&pageNo=1&pageSize=${page.pageSize}" aria-label="第一页">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+  <#list 1..page.totalPage as pageCur>
+	<#if pageCur!=0>
+	  <#if pageCur==page.pageNo>
+	  	<li class="active">
+	  <#else>
+	  	<li>
+	  </#if>
+	  <a href="list.htm?status=${status!}&pageNo=${pageCur}&pageSize=${page.pageSize}">${pageCur} <span class="sr-only">(current)</span></a>
+	</#if>
+  </#list>
+   <li>
+      <a href="list.htm?status=${status!}&pageNo=${page.totalPage}&pageSize=${page.pageSize}" aria-label="最后一页">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+  <#if status??&&(status==888 || status==0 || status==1 || status==-2)>
+	    <button type="button" onclick="showList()" class="btn btn-primary" style="float:left;margin-top: 15px;">查看入库任务日志</button>
+  </#if>
+</nav>
+<#else>
+    <#if status??&&(status==888 || status==0 || status==1 || status==-2)>
+	    <button type="button" onclick="showList()" class="btn btn-primary" style="float:left;margin-top: 15px;">查看入库任务日志</button>
+	</#if>
+</#if>
 				
 			             </div>
 			         </div>

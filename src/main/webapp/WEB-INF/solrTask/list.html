@@ -97,7 +97,7 @@
 								</#if>
 							  </tbody>
 						 </table>  
-<#if (list?size>0)> 
+<#if (page.totalPage>1)>
 <nav style="margin: 0 auto;text-align: center; width: 100%;">
   <ul class="pagination">
    <li>
@@ -107,7 +107,7 @@
     </li>
   <#list 1..page.totalPage as pageCur>
 	<#if pageCur!=0>
-	  <#if pageCur==pageNo>
+	  <#if pageCur==page.pageNo>
 	  	<li class="active">
 	  <#else>
 	  	<li>
