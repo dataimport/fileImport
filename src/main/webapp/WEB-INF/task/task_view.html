@@ -186,33 +186,33 @@
 	   <P>
 	   	<form class="form-inline">
 	  <label>数据日期</label>
-	   <input class="form-control" type="text" id="dataTime" size="20" value="<#if task??>${task.dataTime!}</#if>"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-%d'})">
+	   <input class="form-control" type="text" id="dataTime" size="20" value="<#if task??>${task.dataTime!}</#if>"  onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})">
 	   </form>
  		
 	  </P>
     </div>
     
-    <div class="investment_con_list">    
+    <div class="investment_con_list" style="display: none;">    
       <P> 
       	
       <form class="form-inline">
  		<input class="form-control" id="search" value="" size="20"></input>&nbsp;&nbsp;<input type="button" class="btn btn-primary" id="searchSubmit" value="查询" onclick="searchCollction()">
  		</form>
-        
+ 		
+       
 <table class="table table-bordered table-striped" id="gridtable" style="display:none">
 <tr id="searchCollectionInfo">
 <th>表名</th><th>目录</th><th>来源</th><th>标签</th><th>操作</th> 
 </tr>
 </table>
-        
+    
        
       </P>
  
     </div>
-    <div class="investment_con_list" >
-     <p>简单易用</p> 
-    </div>
+  
   </div>
+  
 </div>
  	</td>
 
@@ -498,7 +498,7 @@ $("#submit").bind("click",function(){
 	                            "<td> </td>"+
 	                            "<td>" + value.origin + "</td>" +
 	                            "<td>" + value.tags + "</td>"+
-	                            "<td><input id='selectThisCollection"+n+"' type='radio' name='selectThisCollection' value='"+value.collectionName+"'>选用</td>"+ 
+	                            "<td><input id='selectThisCollection"+n+"' type='radio' name='selectThisCollection' value='"+value.collectionName+"' onclick='selectTabName(\""+value.collectionName+"\")'>选用</td>"+ 
 	                            "</tr>";  
 	                            tbody += trs;  
 	                        });             		
@@ -538,6 +538,14 @@ function getPercent(){
 	            }  
 	        );
 		return percent;
+	}
+	
+	function selectTabName(tableName){
+		$("#tableName").val(tableName);
+		$(".investment_con").each(function(){
+			  $(this).children().eq(0).show();
+			  $(this).children().eq(1).hide();
+	    });
 	}
 	
 </script>
