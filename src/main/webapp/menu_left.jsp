@@ -9,9 +9,9 @@
 					</ul>
 					<ul class="nav nav-tabs nav-stacked nav-sidebar">
 						  <li class="active"><a href="data_frame.jsp?t=mongo_allCollections.htm">数据维护</a></li>
-			              <li><a href="data_frame.jsp?t=folder_list.htm">&nbsp;&nbsp;|&nbsp;&nbsp;注册路径管理</a></li>
+			              <li><a href="data_frame.jsp?t=folder_list.htm">&nbsp;&nbsp;|&nbsp;&nbsp;路径注册</a></li>
 			              <li><a href="data_frame.jsp?t=folder_child.htm">&nbsp;&nbsp;|&nbsp;&nbsp;数据入库</a></li>
-		                  <li><a href="data_frame.jsp?t=mongo_allCollections.htm">&nbsp;&nbsp;|&nbsp;&nbsp;Mongo数据维护</a></li>
+		                  <li><a href="data_frame.jsp?t=mongo_allCollections.htm">&nbsp;&nbsp;|&nbsp;&nbsp;数据表管理</a></li>
 					</ul>
 					<ul class="nav nav-tabs nav-stacked nav-sidebar">
 						  <li class="active"><a href="elastic.jsp?t=0">索引管理</a></li>
