@@ -107,25 +107,32 @@
 								                               
 							  </tbody>
 						 </table>  
-						 <nav style="margin: 0 auto;text-align: center;">
-						  <ul class="pagination">
-						    <li>
-						      <a href="#" aria-label="Previous">
-						        <span aria-hidden="true">&laquo;</span>
-						      </a>
-						    </li>
-						    <li><a href="#">1</a></li>
-						    <li><a href="#">2</a></li>
-						    <li><a href="#">3</a></li>
-						    <li><a href="#">4</a></li>
-						    <li><a href="#">5</a></li>
-						    <li>
-						      <a href="#" aria-label="Next">
-						        <span aria-hidden="true">&raquo;</span>
-						      </a>
-						    </li>
-						  </ul>
-						</nav>
+<#if (page.totalPage>1)>
+<nav style="margin: 0 auto;text-align: center; width: 100%;">
+  <ul class="pagination">
+   <li>
+      <a href="list.htm?status=${status!}&pageNo=1&pageSize=${page.pageSize}" aria-label="第一页">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+  <#list 1..page.totalPage as pageCur>
+	<#if pageCur!=0>
+	  <#if pageCur==page.pageNo>
+	  	<li class="active">
+	  <#else>
+	  	<li>
+	  </#if>
+	  <a href="list.htm?status=${status!}&pageNo=${pageCur}&pageSize=${page.pageSize}">${pageCur} <span class="sr-only">(current)</span></a>
+	</#if>
+  </#list>
+   <li>
+      <a href="list.htm?status=${status!}&pageNo=${page.totalPage}&pageSize=${page.pageSize}" aria-label="最后一页">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+</#if>
 				
 			             </div>
 			<div class="col-md-4" id="right_side" style="display:none;">
@@ -240,25 +247,6 @@ $("a[name='previewClick'").click(function(){
 	var path= encodeURIComponent($(this).attr("data-path"));
 	$("#filePath").val(path);
 	$("#previewForm").submit();
-});
-
-$(function() {
-	$("#page").paginate({
-		count 		: ${page.totalPage!},
-		start 		: ${page.pageNo!},
-		display     : 12,
-		border					: false,
-		text_color  			: '#888',
-		background_color    	: '#EEE',	
-		text_hover_color  		: 'black',
-		background_hover_color	: '#CFCFCF',
-		mouse		: 'press',
-		onChange  : function(page){
-			window.location.href="child.htm?pageNo="+page+"&folderId=${folderId!}";		
-		  }
-			
-	});
-
 });
 
 </script>	   
