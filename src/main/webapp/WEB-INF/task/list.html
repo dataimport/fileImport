@@ -18,10 +18,10 @@
 		<div class="row">
 			<h4 style="font-weight: bold;margin-top: 0px;">当前任务总数:&nbsp;&nbsp;${list?size}</h4>
 			<div class="progress">
-				<div class="label-info label-progress" style="width: 30%;" onclick="showList(1)">
+				<div class="label-info label-progress" style="width: 33%;" onclick="showList(1)">
 				执行中4/30%</div>
-				<div class="label-danger label-progress" style="width: 15%;" onclick="showList(-2)">失败2/15%</div>
-				<div class="label-default label-progress" style="width: 15%;"  onclick="showList(0)">未启动2/15%</div>
+				<div class="label-danger label-progress" style="width: 33%;" onclick="showList(-2)">失败2/15%</div>
+				<div class="label-default label-progress" style="width: 34%;"  onclick="showList(0)">未启动2/15%</div>
 			</div>
 		</div>
 		</#if>
@@ -94,53 +94,57 @@
 								  </tr>
 								</#if>
 							  </tbody>
-						 </table>  
-
-		</div>
-		<div id="page"> </div>
-		<form id="previewForm" action="../file/preview.htm" method="post">
-			<input type="hidden" name="filePath" id="filePath" value=""/>
-		</form>	
+						 </table> 
+<#if (list?size>0)> 
+<nav style="margin: 0 auto;text-align: center; width: 100%;">
+  <ul class="pagination">
+   <li>
+      <a href="list.htm?status=${status!}&pageNo=1&pageSize=${page.pageSize}" aria-label="第一页">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+  <#list 1..page.totalPage as pageCur>
+	<#if pageCur!=0>
+	  <#if pageCur==pageNo>
+	  	<li class="active">
+	  <#else>
+	  	<li>
+	  </#if>
+	  <a href="list.htm?status=${status!}&pageNo=${pageCur}&pageSize=${page.pageSize}">${pageCur} <span class="sr-only">(current)</span></a>
+	</#if>
+  </#list>
+   <li>
+      <a href="list.htm?status=${status!}&pageNo=${page.totalPage}&pageSize=${page.pageSize}" aria-label="最后一页">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+  <#if status??&&(status==888 || status==0 || status==1 || status==-2)>
+	    <button type="button" onclick="showList()" class="btn btn-primary" style="float:left;margin-top: 15px;">查看入库任务日志</button>
+  </#if>
+</nav>
+<#else>
+    <#if status??&&(status==888 || status==0 || status==1 || status==-2)>
+	    <button type="button" onclick="showList()" class="btn btn-primary" style="float:left;margin-top: 15px;">查看入库任务日志</button>
+	</#if>
+</#if>
+ 
 	</div>
+</div>
 
 </BODY>
 <script src="../static_bootstrap/js/ie10-viewport-bug-workaround.js"></script>
-<script type="text/javascript" src="../js/jquery/jquery.paginate.js" id="st-main"></script>
 <script>
 function showList(status){
-	window.location.href="list.htm?status="+status;
+	if (typeof status == "undefined")
+	{
+		window.location.href="list.htm?pageSize=${page.pageSize}";
+	}else{
+		window.location.href="list.htm?status="+status+"&pageSize=${page.pageSize}";
+	}
  	 
 }
 
-$("#previewClick").click(function(){
-	var path= encodeURIComponent($(this).attr("data-path"));
-	$("#filePath").val(path);
-	$("#previewForm").submit();
-});
-
-$(function() {
-	$("#page").paginate({
-		count 		: ${page.totalPage!},
-		start 		: ${pageNo!},
-		display     : 12,
-		border					: false,
-		text_color  			: '#888',
-		background_color    	: '#EEE',	
-		text_hover_color  		: 'black',
-		background_hover_color	: '#CFCFCF',
-		mouse		: 'press',
-		onChange  : function(page){
-			<#if status??>
-				window.location.href="list.htm?status=${status}&pageNo="+page;
-			<#else>
-				window.location.href="list.htm?pageNo="+page;
-			</#if>
-			
-		  }
-			
-	});
-
-});
 </script>
 		
 </HTML>

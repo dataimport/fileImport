@@ -68,7 +68,7 @@
     		%>       
     		    <iframe src="task/list.htm?status=888" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
     		<%}else if(type!=null && type.trim().equals("task_list.htm")){ %>
-    			<iframe src="task/list.htm?pageSize=1" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
+    			<iframe src="task/list.htm?pageSize=2" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
     		<%}else if(type!=null && type.trim().equals("folder_list.htm")){ %>
     			<iframe src="folder/list.htm" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
     		<%}else if(type!=null && type.trim().equals("folder_child.htm")){ %>
