@@ -168,6 +168,16 @@ public class TaskService {
 		return  new Pagination(pageNo, pageSize, 0);
 	}
 	
+	public long getTotalCountByStatus(Integer status) {
+		
+		try{
+			return taskRepository.getTotalCountByStatus(status);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return 0;
+	}
+	
 	public Task getTaskByFilePath(String filePath) {
 		try{
 			return taskRepository.getObjectsByFilePath(filePath);
