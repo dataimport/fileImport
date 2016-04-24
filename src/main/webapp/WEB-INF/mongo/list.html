@@ -147,8 +147,6 @@
 <input type="hidden" name="uid" id="showTableInfo_uid" value=""/>
 </form>
 
-
-<script type="text/javascript" src="../js/jquery/jquery.paginate.js"></script>
 <script>
 
 function findByCatalog(catalog) {     	    
@@ -169,25 +167,6 @@ function showValues(uid,tableNameAlias) {
 	$("#showValues").submit();
 
 }
-
-$(function() {
-	$("#page").paginate({
-		count 		: ${page.totalPage!},
-		start 		: ${page.pageNo!},
-		display     : 12,
-		border					: false,
-		text_color  			: '#888',
-		background_color    	: '#EEE',	
-		text_hover_color  		: 'black',
-		background_hover_color	: '#CFCFCF',
-		mouse		: 'press',
-		onChange  : function(page){
-			window.location.href="list.htm?pageNo="+page+"&catalog=${catalog!}";		
-		  }
-			
-	});
-
-});
 
 </script>
     
