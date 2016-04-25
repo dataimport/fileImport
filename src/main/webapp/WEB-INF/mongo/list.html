@@ -17,11 +17,9 @@
 			<div class="col-md-2">
 				<div id="treeview1" class="treeview">
 			  <ul class="list-group">
-			  
+                <li class="list-group-item active">数据表目录</li>			  
 			    <#list catalogList as ca> 
-			    <li onclick="findByCatalog('${ca!}')" class="list-group-item node-treeview1" data-nodeid="${ca_index}" style="">
-			      <span class="expand-collapse click-collapse glyphicon glyphicon-minus">
-			      </span>			      
+			    <li onclick="findByCatalog('${ca!}')" class="list-group-item node-treeview1" data-nodeid="${ca_index}" style="WORD-WRAP: break-word;TABLE-LAYOUT: fixed;word-break:break-all;">
 			      ${ca!}
 			    </li>
 			   
