@@ -29,17 +29,17 @@
 <BODY>
 <#assign columnsSize=columns?size>
 <#assign listSize=text?size>
-<table width="100%"  class="table table-bordered table-striped">
+<table width="100%"  class="table table-bordered">
    <#if errorMessage??&&errorMessage!="">
   <tr>
-    <th>提醒</th>    
+    <th class="active">提醒</th>    
  	<td colspan="${columnsSize}" >
  	 <span style="color:red" id="blink"><b>${errorMessage!}</b></span>
  	</td> 	
    <tr>
    </#if>
    <tr>
-    <th>当前文件</th>    
+    <th class="active">当前文件</th>    
  	<td colspan="${columnsSize}" >
  	 ${filePath!}
  	</td> 	
@@ -60,7 +60,7 @@
    -->
    
    <tr>
-    <th>列名</th>
+    <th class="active">列名</th>
     <#list columns as column>
  	<td>
  	 <div> 
@@ -91,7 +91,7 @@
   </tr>
   
   <tr>
-    <th>列标签</th>
+    <th class="active">列标签</th>
     <#list columns as column>
  	<td>
  	  <input class="form-control"  name="columnNameTag"  id="columnNameTag_${(column_index+1)}">   	 	 
@@ -100,7 +100,7 @@
   </tr>
   
    <tr>
-    <th>数据类型</th>
+    <th class="active">数据类型</th>
    	<#list 1..columnsSize as i>
  	<td>
        <select name="columnDataType" id="columnDataType_${i}"  class="form-control">
@@ -116,7 +116,7 @@
   
 <#list text as a>
 <#if a??&&a?trim!="">
-   <tr>
+   <tr  class="active">
     <th>${a_index+1}</th>
  		 	 
  	  <#if separator=="">	  
@@ -138,7 +138,7 @@
 </#list>
 
 <#if (listSize>10)>
-<tr>
+<tr class="active">
     <th>...</th> 	
  	 <#list columns as column>
  		<td>
@@ -148,7 +148,7 @@
 </tr>
 </#if>
 <tr>
-    <th>表信息</th>    
+    <th class="active">表信息</th>    
  	<td colspan="${columnsSize}" >
  	
 <div class="investment_f">
