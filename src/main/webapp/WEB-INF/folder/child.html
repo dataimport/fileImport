@@ -28,21 +28,27 @@
 		 <input id="folderPath_form" name="folderPath" type="hidden" value=""/>
 		 </form>   
 		
-			    <#if folderChild??>
+	    <#if folderChild??>
 		<div class="row">
 			<div id="container" class="col-md-2">
 				<div id="treeview1" class="treeview">
 			  <ul id="left_side" class="list-group">
 			    <li class="list-group-item active">文件夹</li>
-			    <#list folderChild as file>	  
-			            <#if (file.isDirectory()!)>
-			            <#assign absolutePath =file.absolutePath?replace('\\','\\\\' )]	
-			    <li onclick="getChild('${absolutePath!}')" class="list-group-item node-treeview1" data-nodeid="0" style="">
-			      		     
-			      ${file.name?trim}
-			    </li>
-			    </#if> 
-			   </#list> 
+			    
+			    <#if (folderChild?size>0)>
+				    <#list folderChild as file>	  
+				      <#if (file.isDirectory()!)>
+				            <#assign absolutePath =file.absolutePath?replace('\\','\\\\' )]	
+				            <li onclick="getChild('${absolutePath!}')" class="list-group-item node-treeview1" data-nodeid="0" style="">
+						      ${file.name?trim}
+						    </li>
+				      </#if> 
+				    </#list> 
+			    
+			    <#else>
+			        <li class="list-group-item node-treeview1" data-nodeid="0">没有更多</li>
+			         <li class="list-group-item node-treeview1" data-nodeid="0"><button type="button" class="btn btn-primary btn-xs" onclick= "history.go(-1)">返回上级 </button></li>
+			    </#if>
 			     
 			  </ul>
 			</div>
@@ -59,6 +65,15 @@
 								  </tr>
 							  </thead>   
 							  <tbody>
+							  
+							  <#if (folderChild?size<1)>
+							     <tr>
+									<td colspan="10">
+									 该目录下没有文件.
+									</td>
+								</tr>
+							  <#else>
+							  
 								<#list fileTaskList as task>
 									<#if !(folderChild[task_index].isDirectory())>
 										<tr>
@@ -102,7 +117,7 @@
 										</tr> 	
 									</#if>     		
 									</#list>
-								                               
+								 </#if>                           
 							  </tbody>
 						 </table>  
 <#if (page??&&page.totalPage>1)>
@@ -161,7 +176,7 @@
 					  <#else>
 					      <li class="list-group-item">源文件名称:${folderChild[task_index].name}</li>
 					      <li class="list-group-item">修改时间：${(folderChild[task_index].lastModified())?number_to_datetime?string('yyyy-MM-dd HH:mm:ss')}</li>
-						  <li class="list-group-item"><span class="label label-warning">未添加到计划任务中</span></li>
+						  <li class="list-group-item"><a name="previewClick" data-path="${folderChild[task_index].path!}" href="#" style="color:#FFF;"><span class="label label-warning">未添加到计划任务中</span></a></li>
 					    </#if>
 					</ul>
 				</#if>  
