@@ -73,7 +73,7 @@
 
 <#list listValue as obiect > 	
     <tr> 
-     <td> ${obiect_index+1!}</td> 	    
+     <td> ${obiect_index+1+((page.pageNo-1)*page.pageSize)!}</td> 	    
 		<#list fields as field >
 		<#if field_index!=0>	
 		   <#if obiect[field]??>		   
