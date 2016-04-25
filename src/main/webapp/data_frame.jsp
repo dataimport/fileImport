@@ -104,7 +104,7 @@
 			<div class="row-fluid">
 				
 			<% 
-			   Integer pageSize=2; //每页数据条数
+			   Integer pageSize=20; //每页数据条数
     		   if(type!=null && type.trim().equals("task_list.htm_not_finish")){
     		%>       
     		    <iframe src="task/list.htm?status=888" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
