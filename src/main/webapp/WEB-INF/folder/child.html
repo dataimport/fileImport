@@ -166,12 +166,12 @@
 							    </#if>	
 						  </li> 
 						  <li class="list-group-item">表名： ${task.tableName!}</li>
-						  <li href="#" class="list-group-item">记录数：${task.totalCount!} &nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-primary  btn-xs" type="button">浏览</button></li>
+						  <li href="#" class="list-group-item">记录数：${task.runNum!} &nbsp;&nbsp;&nbsp;&nbsp;<button onclick="showValues('${task.uid!}','${task.tableNameAlias!}')" class="btn btn-primary  btn-xs" type="button">浏览</button></li>
 						  <li class="list-group-item">入库时间：${task.startDate!}</li>
 						  <li class="list-group-item">完成时间：${task.endDate!}</li>
 						  <li class="list-group-item">来源:${task.origin!}</li>
 						  <li class="list-group-item">源文件名称:${task.filePath!}</li>
-						  <li class="list-group-item">数据时间：2009年12月</li>
+						  <li class="list-group-item">数据时间：${task.dataTime!}</li>
 						  <li class="list-group-item">标签组：${task.tags!}</li>
 					  <#else>
 					      <li class="list-group-item">源文件名称:${folderChild[task_index].name}</li>
@@ -193,7 +193,11 @@
 <input type="hidden" name="filePath" id="filePath" value=""/>
 </form>
 
-<script type="text/javascript" src="../js/jquery/jquery.paginate.js" id="st-main"></script>
+<form id="showValues" action="../mongo/tableValues.htm" method="post">
+<input type="hidden" name="pageSize" id="pageSize" value="2"/>
+<input type="hidden" name="uid" id="uid" value=""/>
+<input type="hidden" name="tableNameAlias" id="tableNameAlias" value=""/>
+</form>
 
 <script>
 
@@ -263,6 +267,14 @@ $("a[name='previewClick'").click(function(){
 	$("#filePath").val(path);
 	$("#previewForm").submit();
 });
+
+
+function showValues(uid,tableNameAlias) {     	    
+	$("#uid").val(uid);
+	$("#tableNameAlias").val(tableNameAlias);
+	$("#showValues").submit();
+
+}
 
 </script>	   
 		
