@@ -11,14 +11,7 @@
 								
 				<!-- start: Header Menu -->
 				<div class="nav-no-collapse header-nav">
-					<ul class="nav pull-right">
-						<li class="hidden-phone"><a href="index.jsp" class="btn dropdown-toggle">系统总览</a></li>
-						<li class="hidden-phone" style="line-height:40px;">|</li>
-				        <li class="hidden-phone"><a href="data_frame.jsp?t=task_list.htm_not_finish" class="btn dropdown-toggle">入库任务监控</a></li>
-				        <li class="hidden-phone" style="line-height:40px;">|</li>
-				        <li class="hidden-phone"><a href="elastic.jsp?t=0" class="btn dropdown-toggle">入索引任务监控</a></li>
-				        <li class="hidden-phone" style="line-height:40px;">|</li>
-				        <li class="hidden-phone"><a href="data_frame.jsp?t=mongo_allCollections.htm" class="btn dropdown-toggle">Mongo数据维护</a></li>
+					<ul class="nav pull-right">						
 						<!-- start: User Dropdown -->
 						<li class="dropdown">
 							<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
