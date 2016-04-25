@@ -90,7 +90,7 @@
 					<a href="data_frame.jsp?t=mongo_allCollections.htm">数据维护&nbsp;&nbsp;></a>
 					
 				</li>
-    		    <li><a href="index.jsp">数据表管理</a></li>
+    		    <li><a href="data_frame.jsp?t=mongo_allCollections.htm">数据表管理</a></li>
     		<%}else{ %>
             	<li>
 					<i class="icon-home"></i>
