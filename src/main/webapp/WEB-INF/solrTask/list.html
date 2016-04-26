@@ -33,9 +33,9 @@
 									  <th>任务名称</th>
 									  <th>创建者</th>
 									  <th>状态</th>
-									  <th>计划/启动时间</th>
-									  <th>已执行时长</th>
-									  <th>剩余时长</th>
+									  <th>计划时间</th>
+									  <th>启动时间</th>
+									  <th>执行时长</th>
 									  <th>进度/数据条目</th>
 									  <th>数据总条目</th>
 									 
@@ -50,35 +50,45 @@
 									<td class="center">${task.tableName!}-${task.origin!}</td>
 									<td class="center">${task.createUser!}</td>  
 									<td class="center">
+									
+									<#if (task.totalCount??&&task.runNum??&&task.totalCount!=task.runNum)>
+									     <span class="label label-danger">异常</span> 
+									<#else>
 									     <#if task.taskStatus==0>
 										    <span onclick="showList(0)" class="label label-default">未启动</span>
 										 <#elseif task.taskStatus==1>
 									    	<span onclick="showList(1)" class="label label-info">执行中</span>									    
 									    <#elseif task.taskStatus==-2>
-					 				        <span onclick="showList(-2)" class="label label-danger">异常</span>
+					 				        <span onclick="showList(-2)" class="label label-danger">失败</span>
 									    <#elseif task.taskStatus==2>
 									        <span onclick="showList(2)" class="label label-success">已完成</span>
-									    </#if>
+									    <#elseif task.taskStatus==-100>
+									        <span onclick="showList(-100)" class="label label-default">初始化</span>
+									    <#elseif task.taskStatus==-200>
+									        <span onclick="showList(-200)" class="label label-danger">异常</span>    
+									    <#else>
+									         <span class="label label-default">未知错误</span>
+									    </#if>   
+									</#if>
+									
+									    
 									</td>  
 									<td class="center">${task.runTime!}</td>
 									<td class="center">${task.startDate!}</td>
-									<td class="center">${task.timeUse!}</td> 
+									<td class="center">${task.timeUse!}毫秒									
+									</td> 
 									<td class="center">
-									<#if task.totalCount??&&task.totalCount!=0>
+									<#if (task.totalCount??&&task.totalCount!=0)&&(task.runNum??&&task.runNum>0)>
 	   
-									   <#if task.firstLineIgnore=true>
-									      <#assign percent = (((task.runNum+1)!/task.totalCount!)*100)?string("0.##")>
-									   <#else>
-									      <#assign percent = ((task.runNum!/task.totalCount!)*100)?string("0.##")>
-									   </#if>
+									   <#assign percent = ((task.runNum!/task.totalCount!)*100)?string("0.##")>
 									   <#if percent=="100">
-									    <font color="#0D3EEF">${percent!}%</font> 
+									    <font color="green">${percent!}%</font> 
 									   <#else>
 									     <font color="#EF0F1A">${percent!}%</font> 
 									   </#if>		
-									   <#else>
-									   		计算中
-									   </#if>
+								   <#else>
+								   		0%
+								   </#if>
 									   /${task.runNum!}</td>
 									<td class="center">${task.totalCount!}</td> 
 									                                  
