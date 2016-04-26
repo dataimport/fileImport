@@ -82,98 +82,98 @@ public class SolrImportService {
 	
 	
 	public void batchImport(String taskId,String tags,String indexName,String indexAliasName,SolrTask task ){
-//		long start =System.currentTimeMillis();
-//		String[] fieldNames = task.getColumnName();
-//		Client client = new TransportClient()
-//						.addTransportAddress(
-//						new InetSocketTransportAddress("localhost", 9300)
-//						);
-//		BulkRequestBuilder bulkRequest = client.prepareBulk();   
-//				try{
-//				    String collectionName = indexName;
-//					if(StringUtils.isNotBlank(collectionName)){
-//						
-//						
-//						//按分页的方式取数据，并循环入库
-//						DBCollection dbColleciton =mongoTemplate.getCollection(collectionName); 	
-//						long totalCount = dbColleciton.count();
-//						//更新任务中需要处理的真实totalCount
-//						String[] key = new String[]{"totalCount"};
-//						Object[] value = new Object[]{totalCount};
-//						solrTaskRepository.updateTaskByField(taskId, key, value);
-//					    //从mongodb中取出相应的数据，循环写入solr
-//						DBCursor cursor = dbColleciton.find();
-//					    Iterator<DBObject> it = cursor.iterator();
-//						long i=0;
-//						//批次信息
-//						long batchNo = 0;
-//						while (it.hasNext()) {
-//							i++;
-//							DBObject currentData = it.next();
-//													
-//							System.out.println("line no:"+i); 
-//								XContentBuilder xcb = jsonBuilder().startObject();
-//								for(String fieldName:fieldNames){
-//									xcb.field(fieldName,currentData.get(fieldName));
-//								}
-//								xcb.endObject();
-//								bulkRequest.add(client.prepareIndex(indexName, "tuser", i+"")
-//										.setSource(xcb)
-//										);
-//								
-//								if(i%100==0 || i==totalCount){
-//									batchNo++;
-//									BulkResponse bulkResponse = bulkRequest.execute().actionGet();   
-//									if (bulkResponse.hasFailures()) {   
-//										//打印出错误信息，后续改为log的方式输出
-//										System.err.println("本批次有数据写入失败,taskId:"+taskId+
-//												",批次编号:"+batchNo+
-//												",每批次的条数："+100+
-//												",当前行号："+i);
-//										//此处是有异常的情况，不是完全失败的情况
-//										//-100,写入solr时，某一部分数据异常
-//										key = new String[]{"taskStatus"};
-//										value = new Object[]{-100};
-//										solrTaskRepository.updateTaskByField(taskId, key, value);
-//									}else{
-//										//更新task中的成功条数
-//										key = new String[]{"runNum"};
-//										value = new Object[]{i};
-//										solrTaskRepository.updateTaskByField(taskId, key, value);
-//									}
-//									bulkRequest=null; 
-//									bulkRequest = client.prepareBulk();
-//									
-//								}
-//						}
-//						//				long duration= (System.currentTimeMillis()-start)/1000;
-//						Map<String,Object> dbInfo = new HashMap<String,Object>();
-//						dbInfo.put("filePath", task.getFilePath());
-//						dbInfo.put("fileName", task.getFileName());
-//						dbInfo.put("fileSize", task.getFileSize());
-//						dbInfo.put("taskTag", task.getTags());
-//						dbInfo.put("taskOrigin", task.getOrigin());
-//						dbInfo.put("totalCount", task.getTotalCount());
-//						dbInfo.put("taskId"  , taskId);
-//						
-////						client.admin().indices().prepareAliases().addAlias(indexName,"indexAliasName",indexAliasName)
-////						.addAlias(indexName, "dbInfo", dbInfo)
-////						.execute().actionGet();
-//						
-//						client.admin().indices().prepareAliases().addAlias(indexName,indexAliasName).execute().actionGet();
-//						
-//						long duration= (System.currentTimeMillis()-start);
-//						key = new String[]{"timeUse"};
-//						value = new Object[]{duration};
-//						solrTaskRepository.updateTaskByField(taskId, key, value);
-//						
-//						System.out.println("入库到索引"+indexName+",总耗时:"+duration+"ms,totalCount:"+totalCount);
-//					}
-//					
-//					
-//			}catch(Exception e){
-//				e.printStackTrace();
-//			}
+		long start =System.currentTimeMillis();
+		String[] fieldNames = task.getColumnName();
+		Client client = new TransportClient()
+						.addTransportAddress(
+						new InetSocketTransportAddress("localhost", 9300)
+						);
+		BulkRequestBuilder bulkRequest = client.prepareBulk();   
+				try{
+				    String collectionName = indexName;
+					if(StringUtils.isNotBlank(collectionName)){
+						
+						
+						//按分页的方式取数据，并循环入库
+						DBCollection dbColleciton =mongoTemplate.getCollection(collectionName); 	
+						long totalCount = dbColleciton.count();
+						//更新任务中需要处理的真实totalCount
+						String[] key = new String[]{"totalCount"};
+						Object[] value = new Object[]{totalCount};
+						solrTaskRepository.updateTaskByField(taskId, key, value);
+					    //从mongodb中取出相应的数据，循环写入solr
+						DBCursor cursor = dbColleciton.find();
+					    Iterator<DBObject> it = cursor.iterator();
+						long i=0;
+						//批次信息
+						long batchNo = 0;
+						while (it.hasNext()) {
+							i++;
+							DBObject currentData = it.next();
+													
+							System.out.println("line no:"+i); 
+								XContentBuilder xcb = jsonBuilder().startObject();
+								for(String fieldName:fieldNames){
+									xcb.field(fieldName,currentData.get(fieldName));
+								}
+								xcb.endObject();
+								bulkRequest.add(client.prepareIndex(indexName, "tuser", i+"")
+										.setSource(xcb)
+										);
+								
+								if(i%100==0 || i==totalCount){
+									batchNo++;
+									BulkResponse bulkResponse = bulkRequest.execute().actionGet();   
+									if (bulkResponse.hasFailures()) {   
+										//打印出错误信息，后续改为log的方式输出
+										System.err.println("本批次有数据写入失败,taskId:"+taskId+
+												",批次编号:"+batchNo+
+												",每批次的条数："+100+
+												",当前行号："+i);
+										//此处是有异常的情况，不是完全失败的情况
+										//-100,写入solr时，某一部分数据异常
+										key = new String[]{"taskStatus"};
+										value = new Object[]{-100};
+										solrTaskRepository.updateTaskByField(taskId, key, value);
+									}else{
+										//更新task中的成功条数
+										key = new String[]{"runNum"};
+										value = new Object[]{i};
+										solrTaskRepository.updateTaskByField(taskId, key, value);
+									}
+									bulkRequest=null; 
+									bulkRequest = client.prepareBulk();
+									
+								}
+						}
+						//				long duration= (System.currentTimeMillis()-start)/1000;
+						Map<String,Object> dbInfo = new HashMap<String,Object>();
+						dbInfo.put("filePath", task.getFilePath());
+						dbInfo.put("fileName", task.getFileName());
+						dbInfo.put("fileSize", task.getFileSize());
+						dbInfo.put("taskTag", task.getTags());
+						dbInfo.put("taskOrigin", task.getOrigin());
+						dbInfo.put("totalCount", task.getTotalCount());
+						dbInfo.put("taskId"  , taskId);
+						
+//						client.admin().indices().prepareAliases().addAlias(indexName,"indexAliasName",indexAliasName)
+//						.addAlias(indexName, "dbInfo", dbInfo)
+//						.execute().actionGet();
+						
+						client.admin().indices().prepareAliases().addAlias(indexName,indexAliasName).execute().actionGet();
+						
+						long duration= (System.currentTimeMillis()-start);
+						key = new String[]{"timeUse"};
+						value = new Object[]{duration};
+						solrTaskRepository.updateTaskByField(taskId, key, value);
+						
+						System.out.println("入库到索引"+indexName+",总耗时:"+duration+"ms,totalCount:"+totalCount);
+					}
+					
+					
+			}catch(Exception e){
+				e.printStackTrace();
+			}
 	}
 	
 	
