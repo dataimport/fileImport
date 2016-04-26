@@ -30,13 +30,13 @@
      </#if>
      
 	<#list list as file>
-		   <#if file??&&file!="">
+		   
 			<tr>	
 				<td>	  
 			   ${file?replace('<', '&lt;' )?replace(">","&gt;")?replace('\n', '' )}
 			    </td>
 			</tr> 		
-			</#if>	
+			
 	</#list>
 
 </tr>
