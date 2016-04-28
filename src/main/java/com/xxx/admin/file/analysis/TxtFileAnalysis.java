@@ -267,37 +267,54 @@ public class TxtFileAnalysis  {
 		
 	}
 	
+	
+	private String getBigFileLineNumByWindowsCommand(String filePath){
+		String command = "find /V \"\" /C "+filePath;			
+		Runtime runtime=Runtime.getRuntime();
+		String temp;
+		String number="1";
+		try{
+			Process process  = runtime.exec(command);
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					process.getInputStream()));		
+			while ((temp = br.readLine()) != null) {
+				if(StringUtils.isNotBlank(temp)){					
+					//System.out.println(" result : " + temp.substring(temp.lastIndexOf(":")+1).trim());
+					number = temp.substring(temp.lastIndexOf(":")+1).trim();					
+					break;
+				}				
+			}
+		}catch(Exception e){
+			e.printStackTrace();	
+			return "1";
+		}
+        return number;
+	}
+
+	
 	/**
 	 * 用命令读取大文件的行数   linux下非常快
 	 * @param file
 	 * @throws FileNotFoundException
 	 */
 	public String getBigFileLineNumByCommand(String filePath){
-		long start = System.currentTimeMillis();
-		String command ="";
-		boolean isWindows = false;
+		//long start = System.currentTimeMillis();
 		if (System.getProperty("os.name").contains("Windows")) {
-			command = "find /V \"\" /C "+filePath;		
-			isWindows = true;
+			return getBigFileLineNumByWindowsCommand(filePath);
 		} else {
-			command="cat "+filePath+" |wc -l";			
-		}
-	
-		Runtime runtime=Runtime.getRuntime();
-		String temp;
-		String number="1";
-		try{
-			String[] cmdA = { "/bin/sh", "-c", command };
-			Process process  = runtime.exec(cmdA);				 
-			BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));	
-			temp = br.readLine();		
-			if(temp!=null){				
-				if(isWindows){
-					number = temp.substring(temp.lastIndexOf(":")+1).trim();
-				}else{
-					number = temp;
-				}				
-			}			
+			String command="cat "+filePath+" |wc -l";			
+			Runtime runtime=Runtime.getRuntime();
+			String temp;
+			String number="1";
+			try{
+				String[] cmdA = { "/bin/sh", "-c", command };
+				Process process  =  runtime.exec(cmdA);			 
+				BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()));	
+				//BufferedReader brError = new BufferedReader(new InputStreamReader(process.getErrorStream()));	
+				temp = br.readLine();		
+				if(StringUtils.isNotBlank(temp)){				
+					number = temp;	
+				}			
 //			while ((temp = br.readLine()) != null) {
 //				System.out.println(" #getBigFileLineNumByCommand command result: ##　"+temp);
 //				if(StringUtils.isNotBlank(temp)){					
@@ -316,10 +333,10 @@ public class TxtFileAnalysis  {
 			e.printStackTrace();	
 			return "1";
 		}
-		long end = System.currentTimeMillis();	 
-        System.out.println("读取文件行数耗时：" + (end - start) + "毫秒");
-
-        return number;
+			//long end = System.currentTimeMillis();	 
+			//System.out.println("读取文件行数耗时：" + (end - start) + "毫秒");
+		 return number;
+		}       
 	}
 
 	public String getCharset(String filePath,String fileCode){

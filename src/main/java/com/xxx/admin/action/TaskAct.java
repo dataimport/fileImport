@@ -251,6 +251,7 @@ public class TaskAct {
 			task.setStartDate(nowTime);
 			task.setRunTime(nowTime);
 			task.setTaskStatus(1);//执行中
+			task.setTotalCount(1l);
 			boolean result = taskService.createTask(task);//创建任务
 			
 			if(result){

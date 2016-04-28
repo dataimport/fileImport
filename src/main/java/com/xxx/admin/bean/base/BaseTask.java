@@ -36,7 +36,7 @@ public abstract class BaseTask implements Serializable {
 	private String fileCode;
 	private long fileSize;
 	private String leftTime;
-	private long totalCount= 0l;
+	private long totalCount= 1l;
 	private int taskStatus;  // 0 未执行  1 执行中 2 已完成  -2 失败
 	private String timeUse;//耗时;
 	private int runNum;//当前插入的行数

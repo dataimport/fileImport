@@ -199,7 +199,7 @@ public class FileService {
 								fcin,rBuffer,lines,charset);	 					 
 					 successNum+=fmRepository.FilePushToMongo(t, lines,true,runNum,successNum,System.currentTimeMillis()-start);		
 					 runNum+=lines.size();
-					 System.out.println("runNum " +runNum);
+					 //System.out.println("runNum " +runNum);
 				  }					
 
 				  //更新状态为导入完毕

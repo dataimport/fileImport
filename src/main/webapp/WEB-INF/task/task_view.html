@@ -459,6 +459,7 @@ $("#submit").bind("click",function(){
 	                				"&nbsp;&nbsp;  <input id='cleanOrAppend1' type='radio' name='cleanOrAppend' value='clean' checked=''>清空并追加"+
 	                				"&nbsp;&nbsp;  <input id='cleanOrAppend2' type='radio' name='cleanOrAppend' value='append'  >追加到此表 "
 	                				);  
+	                		$('#submit').attr('disabled',false); 
 	                	}else{
 	                		$('#submit').attr('disabled',false); 
 	                		$("#tableInfo").html("");
