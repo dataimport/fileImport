@@ -15,7 +15,7 @@
 	<div class="container" style="width: 100%;">
 	    
 	    <#if status??&&(status==888 || status==0 || status==1 || status==-2)>
-	    <script language=javascript>setInterval("window.location.reload()",5000)</script>
+	   <!--  <script language=javascript>setInterval("window.location.reload()",5000)</script> -->
 		<div class="row">
 			<h4 style="font-weight: bold;margin-top: 0px;">当前任务总数:&nbsp;&nbsp;${page.totalCount!}</h4>
 			<div class="progress">
@@ -67,7 +67,7 @@
 									<td class="center">${task.runTime!}</td>
 									<td class="center">${task.startDate!}</td>
 									<td class="center">${task.timeUse!}</td> 
-									<td class="center">
+									<td class="center" id="td_${task.id}">
 									<#if task.totalCount??&&task.totalCount!=0&&(task.totalCount!>=task.runNum!)>
 	   
 									   <#if task.firstLineIgnore=true>
@@ -83,7 +83,8 @@
 									   <#else>
 									   		计算中
 									   </#if>
-									   /${task.runNum!}</td>
+									   /${task.runNum!}
+									   </td>
 									<td class="center">${task.totalCount!}</td> 
 									<td class="center">
 										<button type="button" name="previewClick"  data-path="${task.filePath!}" class="btn btn-primary btn-xs">重新导入</button>
@@ -140,6 +141,9 @@
 </form>
 </BODY>
 <script src="../static_bootstrap/js/ie10-viewport-bug-workaround.js"></script>
+<script type="text/javascript" src="../js/jquery/jquery.timers-1.2.js" id="st-main"></script>
+<script type="text/javascript" src="../js/jquery/jquery.corner.js" id="st-main"></script>
+<script type="text/javascript" src="../js/common.js" id="st-main"></script>
 <script>
 function showList(status){
 	if (typeof status == "undefined")
@@ -157,6 +161,63 @@ $("button[name='previewClick'").click(function(){
 	$("#previewForm").submit();
 });
 
+//3s刷新 一次,最多执行 5分钟
+var runNum;
+$('body').everyTime('3s','C',function(){	
+	getPercent();
+	runNum++;	
+    if(runNum>100){
+    	$('body').stopTime();
+    }
+},0,true);
+
+
+function getPercent(){
+  
+	$.ajax(  
+            {  
+                url:'list.htm', 
+                type:"post",  
+                async:true,  
+                data:{
+                	'status':'${status!}',
+                	'pageNo':'${pageNo!}',
+                	'type':'ajax',
+                	},  
+                dataType:"json",  
+                timeout:"1000",  
+                async:false,
+                error:function(){
+                	percent = 0;
+                },  
+                success:function(data)  
+                {  	                	
+                	
+                	 $.each(data, function (n, task) {
+                		 
+     					if(task.totalCount!=0&&(task.totalCount>=task.runNum))
+     				   	{
+						  if(task.firstLineIgnore=true){
+							  var  percent = (((task.runNum+1)/task.totalCount)*100).toFixed(2)
+						  }else{
+							  var  percent =  ((task.runNum/task.totalCount)*100).toFixed(2)
+						  }		
+						  
+						  if(percent==100){
+							  var html ='<font color="#0D3EEF">'+percent+'%</font>/'+task.runNum;
+						  }else{
+							  var html ='<font color="#EF0F1A">'+percent+'%</font>/'+task.runNum;
+						  }
+						  $("#td_"+task.id).html(html);						  
+     				   }else{
+     					  $("#td_"+task.id).text("计算中");     					
+     				   }		                		
+                      });            	
+                }  
+            }  
+        );
+
+}
 </script>
 		
 </HTML>

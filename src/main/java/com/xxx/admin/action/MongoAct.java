@@ -52,6 +52,8 @@ public class MongoAct {
 			if(list.size()>0){
 			    catalog = list.get(0).substring(0,  list.get(0).lastIndexOf("("));   	
 			 }
+		}else{
+			 catalog = catalog.substring(0,  catalog.lastIndexOf("("));   	
 		}		
 		
 		Pagination page = null;

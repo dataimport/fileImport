@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.alibaba.fastjson.JSON;
 import com.xxx.admin.bean.Task;
 import com.xxx.admin.service.FileService;
 import com.xxx.admin.service.FolderService;
@@ -55,7 +56,15 @@ public class TaskAct {
 		model.put("failedCount", failedCount);
 		model.put("waitCount", waitCount);
 		
-		return "task/list";
+		String type = request.getParameter("type");
+		if("ajax".equals(type)){
+			String jsonText = JSON.toJSONString(page.getList());  
+			ResponseUtils.renderJson(response, jsonText);
+			return null;
+		}else{
+			return "task/list";	
+		}
+		
 	}
 	
 	/**
