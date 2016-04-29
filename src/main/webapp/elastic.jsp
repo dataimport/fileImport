@@ -45,7 +45,7 @@
 			<noscript>
 				<div class="alert alert-block span10">
 					<h4 class="alert-heading">Warning!</h4>
-					<p>You need to have <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a> enabled to use this site.</p>
+					<p>你需要打开JavaScript支持.</p>
 				</div>
 			</noscript>
 			
@@ -88,11 +88,11 @@
             <% 
     		   if(type!=null && type.trim().equals("0")){
     		%>       
-    		    <iframe src="solrTask/list.htm?status=888" frameborder="0" scrolling="auto" width="100%" height="550"></iframe>
+    		    <iframe src="solrTask/list.htm?status=888" frameborder="0" scrolling="auto" width="100%" height="900"></iframe>
     		<%}else if(type!=null && type.trim().equals("1")){ %>
-    			<iframe src="solrTask/list.htm" frameborder="0" scrolling="auto" width="100%" height="550"></iframe>
+    			<iframe src="solrTask/list.htm" frameborder="0" scrolling="auto" width="100%" height="900"></iframe>
     		<%}else{ %>
-            	<iframe src="http://222.161.210.86:9200/_plugin/head/" frameborder="0" scrolling="auto" width="100%" height="550"></iframe>
+            	<iframe src="http://222.161.210.86:9200/_plugin/head/" frameborder="0" scrolling="auto" width="100%" height="900"></iframe>
             <%} %>
       </div>
 
