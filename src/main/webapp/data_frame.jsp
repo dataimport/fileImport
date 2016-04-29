@@ -107,11 +107,11 @@
 			   Integer pageSize=20; //每页数据条数
     		   if(type!=null && type.trim().equals("task_list.htm_not_finish")){
     		%>       
-    		    <iframe src="task/list.htm?status=888" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
+    		    <iframe src="task/list.htm?status=888" frameborder="0" scrolling="auto" width="100%" height="1200"></iframe>
     		<%}else if(type!=null && type.trim().equals("task_list.htm")){ %>
-    			<iframe src="task/list.htm?pageSize=<%=pageSize %>" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
+    			<iframe src="task/list.htm?pageSize=<%=pageSize %>" frameborder="0" scrolling="auto" width="100%" height="900" style="margin-left:5px;"></iframe>
     		<%}else if(type!=null && type.trim().equals("folder_list.htm")){ %>
-    			<iframe src="folder/list.htm?pageSize=<%=pageSize %>" frameborder="0" scrolling="auto" width="100%" height="600"></iframe>
+    			<iframe src="folder/list.htm?pageSize=<%=pageSize %>" frameborder="0" scrolling="auto" width="100%" height="1200"></iframe>
     		<%}else if(type!=null && type.trim().equals("folder_child.htm")){ %>
     			<iframe src="folder/child.htm?pageSize=20" frameborder="0" scrolling="auto" width="100%" height="1200"></iframe>
     		<%}else if(type!=null && type.trim().equals("mongo_allCollections.htm")){ %>
