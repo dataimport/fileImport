@@ -58,9 +58,10 @@ public class TaskAct {
 		
 		String type = request.getParameter("type");
 		if("ajax".equals(type)){
-			String jsonText = JSON.toJSONString(page.getList());  
-			ResponseUtils.renderJson(response, jsonText);
-			return null;
+//			String jsonText = JSON.toJSONString(page.getList());  
+//			ResponseUtils.renderJson(response, jsonText);
+//			return null;
+			return "task/list_ajax";	
 		}else{
 			return "task/list";	
 		}

@@ -29,7 +29,7 @@
 			</div>
 		</div>
 		</#if>
-		<div class="row">
+		<div class="row" id="tableInfo">
 				<table class="table table-bordered" style="width:99%;margin-left:5px;">
 							  <thead>
 								  <tr class="active">
@@ -169,7 +169,7 @@ if(sta==""){
 }
 $('body').everyTime('3s','C',function(){
 	runNum++;	
-    if(runNum>10){
+    if(runNum>100){
     	$('body').stopTime();
     }else{
     	getPercent();	
@@ -190,7 +190,7 @@ function getPercent(){
                 	'pageNo':'${pageNo!}',
                 	'type':'ajax',
                 	},  
-                dataType:"json",  
+                dataType:"html",  
                 timeout:"1000",  
                 async:false,
                 error:function(){
@@ -198,7 +198,8 @@ function getPercent(){
                 },  
                 success:function(data)  
                 {  	                	
-                	
+                	$("#tableInfo").html(data);
+                	/**
                 	 $.each(data, function (n, task) {
                 		 
      					if(task.totalCount!=0&&(task.totalCount>=task.runNum))
@@ -220,7 +221,8 @@ function getPercent(){
      					 $("#td_"+task.id).text("计算中");     		
      					 $("#tdCount_"+task.id).text("计算中");	
      				   }		                		
-                      });            	
+                      });   
+                	**/
                 }  
             }  
         );

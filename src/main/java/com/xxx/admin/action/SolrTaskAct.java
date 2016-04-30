@@ -26,7 +26,12 @@ public class SolrTaskAct {
 		model.put("page", page);
 		model.put("status", status);
 		model.put("pageNo", page.getPageNo());
-		return "solrTask/list";
+		String type = request.getParameter("type");
+		if("ajax".equals(type)){
+			return "solrTask/list_ajax";	
+		}else{
+			return "solrTask/list";	
+		}
 	}
 	
 	
