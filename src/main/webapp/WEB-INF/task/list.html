@@ -85,7 +85,7 @@
 									   </#if>
 									   /${task.runNum!}
 									   </td>
-									<td class="center">${task.totalCount!}</td> 
+									<td class="center" id="tdCount_${task.id}">${task.totalCount!}</td> 
 									<td class="center">
 										<button type="button" name="previewClick"  data-path="${task.filePath!}" class="btn btn-primary btn-xs">重新导入</button>
 								</td>                                     
@@ -162,13 +162,19 @@ $("button[name='previewClick'").click(function(){
 });
 
 //3s刷新 一次,最多执行 5分钟
+var sta= "${status!}";
 var runNum;
-$('body').everyTime('3s','C',function(){	
-	getPercent();
+if(sta==""){
+	runNum=10000;
+}
+$('body').everyTime('3s','C',function(){
 	runNum++;	
     if(runNum>100){
     	$('body').stopTime();
+    }else{
+    	getPercent();	
     }
+		
 },0,true);
 
 
@@ -208,9 +214,11 @@ function getPercent(){
 						  }else{
 							  var html ='<font color="#EF0F1A">'+percent+'%</font>/'+task.runNum;
 						  }
-						  $("#td_"+task.id).html(html);						  
+						  $("#td_"+task.id).html(html);		
+						  $("#tdCount_"+task.id).text(task.totalCount);	
      				   }else{
-     					  $("#td_"+task.id).text("计算中");     					
+     					 $("#td_"+task.id).text("计算中");     		
+     					 $("#tdCount_"+task.id).text("计算中");	
      				   }		                		
                       });            	
                 }  

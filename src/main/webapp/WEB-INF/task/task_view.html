@@ -345,7 +345,6 @@ $("#submit").bind("click",function(){
 			return;
 		}	
 		temp = temp.replace(',','');//列名中不能有逗号
-
 		if(columnName.indexOf(temp)>=0){
 			alert("有相同列名");
 			return ;
@@ -357,9 +356,10 @@ $("#submit").bind("click",function(){
 	}	
 		
 	$('#submit').attr('disabled','true');  
-	//$('#loading').html("<img src='../resources/images/loading.gif'/>");
-	$('#processbar').show();
-		
+//$('#loading').html("<img src='../resources/images/loading.gif'/>");
+/**
+ * 注释进度条效果
+$('#processbar').show();		
 	var stop = false;
 	$('body').everyTime('1s','C',function(){	
 		var percent = getPercent();
@@ -372,7 +372,7 @@ $("#submit").bind("click",function(){
 	    	$('body').stopTime();
 	    }
 	},0,true);
-	  
+**/
 		$.ajax(  
 	            {  
 	                url:'../task/o_task.htm', 
@@ -386,6 +386,7 @@ $("#submit").bind("click",function(){
 	                },  
 	                success:function(data)  
 	                {  	     
+	                	/**
 	                	stop = true;
 	                	if(data.code==200){
 	                		$('#submit').attr('disabled',false); ; 
@@ -400,11 +401,12 @@ $("#submit").bind("click",function(){
 	                		    {   
 	                			 location.href='../file/errorLogByTaskId.htm?id='+data.taskId
 	                		     }
-	                	}	 	
+	                	}	 
+	                	**/
 	                }  
 	            }  
 	        ); 
-
+    location.href="/dataImport/task/list.htm?status=888";
 	if(document.getElementById("sameRule").checked){
 		$("#form").submit();
 	}

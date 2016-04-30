@@ -315,19 +315,6 @@ public class TxtFileAnalysis  {
 				if(StringUtils.isNotBlank(temp)){				
 					number = temp;	
 				}			
-//			while ((temp = br.readLine()) != null) {
-//				System.out.println(" #getBigFileLineNumByCommand command result: ##　"+temp);
-//				if(StringUtils.isNotBlank(temp)){					
-//					//System.out.println(" result : " + temp.substring(temp.lastIndexOf(":")+1).trim());
-//					if(isWindows){
-//						number = temp.substring(temp.lastIndexOf(":")+1).trim();
-//					}else{
-//						number = temp;
-//					}
-//					
-//					break;
-//				}				
-//			}
 			br.close();
 		}catch(Exception e){
 			e.printStackTrace();	
