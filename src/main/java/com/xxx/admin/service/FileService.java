@@ -151,8 +151,9 @@ public class FileService {
 	@Async
 	public void getAndUpdateFileTotalCount(String uid,String filePath){
 		String count = getFileLineNumber(filePath);
+		Long totalCount = Long.valueOf(count);
 		fmRepository.updateFileInfoByField(uid, new String[]{"totalCount"},
-				new Object[]{count});
+				new Object[]{totalCount});
 	}
 	
 	private void saveToRepeatColls(Task t){

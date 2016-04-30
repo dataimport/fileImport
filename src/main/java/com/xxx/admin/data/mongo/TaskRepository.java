@@ -273,6 +273,14 @@ public class TaskRepository implements BaseRepository<Task> {
      */
     public Double getFileTotalCount(){  
     	try{
+//    		TypedAggregation<AllFileInfo> agg = Aggregation.newAggregation(
+//			AllFileInfo.class,
+//			Aggregation.group("tableName").sum("totalCount").as("totalCount"),
+//			Aggregation.match(Criteria.where("createTime").gte("2012-05-01 00:00:00"))
+//			);
+//			AggregationResults result = mongoTemplate.aggregate(agg, AllFileInfo.class);
+//			List<DBObject> list2= result.getMappedResults();
+    		
     		DBCollection coll= mongoTemplate.getCollection(AllCollectionName.ALLFILEINFO_COLLECTIONNAME);
     		DBObject match=new BasicDBObject("$match", new BasicDBObject());
     		DBObject group=new BasicDBObject("$group",new BasicDBObject("_id",null).append("total", new BasicDBObject("$sum","$totalCount")));

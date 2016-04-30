@@ -163,13 +163,13 @@ $("button[name='previewClick'").click(function(){
 
 //3s刷新 一次,最多执行 5分钟
 var sta= "${status!}";
-var runNum;
+var runNum=0;
 if(sta==""){
 	runNum=10000;
 }
 $('body').everyTime('3s','C',function(){
 	runNum++;	
-    if(runNum>100){
+    if(runNum>10){
     	$('body').stopTime();
     }else{
     	getPercent();	
