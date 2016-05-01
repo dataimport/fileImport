@@ -51,7 +51,7 @@
 									<td class="center">${task.createUser!}</td>  
 									<td class="center">
 									
-									<#if (task.totalCount??&&task.runNum??&&task.totalCount!=task.runNum)>
+									<#if (task.totalCount??&&task.runNum??&&task.totalCount!=task.runNum && task.taskStatus==2)>
 									     <span class="label label-danger">异常</span> 
 									<#else>
 									     <#if task.taskStatus==0>
