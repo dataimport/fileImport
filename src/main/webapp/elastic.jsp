@@ -91,6 +91,8 @@
     		    <iframe src="solrTask/list.htm?status=888" frameborder="0" scrolling="auto" width="100%" height="900"></iframe>
     		<%}else if(type!=null && type.trim().equals("1")){ %>
     			<iframe src="solrTask/list.htm" frameborder="0" scrolling="auto" width="100%" height="900"></iframe>
+    		<%}else if(type!=null && type.trim().equals("2")){ %>
+    			<iframe src="http://222.161.210.86:9200/_plugin/kopf/" frameborder="0" scrolling="auto" width="100%" height="900"></iframe>
     		<%}else{ %>
             	<iframe src="http://222.161.210.86:9200/_plugin/head/" frameborder="0" scrolling="auto" width="100%" height="900"></iframe>
             <%} %>

@@ -18,6 +18,7 @@
 							<li><a href="elastic.jsp?t=0">&nbsp;|&nbsp;索引任务监控</a></li>
 							<li><a href="elastic.jsp?t=1">&nbsp;|&nbsp;索引任务日志</a></li>
 							<li><a href="elastic.jsp">&nbsp;|&nbsp;索引数据维护</a></li>
+							<li><a href="elastic.jsp?t=2">&nbsp;|&nbsp;索引状态管理</a></li>
 					</ul>
 					
 				</div>
