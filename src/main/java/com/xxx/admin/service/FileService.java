@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.xxx.admin.bean.AllCollectionName;
 import com.xxx.admin.bean.MongoInToErrorLog;
 import com.xxx.admin.bean.NoRepeatColls;
 import com.xxx.admin.bean.Task;
@@ -152,8 +153,12 @@ public class FileService {
 	public void getAndUpdateFileTotalCount(String uid,String filePath,boolean firstLineIgnore){
 		String count = getFileLineNumber(filePath,firstLineIgnore);
 		Long totalCount = Long.valueOf(count);
+		//更新allFileInfo
 		fmRepository.updateFileInfoByField(uid, new String[]{"totalCount"},
 				new Object[]{totalCount});
+		//更新taskInfo
+		fmRepository.updateFileInfoByField(uid, new String[]{"totalCount"},
+				new Object[]{totalCount},AllCollectionName.TASKINFO_COLLECTIONNAME);
 	}
 	
 	private void saveToRepeatColls(Task t){
@@ -207,6 +212,7 @@ public class FileService {
 				  String[] keys = new String[]{"taskStatus"};
 				  Object[] values = new Object[]{BaseTask.TASK_STATUS_SUCCESS};			
 				  fmRepository.updateFileInfoByField(t.getUid(), keys, values);
+				  fmRepository.updateFileInfoByField(t.getUid(), keys, values,AllCollectionName.TASKINFO_COLLECTIONNAME);				  
 				  
 				  //更新solrTask为等待状态
 				  solrTaskRepository.updateTaskByField(t.getUid(), 
@@ -224,6 +230,7 @@ public class FileService {
 					String[] keys = new String[]{"taskStatus"};
 					Object[] values = new Object[]{BaseTask.TASK_STATUS_FAILED};			
 					fmRepository.updateFileInfoByField(t.getUid(), keys, values);
+					fmRepository.updateFileInfoByField(t.getUid(), keys, values,AllCollectionName.TASKINFO_COLLECTIONNAME);					
 					 return new int[]{successNum,runNum-successNum};
 				}			  
 			  return new int[]{successNum,runNum-successNum};
@@ -236,6 +243,7 @@ public class FileService {
 				  String[] keys = new String[]{"taskStatus","runNum"};
 				  Object[] values = new Object[]{BaseTask.TASK_STATUS_SUCCESS,successNum};			
 				  fmRepository.updateFileInfoByField(t.getUid(), keys, values);
+				  fmRepository.updateFileInfoByField(t.getUid(), keys, values,AllCollectionName.TASKINFO_COLLECTIONNAME);
 					
 				//更新solrTask为等待状态
 				  solrTaskRepository.updateTaskByField(t.getUid(), 
@@ -253,6 +261,7 @@ public class FileService {
 				  String[] keys = new String[]{"taskStatus"};
 				  Object[] values = new Object[]{BaseTask.TASK_STATUS_FAILED};			
 				  fmRepository.updateFileInfoByField(t.getUid(), keys, values);
+				  fmRepository.updateFileInfoByField(t.getUid(), keys, values,AllCollectionName.TASKINFO_COLLECTIONNAME);
 				  return new int[]{-1,0};
 			  }			  
 		  }

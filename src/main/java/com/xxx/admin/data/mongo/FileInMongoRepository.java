@@ -242,6 +242,7 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 									 //values[4]=valuesSize;
 								//}
 								updateFileInfoByField(task.getUid(),keys,values);
+								updateFileInfoByField(task.getUid(),keys,values,AllCollectionName.TASKINFO_COLLECTIONNAME);
 							}				
 						}	
 						
@@ -265,6 +266,7 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 			values[0]=totalSuccessNum+successNum;
 			values[1]=timeUse;	
 			updateFileInfoByField(task.getUid(),keys,values);
+			updateFileInfoByField(task.getUid(),keys,values,AllCollectionName.TASKINFO_COLLECTIONNAME);
 		}	
 		
 		return successNum;
@@ -377,6 +379,8 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 		}			
 	}
 	
+	
+	
 	/**
 	* 根据指定的字段还有value 更新所有文件信息表
 	* @param uid
@@ -384,7 +388,11 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 	* @param value
 	*/
 	public void updateFileInfoByField(String uid, String[] key, Object[] value) {
-		DBCollection dbColleciton =mongoTemplate.getCollection(AllCollectionName.ALLFILEINFO_COLLECTIONNAME); 	
+		updateFileInfoByField(uid,key,value,AllCollectionName.ALLFILEINFO_COLLECTIONNAME);	
+	}
+
+	public void updateFileInfoByField(String uid, String[] key, Object[] value,String collectionName) {
+		DBCollection dbColleciton =mongoTemplate.getCollection(collectionName); 	
 		BasicDBObject query = new BasicDBObject();
 		query.put("uid", uid);
 		DBObject taskDB = dbColleciton.findOne(query);

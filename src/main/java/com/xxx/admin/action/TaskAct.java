@@ -18,8 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.alibaba.fastjson.JSON;
+import com.xxx.admin.bean.AllCollectionName;
 import com.xxx.admin.bean.Task;
 import com.xxx.admin.service.FileService;
 import com.xxx.admin.service.FolderService;
@@ -37,14 +36,14 @@ public class TaskAct {
 	
 	@RequestMapping(value = "list.htm")
 	public String getAllTask(ModelMap model,Integer status,Integer pageNo, Integer pageSize,HttpServletRequest request,HttpServletResponse response) {
-		Pagination page = taskService.getTaskByStatus(pageNo,pageSize,status);
+		Pagination page = taskService.getTaskByStatus(pageNo,pageSize,status,AllCollectionName.TASKINFO_COLLECTIONNAME);
 		//System.out.println(page.getTotalPage()+" ######");
 		//System.out.println( page.getList().size()+" ## page.getList()####");
 		
-		long totalCount = taskService.getTotalCountByStatus(null);
-		long runingCount = taskService.getTotalCountByStatus(1);
-		long failedCount = taskService.getTotalCountByStatus(-2);
-		long waitCount = taskService.getTotalCountByStatus(0);
+		long totalCount = taskService.getTotalCountByStatus(null,AllCollectionName.TASKINFO_COLLECTIONNAME);
+		long runingCount = taskService.getTotalCountByStatus(1,AllCollectionName.TASKINFO_COLLECTIONNAME);
+		long failedCount = taskService.getTotalCountByStatus(-2,AllCollectionName.TASKINFO_COLLECTIONNAME);
+		long waitCount = taskService.getTotalCountByStatus(0,AllCollectionName.TASKINFO_COLLECTIONNAME);
 		
 		model.put("list", page.getList());
 		model.put("page", page);
@@ -253,7 +252,8 @@ public class TaskAct {
 			task.setRunTime(nowTime);
 			task.setTaskStatus(1);//执行中
 			task.setTotalCount(1l);
-			boolean result = taskService.createTask(task);//创建任务
+			//boolean result = taskService.createTask(task);//创建任务
+			boolean result = taskService.createTask(task,false);//立即执行也放到task表中
 			
 			if(result){
 				int[] successAndFailNum = fileService.saveFileToMongo(task);
@@ -264,6 +264,8 @@ public class TaskAct {
 						ResponseUtils.renderJson(response, "{\"code\":200,\"msg\":\"创建任务并且入库成功，本次任务共导入【  "+successAndFailNum[0]+"  】条数据\"}");
 					}
 					
+					//导入完成，删除taskInfo表中的数据
+					taskService.deleteByUid(task.getUid());
 				}else{
 					ResponseUtils.renderJson(response, "{\"code\":500,\"taskId\":\""+task.getUid()+"\",\"msg\":\"创建任务成功,但是导入数据失败\"}");
 				}			

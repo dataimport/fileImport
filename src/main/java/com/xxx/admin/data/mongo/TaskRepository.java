@@ -118,8 +118,13 @@ public class TaskRepository implements BaseRepository<Task> {
 		query.with(new Sort(Direction.ASC,"runTime"));
 		return mongoTemplate.find(query, Task.class);
     }
+    
+    
+    public Pagination getObjectsByStatus(Integer pageNo, Integer pageSize,Integer status) {
+    	return getObjectsByStatus(pageNo, pageSize,status,AllCollectionName.ALLFILEINFO_COLLECTIONNAME);
+    }
 
-	public Pagination getObjectsByStatus(Integer pageNo, Integer pageSize,Integer status) {
+	public Pagination getObjectsByStatus(Integer pageNo, Integer pageSize,Integer status,String collectionName) {
 		Query query = new Query();
 		if(pageNo==null){
 			pageNo =1;
@@ -138,22 +143,26 @@ public class TaskRepository implements BaseRepository<Task> {
 				query.addCriteria(criteriaStatus);
 			}
 		}
-		long totalCount = this.mongoTemplate.count(query, Task.class,AllCollectionName.ALLFILEINFO_COLLECTIONNAME); 
+		long totalCount = this.mongoTemplate.count(query, Task.class,collectionName); 
 		Pagination page = new Pagination(pageNo, pageSize, totalCount);  
 		query.with(new Sort(Direction.DESC,"runTime"));
 		query.skip(page.getFirstResult());  
 	    query.limit(pageSize);
-		page.setList(mongoTemplate.find(query, Task.class,AllCollectionName.ALLFILEINFO_COLLECTIONNAME));
+		page.setList(mongoTemplate.find(query, Task.class,collectionName));
 		return page;
 	}
 	
 	public long getTotalCountByStatus(Integer status) {
+		return getTotalCountByStatus(status,AllCollectionName.ALLFILEINFO_COLLECTIONNAME);				
+	}
+	
+	public long getTotalCountByStatus(Integer status,String collectionName) {
 		Query query = new Query();
 		if(status!=null){
 			Criteria criteriaStatus = Criteria.where("taskStatus").is(status);
 			query.addCriteria(criteriaStatus);
 		}		
-		long totalCount = this.mongoTemplate.count(query, Task.class,AllCollectionName.ALLFILEINFO_COLLECTIONNAME);		
+		long totalCount = this.mongoTemplate.count(query, Task.class,collectionName);		
 		return totalCount;
 	}
 
@@ -280,7 +289,6 @@ public class TaskRepository implements BaseRepository<Task> {
 //			);
 //			AggregationResults result = mongoTemplate.aggregate(agg, AllFileInfo.class);
 //			List<DBObject> list2= result.getMappedResults();
-    		
     		DBCollection coll= mongoTemplate.getCollection(AllCollectionName.ALLFILEINFO_COLLECTIONNAME);
     		DBObject match=new BasicDBObject("$match", new BasicDBObject());
     		DBObject group=new BasicDBObject("$group",new BasicDBObject("_id",null).append("total", new BasicDBObject("$sum","$totalCount")));

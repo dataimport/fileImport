@@ -38,11 +38,11 @@ public class TaskService {
 	 * 创建任务
 	 * @param task
 	 */
-	public boolean createTask(Task task,Boolean runNow) {
+	public boolean createTask(Task task,Boolean saveToTaskCollection) {
 		try{
 			
 			setTaskInfo(task);
-			if(!runNow){//不是立即执行，放到任务表中
+			if(!saveToTaskCollection){//不是立即执行，放到任务表中
 				taskRepository.saveObject(task,AllCollectionName.TASKINFO_COLLECTIONNAME); //保存到任务表中
 			}			
 			
@@ -166,10 +166,29 @@ public class TaskService {
 		return  new Pagination(pageNo, pageSize, 0);
 	}
 	
+	public Pagination getTaskByStatus(Integer pageNo, Integer pageSize,Integer status,String collectionName) {
+		try{
+			return taskRepository.getObjectsByStatus(pageNo, pageSize,status,collectionName);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return  new Pagination(pageNo, pageSize, 0);
+	}
+	
 	public long getTotalCountByStatus(Integer status) {
 		
 		try{
 			return taskRepository.getTotalCountByStatus(status);
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public long getTotalCountByStatus(Integer status,String collectionName) {
+		
+		try{
+			return taskRepository.getTotalCountByStatus(status,collectionName);
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
@@ -222,6 +241,9 @@ public class TaskService {
 		return taskRepository.getDBStats();
 	}	
 	  
+    public void deleteByUid(String uid){
+    	taskRepository.deleteObjectById(uid);
+    }
 	
     @Resource(name = "task")
     TaskRepository taskRepository;    
