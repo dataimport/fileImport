@@ -88,9 +88,9 @@
 			<div style="float:left;width:200px;">
 				<h1>全文检索</h1>
 				<img alt="" src="resources/project_img/data.png" border="0">
-				<p class="label-success">文件数量:22455</p>
-				<p class="label-warning">索引行数:22455</p>
-				<p class="label-info">索引容量:22455</p>
+				<p class="label-success" id="es_collections">索引数量</p>
+				<p class="label-warning" id="es_lines">索引行数</p>
+				<p class="label-info" id="es_storageSize">索引容量</p>
 			</div>
 		    </div>
 		    </div>
@@ -188,6 +188,36 @@ $.ajax(
 	            }  
         }  
     ); 
+    
+$.ajax(  
+        {  
+            url:'./index/es_status.htm', 
+            type:"post",             
+            data:{},  
+            dataType:"json",  
+            timeout:"10000",  
+            error:function(){
+            	
+            },  
+            success:function(data)  
+            {  	   
+	            $("#es_collections").text("索引数量:"+data.collections);
+	            $("#es_lines").text("索引行数:"+data.totalCount);            	
+	            var storageSizeShow="0";
+				 if(data.storageSize>=1073741824){//GB
+					 storageSizeShow =  (data.storageSize/1073741824).toFixed(2)+" GB";
+				 }else if(data.storageSize>=1048576){//MB
+					 storageSizeShow = (data.storageSize/1048576).toFixed(2)+" MB";
+				 }else if(data.storageSize>=1024){//kb
+				 	storageSizeShow = (data.storageSize/1024).toFixed(2)+" KB";
+				 }else{
+					 storageSizeShow = (data.storageSize).toFixed(2)+" B";
+				 }
+				 $("#es_storageSize").text("索引容量:"+storageSizeShow);
+	            }  
+        }  
+    );
+    
 </script>
 </body>
 </html>
