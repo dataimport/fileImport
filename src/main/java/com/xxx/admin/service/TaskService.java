@@ -14,12 +14,10 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.mongodb.CommandResult;
 import com.xxx.admin.bean.AllCollectionName;
-import com.xxx.admin.bean.AllFileInfo;
 import com.xxx.admin.bean.MongoInToErrorLog;
 import com.xxx.admin.bean.MongoSolrInfo;
 import com.xxx.admin.bean.SolrTask;
@@ -77,7 +75,7 @@ public class TaskService {
 			//不能直接这么用，异步调用，会报异常org.springframework.aop.AopInvocationException: Null return value from advice does not match primitive return type for: public int com.xxx.admin.service.FileService.getAndUpdateFileTotalCount(java.lang.String,java.lang.String)
 
 //			int totalCount = fileService.getAndUpdateFileTotalCount(task.getUid(),task.getFilePath());
-			fileService.getAndUpdateFileTotalCount(task.getUid(),task.getFilePath());
+			fileService.getAndUpdateFileTotalCount(task.getUid(),task.getFilePath(),task.getFirstLineIgnore());
 			
 			//保存一份任务信息到solr入库的任务表中
 			//TODO 其实在这个环节，写入，有些不妥，应该在入mongo任务完成后

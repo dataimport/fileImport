@@ -297,7 +297,7 @@ public class TxtFileAnalysis  {
 	 * @param file
 	 * @throws FileNotFoundException
 	 */
-	public String getBigFileLineNumByCommand(String filePath){
+	public String getBigFileLineNumByCommand(String filePath,boolean firstLineIgnore){
 		//long start = System.currentTimeMillis();
 		if (System.getProperty("os.name").contains("Windows")) {
 			return getBigFileLineNumByWindowsCommand(filePath);
@@ -322,7 +322,12 @@ public class TxtFileAnalysis  {
 		}
 			//long end = System.currentTimeMillis();	 
 			//System.out.println("读取文件行数耗时：" + (end - start) + "毫秒");
-		 return number;
+		 if(firstLineIgnore&&Integer.valueOf(number)>1){
+			 return String.valueOf(Integer.valueOf(number)-1);
+		 }else{
+			 return number;
+		 }
+		
 		}       
 	}
 

@@ -137,10 +137,10 @@ public class FileService {
 		
 	}
 		
-	public String getFileLineNumber(String filePath){
+	public String getFileLineNumber(String filePath,boolean firstLineIgnore){
 		String extension  = filePath.substring(filePath.lastIndexOf(".")+1, filePath.length());
 		if("txt".equals(extension.toLowerCase())){
-			return txtFileAnalysis.getBigFileLineNumByCommand(filePath);
+			return txtFileAnalysis.getBigFileLineNumByCommand(filePath,firstLineIgnore);
 		}else if("xlsx".equals(extension.toLowerCase())||"xls".equals(extension.toLowerCase())){
 			return excelFileAnalysis.getFileLineNum(filePath);
 		}
@@ -149,8 +149,8 @@ public class FileService {
 	
 	
 	@Async
-	public void getAndUpdateFileTotalCount(String uid,String filePath){
-		String count = getFileLineNumber(filePath);
+	public void getAndUpdateFileTotalCount(String uid,String filePath,boolean firstLineIgnore){
+		String count = getFileLineNumber(filePath,firstLineIgnore);
 		Long totalCount = Long.valueOf(count);
 		fmRepository.updateFileInfoByField(uid, new String[]{"totalCount"},
 				new Object[]{totalCount});
