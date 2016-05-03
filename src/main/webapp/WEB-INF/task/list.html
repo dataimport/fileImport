@@ -20,10 +20,16 @@
 			<h4 style="font-weight: bold;margin-top: 0px;">当前任务总数:&nbsp;&nbsp;${page.totalCount!}</h4>
 			<div class="progress">
 				<div class="label-info label-progress" style="width: 33%;" onclick="showList(1)">
-				<#assign runingPercent = ((runingCount!/totalCount!)*100)?string("0.##")>
-				执行中${runingCount!}/${runingPercent!}%</div>				
-				<#assign failedPercent = ((failedCount!/totalCount!)*100)?string("0.##")>
-				<#assign waitPercent = ((waitCount!/totalCount!)*100)?string("0.##")>
+				<#if totalCount==0>
+					<#assign runingPercent =0>
+					<#assign failedPercent = 0>
+					<#assign waitPercent = 0>
+				<#else>
+					<#assign runingPercent = ((runingCount!/totalCount!)*100)?string("0.##")>
+					<#assign failedPercent = ((failedCount!/totalCount!)*100)?string("0.##")>
+					<#assign waitPercent = ((waitCount!/totalCount!)*100)?string("0.##")>
+				</#if>				
+				执行中${runingCount!}/${runingPercent!}%</div>							
 				<div class="label-danger label-progress" style="width: 33%;" onclick="showList(-2)">失败${failedCount!}/${failedPercent!}%</div>
 				<div class="label-default label-progress" style="width: 34%;"  onclick="showList(0)">未启动${waitCount!}/${waitPercent!}%</div>
 			</div>

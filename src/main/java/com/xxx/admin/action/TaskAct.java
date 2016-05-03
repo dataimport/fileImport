@@ -36,14 +36,21 @@ public class TaskAct {
 	
 	@RequestMapping(value = "list.htm")
 	public String getAllTask(ModelMap model,Integer status,Integer pageNo, Integer pageSize,HttpServletRequest request,HttpServletResponse response) {
-		Pagination page = taskService.getTaskByStatus(pageNo,pageSize,status,AllCollectionName.TASKINFO_COLLECTIONNAME);
+		String collectionName="";
+		if(status!=null&&888==status){
+			collectionName = AllCollectionName.TASKINFO_COLLECTIONNAME;
+		}else{
+			collectionName = AllCollectionName.ALLFILEINFO_COLLECTIONNAME;
+		}
+		//collectionName = AllCollectionName.ALLFILEINFO_COLLECTIONNAME;
+		Pagination page = taskService.getTaskByStatus(pageNo,pageSize,status,collectionName);
 		//System.out.println(page.getTotalPage()+" ######");
 		//System.out.println( page.getList().size()+" ## page.getList()####");
 		
-		long totalCount = taskService.getTotalCountByStatus(null,AllCollectionName.TASKINFO_COLLECTIONNAME);
-		long runingCount = taskService.getTotalCountByStatus(1,AllCollectionName.TASKINFO_COLLECTIONNAME);
-		long failedCount = taskService.getTotalCountByStatus(-2,AllCollectionName.TASKINFO_COLLECTIONNAME);
-		long waitCount = taskService.getTotalCountByStatus(0,AllCollectionName.TASKINFO_COLLECTIONNAME);
+		long totalCount = taskService.getTotalCountByStatus(null,collectionName);
+		long runingCount = taskService.getTotalCountByStatus(1,collectionName);
+		long failedCount = taskService.getTotalCountByStatus(-2,collectionName);
+		long waitCount = taskService.getTotalCountByStatus(0,collectionName);
 		
 		model.put("list", page.getList());
 		model.put("page", page);
