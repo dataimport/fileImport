@@ -9,7 +9,7 @@
 <link href="../static_bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
 <link id="base-style-responsive" href="../static_bootstrap/css/style-responsive.css" rel="stylesheet">
 <link href="../static_bootstrap/css/my.css" type=text/css rel=stylesheet>
-
+<script src="../static_bootstrap/js/bootstrap-paginator.js"></script>
 </HEAD>
 <BODY>
 <div id="wrap" style="width:800px;">  
@@ -87,40 +87,44 @@
  </#list>
    
 </table>
-<#if (page.totalPage>0)>
-<nav style="margin: 0 auto;text-align: center; width: 100%;">
-  <ul class="pagination">
-   <li>
-      <a href="tableValues.htm?pageNo=1&pageSize=${page.pageSize}&tableNameAlias=${tableNameAlias!}&uid=${uid!}" aria-label="第一页">
-        <span aria-hidden="true">&laquo;</span>
-      </a>
-    </li>
-  <#list 1..page.totalPage as pageCur>
-	<#if pageCur!=0>
-	  <#if pageCur==page.pageNo>
-	  	<li class="active">
-	  <#else>
-	  	<li>
-	  </#if>
-	  <a href="tableValues.htm?pageNo=${pageCur}&pageSize=${page.pageSize}&tableNameAlias=${tableNameAlias!}&uid=${uid!}">${pageCur} <span class="sr-only">(current)</span></a>
-	</#if>
-  </#list>
-   <li>
-      <a href="tableValues.htm?pageNo=${page.totalPage}&pageSize=${page.pageSize}&tableNameAlias=${tableNameAlias!}&uid=${uid!}" aria-label="最后一页">
-        <span aria-hidden="true">&raquo;</span>
-      </a>
-    </li>
-  </ul>
-</nav>
-</#if>
 
-<div id="page"></div>
-	   <button type="button" class="btn btn-primary" onclick= "history.go(-1) ">返回 </button> 
+<div><ul id="page"></ul></div>
+	   
+<button type="button" class="btn btn-primary" onclick= "history.go(-1) ">返回 </button> 
 	
 </div>  
 </#if>       
     </div>  
+<script type="text/javascript">
+var element = jQuery('#page');
+
+var options = {
+    bootstrapMajorVersion:3,//这个不用改
+    currentPage: ${page.pageNo},
+    numberOfPages: 10,
+    totalPages:${page.totalPage},
+
+    itemTexts: function (type, page, current) {
+      switch (type) {
+        case "first":
+          return "首页";
+        case "prev":
+          return "上一页";
+        case "next":
+          return "下一页";
+        case "last":
+          return "末页";
+        case "page":
+          return page;
+      }
+    },
+    onPageClicked: function (event, originalEvent, type, page) {
+        location.href="tableValues.htm?pageNo="+page+"&pageSize=${page.pageSize}&tableNameAlias=${tableNameAlias!}&uid=${uid!}";
+    }
+}
+element.bootstrapPaginator(options);
 
 </script>
+
 </BODY>
 </HTML>
