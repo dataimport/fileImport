@@ -63,14 +63,14 @@
 					<a href="elastic.jsp?t=1">索引管理&nbsp;&nbsp;></a> 
 					
 				</li>
-				<li><a href="#">入索引任务监控</a></li>
+				<li><a href="#">索引任务监控</a></li>
     		<%}else if(type!=null && type.trim().equals("1")){ %>
     			<li>
 					<i class="icon-home"></i>
 					<a href="elastic.jsp?t=1">索引管理&nbsp;&nbsp;></a> 
 					
 				</li>
-				<li><a href="#">入索引任务日志</a></li>
+				<li><a href="#">索引任务日志</a></li>
     		<%}else{ %>
             	<li>
 					<i class="icon-home"></i>
