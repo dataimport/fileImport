@@ -104,33 +104,40 @@
 							  </tbody>
 						 </table>  
 <#if (page.totalPage>1)>
-<nav style="margin: 0 auto;text-align: center; width: 100%;">
-  <ul class="pagination">
-   <li>
-      <a href="list.htm?status=${status!}&pageNo=1&pageSize=${page.pageSize}" aria-label="第一页">
-        <span aria-hidden="true">&laquo;</span>
-      </a>
-    </li>
-  <#list 1..page.totalPage as pageCur>
-	<#if pageCur!=0>
-	  <#if pageCur==page.pageNo>
-	  	<li class="active">
-	  <#else>
-	  	<li>
-	  </#if>
-	  <a href="list.htm?status=${status!}&pageNo=${pageCur}&pageSize=${page.pageSize}">${pageCur} <span class="sr-only">(current)</span></a>
-	</#if>
-  </#list>
-   <li>
-      <a href="list.htm?status=${status!}&pageNo=${page.totalPage}&pageSize=${page.pageSize}" aria-label="最后一页">
-        <span aria-hidden="true">&raquo;</span>
-      </a>
-    </li>
-  </ul>
-  <#if status??&&(status==888 || status==0 || status==1 || status==-2)>
-	    <button type="button" onclick="showList()" class="btn btn-primary" style="float:left;margin-top: 15px;">查看入库任务日志</button>
-  </#if>
-</nav>
+<script src="../static_bootstrap/js/bootstrap-paginator.js"></script>
+<div><ul id="page"></ul></div>
+<script type="text/javascript">
+var element = jQuery('#page');
+
+var options = {
+    bootstrapMajorVersion:3,//这个不用改
+    currentPage: ${page.pageNo},
+    numberOfPages: 10,
+    totalPages:${page.totalPage},
+
+    itemTexts: function (type, page, current) {
+      switch (type) {
+        case "first":
+          return "首页";
+        case "prev":
+          return "上一页";
+        case "next":
+          return "下一页";
+        case "last":
+          return "末页";
+        case "page":
+          return page;
+      }
+    },
+    onPageClicked: function (event, originalEvent, type, page) {
+        location.href="list.htm?status=${status!}&pageNo="+page+"&pageSize=${page.pageSize}";
+    }
+}
+element.bootstrapPaginator(options);
+
+</script>
+
+
 <#else>
     <#if status??&&(status==888 || status==0 || status==1 || status==-2)>
 	    <button type="button" onclick="showList()" class="btn btn-primary" style="float:left;margin-top: 15px;">查看入库任务日志</button>
