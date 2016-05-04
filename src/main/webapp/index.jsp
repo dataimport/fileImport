@@ -77,9 +77,9 @@
 			<div style="float:left;width:200px;">
 				<h1>入库数据</h1>
 				<img alt="" src="resources/project_img/data.png" border="0">
-				<p class="label-success" id="mongo_collections" >数据表</p>
-				<p class="label-warning" id="mongo_lines" >记录行数</p>
-				<p class="label-info" id="mongo_storageSize" >存储容量</p>
+				<p class="label-success" id="mongo_collections" >数据表:加载中...</p>
+				<p class="label-warning" id="mongo_lines" >记录行数:加载中...</p>
+				<p class="label-info" id="mongo_storageSize" >存储容量:加载中...</p>
 			</div>
 			<div style="float:left;width:200px;margin-top: 60px;">
 				<p class="label label-important">未完成索引任务12345</p>
@@ -88,9 +88,9 @@
 			<div style="float:left;width:200px;">
 				<h1>全文检索</h1>
 				<img alt="" src="resources/project_img/data.png" border="0">
-				<p class="label-success" id="es_collections">索引数量</p>
-				<p class="label-warning" id="es_lines">索引行数</p>
-				<p class="label-info" id="es_storageSize">索引容量</p>
+				<p class="label-success" id="es_collections">索引数量:加载中...</p>
+				<p class="label-warning" id="es_lines">索引行数:加载中...</p>
+				<p class="label-info" id="es_storageSize">索引容量:加载中...</p>
 			</div>
 		    </div>
 		    </div>
