@@ -1,0 +1,111 @@
+				<table class="table table-bordered" style="width:99%;margin-left:5px;">
+							  <thead>
+								  <tr class="active">
+									  <th>序号</th>
+									  <th>任务名称</th>
+									  <th>创建者</th>
+									  <th>状态</th>
+									  <th>计划时间</th>
+									  <th>启动时间</th>
+									  <th>执行时长</th>
+									  <th>进度/数据条目</th>
+									  <th>数据总条目</th>
+									 
+								  </tr>
+							  </thead>   
+							  <tbody>
+							  
+							  <#if (list?size>0)>
+							  <#list list as task>
+								<tr>
+									<td>${task_index+1!}</td>
+									<td class="center">${task.tableName!}-${task.origin!}</td>
+									<td class="center">${task.createUser!}</td>  
+									<td class="center">
+									
+									<#if (task.totalCount??&&task.runNum??&&task.totalCount!=task.runNum)>
+									     <span class="label label-danger">异常</span> 
+									<#else>
+									     <#if task.taskStatus==0>
+										    <span onclick="showList(0)" class="label label-default">未启动</span>
+										 <#elseif task.taskStatus==1>
+									    	<span onclick="showList(1)" class="label label-info">执行中</span>									    
+									    <#elseif task.taskStatus==-2>
+					 				        <span onclick="showList(-2)" class="label label-danger">失败</span>
+									    <#elseif task.taskStatus==2>
+									        <span onclick="showList(2)" class="label label-success">已完成</span>
+									    <#elseif task.taskStatus==-100>
+									        <span onclick="showList(-100)" class="label label-default">初始化</span>
+									    <#elseif task.taskStatus==-200>
+									        <span onclick="showList(-200)" class="label label-danger">异常</span>    
+									    <#else>
+									         <span class="label label-default">未知错误</span>
+									    </#if>   
+									</#if>
+									
+									    
+									</td>  
+									<td class="center">${task.runTime!}</td>
+									<td class="center">${task.startDate!}</td>
+									<td class="center">${task.timeUse!}毫秒									
+									</td> 
+									<td class="center">
+									<#if (task.totalCount??&&task.totalCount!=0)&&(task.runNum??&&task.runNum>0)>
+	   
+									   <#assign percent = ((task.runNum!/task.totalCount!)*100)?string("0.##")>
+									   <#if percent=="100">
+									    <font color="green">${percent!}%</font> 
+									   <#else>
+									     <font color="#EF0F1A">${percent!}%</font> 
+									   </#if>		
+								   <#else>
+								   		0%
+								   </#if>
+									   /${task.runNum!}</td>
+									<td class="center">${task.totalCount!}</td> 
+									                                  
+								</tr>
+								</#list>
+								<#else>
+								  <tr>
+									<td colspan="10">
+									            当前队列中，没有执行的任务
+									</td>
+								  </tr>
+								</#if>
+							  </tbody>
+						 </table>  
+<#if (page.totalPage>1)>
+<nav style="margin: 0 auto;text-align: center; width: 100%;">
+  <ul class="pagination">
+   <li>
+      <a href="list.htm?status=${status!}&pageNo=1&pageSize=${page.pageSize}" aria-label="第一页">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+  <#list 1..page.totalPage as pageCur>
+	<#if pageCur!=0>
+	  <#if pageCur==page.pageNo>
+	  	<li class="active">
+	  <#else>
+	  	<li>
+	  </#if>
+	  <a href="list.htm?status=${status!}&pageNo=${pageCur}&pageSize=${page.pageSize}">${pageCur} <span class="sr-only">(current)</span></a>
+	</#if>
+  </#list>
+   <li>
+      <a href="list.htm?status=${status!}&pageNo=${page.totalPage}&pageSize=${page.pageSize}" aria-label="最后一页">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+  <#if status??&&(status==888 || status==0 || status==1 || status==-2)>
+	    <button type="button" onclick="showList()" class="btn btn-primary" style="float:left;margin-top: 15px;">查看入库任务日志</button>
+  </#if>
+</nav>
+<#else>
+    <#if status??&&(status==888 || status==0 || status==1 || status==-2)>
+	    <button type="button" onclick="showList()" class="btn btn-primary" style="float:left;margin-top: 15px;">查看入库任务日志</button>
+	</#if>
+</#if>
+ 
