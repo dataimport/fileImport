@@ -280,7 +280,7 @@ public class TaskRepository implements BaseRepository<Task> {
      * 获取半年内的数据总行数
      * @return
      */
-    public Double getFileTotalCount(){  
+    public long getFileTotalCount(){  
     	try{
 //    		TypedAggregation<AllFileInfo> agg = Aggregation.newAggregation(
 //			AllFileInfo.class,
@@ -294,12 +294,12 @@ public class TaskRepository implements BaseRepository<Task> {
     		DBObject group=new BasicDBObject("$group",new BasicDBObject("_id",null).append("total", new BasicDBObject("$sum","$totalCount")));
     		List<DBObject> list=(List<DBObject>)coll.aggregate(match,group).results();
     		if(list.size()>0){
-    			return Double.valueOf(list.get(0).get("total").toString());
+    			return Long.valueOf(list.get(0).get("total").toString());
     		}
     	}catch(Exception ex){
     		ex.printStackTrace();
     	}    	
-		return 0D;		      
+		return 0l;		      
     }  
     
 }

@@ -66,12 +66,12 @@
 			<div style="float:left;width:200px;">
 				<h1>FS</h1>
 				<img alt="" src="resources/project_img/data.png" border="0">
-				<p class="label-success">文件数量:22455</p>
-				<p class="label-warning">存储容量:22455</p>
+				<p class="label-success" id="totalFile">文件数量:加载中...</p>
+				<p class="label-warning" id="totalFileLength" >存储容量:加载中...</p>
 				<p class="label-info">路径注册</p>
 			</div>
 			<div style="float:left;width:200px;margin-top: 60px;">
-				<p class="label label-important">未完成入库任务12345</p>
+				<p class="label label-important" id="notImportFile">未完成入库任务:加载中...</p>
 				<p><img alt="" src="resources/project_img/jt.png" border="0" ></p>
 			</div>
 			<div style="float:left;width:200px;">
@@ -185,7 +185,22 @@ $.ajax(
 					 storageSizeShow = (data.storageSize).toFixed(2)+" B";
 				 }
 				 $("#mongo_storageSize").text("存储容量:"+storageSizeShow);
-	            }  
+				 $("#totalFile").text("文件数量:"+data.totalFile);
+				 $("#notImportFile").text("未完成入库任务:"+data.notImportFileCout);
+				 
+				 var totalFileLength="0";
+				 if(data.totalFileLength>=1073741824){//GB
+					 totalFileLength =  (data.totalFileLength/1073741824).toFixed(2)+" GB";
+				 }else if(data.totalFileLength>=1048576){//MB
+					 totalFileLength = (data.totalFileLength/1048576).toFixed(2)+" MB";
+				 }else if(data.storageSize>=1024){//kb
+					 totalFileLength = (data.totalFileLength/1024).toFixed(2)+" KB";
+				 }else{
+					 totalFileLength = (data.totalFileLength).toFixed(2)+" B";
+				 }
+				 
+				 $("#totalFileLength").text(" 存储容量:"+totalFileLength);
+	        }  
         }  
     ); 
     
