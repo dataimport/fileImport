@@ -116,6 +116,7 @@ public class MongoFileService {
 			fileInMongoRepository.deleteObjectByIdFromAllFileInfo(uid);//删除总表记录中的数据
 			mongoCollRepository.deleteObjectByNanmeAlias(collectionName);//删除norepeae表记录
 			mongoCollRepository.dropCollection(collectionName);//drop
+			mongoCollRepository.dropCollection(collectionName+"_fail");//drop
 			//删除索引中的数据
 			Client  client = ElasticSearchManager.getClient();
 			client.prepareDelete().setIndex(collectionName).execute().actionGet();

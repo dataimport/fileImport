@@ -365,7 +365,7 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 	 * @param task
 	 */
 	private void saveFailData(Task task,int failNum,String value,boolean removeOld){
-		DBCollection dbColleciton =mongoTemplate.getCollection(task.getTableNameAlias()+"_falie"); 
+		DBCollection dbColleciton =mongoTemplate.getCollection(task.getTableNameAlias()+"_fali"); 
 		if(removeOld){
 			dbColleciton.remove(new BasicDBObject());	
 		}		
