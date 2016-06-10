@@ -23,6 +23,7 @@ import com.xxx.admin.data.mongo.FileInMongoRepository;
 import com.xxx.admin.data.mongo.MongoCollRepository;
 import com.xxx.admin.data.mongo.MongoToSolrRepository;
 import com.xxx.admin.data.mongo.TaskRepository;
+import com.xxx.elasticsearch.data.mongo.SolrTaskRepository;
 import com.xxx.utils.Pagination;
 
 import net.sf.json.JSONObject;
@@ -118,6 +119,9 @@ public class MongoFileService {
 			mongoCollRepository.deleteObjectByNanmeAlias(collectionName);//删除norepeae表记录
 			mongoCollRepository.dropCollection(collectionName);//drop
 			mongoCollRepository.dropCollection(collectionName+"_fail");//drop
+			
+			//删除索引入库任务
+			solrTaskRepository.deleteObjectById(uid);
 			//删除索引以及其中的数据
 			Client  client = ElasticSearchManager.getClient();
 			IndicesExistsResponse indicesExistsResponse = client.admin().indices()
@@ -142,6 +146,8 @@ public class MongoFileService {
     MongoCollRepository mongoCollRepository;
     @Resource
     FileInMongoRepository fileInMongoRepository;
+    @Resource
+    SolrTaskRepository solrTaskRepository;
     
     public static void main(String[] args) {
     	String collectionName="683e29ac95b27502229168ef318cb3ad";
