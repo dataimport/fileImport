@@ -76,11 +76,9 @@
 									<td class="center" id="td_${task.id}">
 									<#if task.totalCount??&&task.totalCount!=0&&(task.totalCount!>=task.runNum!)>
 	   
-									   <#if task.firstLineIgnore=true>
-									      <#assign percent = (((task.runNum+1)!/task.totalCount!)*100)?string("0.##")>
-									   <#else>
-									      <#assign percent = ((task.runNum!/task.totalCount!)*100)?string("0.##")>
-									   </#if>
+									   
+									   <#assign percent = ((task.runNum!/task.totalCount!)*100)?string("0.##")>
+									   
 									   <#if percent=="100">
 									    <font color="#0D3EEF">${percent!}%</font> 
 									   <#else>
