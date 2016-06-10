@@ -94,6 +94,17 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 		 return false;
     }
  
+    public boolean deleteObjectByIdFromAllFileInfo(String id) {
+   	 WriteResult result =   mongoTemplate
+               .remove(new Query(Criteria.where("uid").is(id)), AllFileInfo.class);
+   	 result.getLastError();
+		 if (null != result) {
+            if (result.getN() > 0) {
+                return true;
+            }
+        }
+		 return false;
+   }
     /**
      * Create a {<span class="referer">@link</span>  Task} collection if the collection does not already
      * exists

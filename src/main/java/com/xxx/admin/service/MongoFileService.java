@@ -12,6 +12,8 @@ import javax.annotation.Resource;
 
 import net.sf.json.JSONObject;
 
+import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.client.Client;
 import org.springframework.stereotype.Service;
 
 import com.xxx.admin.bean.AllFileInfo;
@@ -106,6 +108,22 @@ public class MongoFileService {
 	public  Pagination getFromTable(String tableNameAlias,Integer pageNo, Integer pageSize) {
 		return fileInMongoRepository.getFromTable(tableNameAlias,pageNo,pageSize);
 		//return null;
+	}
+	
+	
+	public  Boolean deleteCollection(String uid,String collectionName) {
+		try{
+			fileInMongoRepository.deleteObjectByIdFromAllFileInfo(uid);//删除总表记录中的数据
+			mongoCollRepository.deleteObjectByNanmeAlias(collectionName);//删除norepeae表记录
+			mongoCollRepository.dropCollection(collectionName);//drop
+			//删除索引中的数据
+			Client  client = ElasticSearchManager.getClient();
+			client.prepareDelete().setIndex(collectionName).execute().actionGet();
+			return true;
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+		return false;
 	}
 	
     @Resource(name = "task")

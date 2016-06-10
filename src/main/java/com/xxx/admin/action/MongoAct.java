@@ -104,11 +104,14 @@ public class MongoAct {
 		
 		model.put("tableNameAlias", tableNameAlias);
 		model.put("uid", uid);
-		return "mongo/tableValues";
-		
-		
-		
-		
+		return "mongo/tableValues";		
+	}
+	
+	
+	@RequestMapping(value = "deleTable.htm")
+	public void deleTable(ModelMap model,String uid,String tableNameAlia,HttpServletRequest request,HttpServletResponse response) {
+		 mongoFileService.deleteCollection(uid,tableNameAlia);
+		 list(model,"","","",1, 20,request,response);
 	}
 	
 	

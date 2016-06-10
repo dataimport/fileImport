@@ -85,6 +85,7 @@
 										<td>
 										<a href="javascript:showValues('${task.uid!}','${task.tableNameAlias!}')">浏览数据</a>&nbsp;&nbsp;
 										<a href="javascript:showTableInfo('${task.uid!}')">查看表信息</a>&nbsp;&nbsp;
+										<a href="javascript:deleteTable('${task.uid!}','${task.tableNameAlias!}')">删除此表数据</a>&nbsp;&nbsp;
 										</td>
 									</tr> 			
 								</#list>
@@ -150,6 +151,12 @@
 <input type="hidden" name="uid" id="showTableInfo_uid" value=""/>
 </form>
 
+<form id="deleteTable" action="deleTable.htm" method="post">
+<input type="hidden" name="uid" id="deleteTable_uid" value=""/>
+<input type="hidden" name="tableNameAlia" id="deleteTable_tname" value=""/>
+</form>
+
+
 <script>
 
 function findByCatalog(catalog) {     	    
@@ -161,6 +168,14 @@ function findByCatalog(catalog) {
 function showTableInfo(uid) {     	    
 	$("#showTableInfo_uid").val(uid);
 	$("#showTableInfo").submit();
+
+}
+
+
+function deleteTable(uid,tableName) {     	    
+	$("#deleteTable_uid").val(uid);
+	$("#deleteTable_tname").val(tableName);
+	$("#deleteTable").submit();
 
 }
 

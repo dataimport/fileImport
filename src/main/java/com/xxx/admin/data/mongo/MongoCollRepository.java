@@ -74,6 +74,18 @@ public class MongoCollRepository implements BaseRepository<NoRepeatColls> {
          }
 		 return false;
     }
+    
+    public boolean deleteObjectByNanmeAlias(String name) {
+   	 WriteResult result =   mongoTemplate
+               .remove(new Query(Criteria.where("nameAlias").is(name)), NoRepeatColls.class);
+   	 result.getLastError();
+		 if (null != result) {
+            if (result.getN() > 0) {
+                return true;
+            }
+        }
+		 return false;
+   }
  
 	public NoRepeatColls getObjectsByName(String name) {
 		Query query = new Query();
