@@ -10,21 +10,22 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
-import net.sf.json.JSONObject;
-
-import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequest;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
 import org.elasticsearch.client.Client;
 import org.springframework.stereotype.Service;
 
 import com.xxx.admin.bean.AllFileInfo;
 import com.xxx.admin.bean.MongoSolrInfo;
 import com.xxx.admin.bean.NoRepeatColls;
-import com.xxx.admin.bean.Task;
 import com.xxx.admin.data.mongo.FileInMongoRepository;
 import com.xxx.admin.data.mongo.MongoCollRepository;
 import com.xxx.admin.data.mongo.MongoToSolrRepository;
 import com.xxx.admin.data.mongo.TaskRepository;
 import com.xxx.utils.Pagination;
+
+import net.sf.json.JSONObject;
 
 @Service("mongofileService")
 public class MongoFileService {
@@ -117,9 +118,15 @@ public class MongoFileService {
 			mongoCollRepository.deleteObjectByNanmeAlias(collectionName);//删除norepeae表记录
 			mongoCollRepository.dropCollection(collectionName);//drop
 			mongoCollRepository.dropCollection(collectionName+"_fail");//drop
-			//删除索引中的数据
+			//删除索引以及其中的数据
 			Client  client = ElasticSearchManager.getClient();
-			client.prepareDelete().setIndex(collectionName).execute().actionGet();
+			IndicesExistsResponse indicesExistsResponse = client.admin().indices()
+	                .exists(new IndicesExistsRequest(new String[] { collectionName }))
+	                .actionGet();
+	        if (indicesExistsResponse.isExists()) {
+	            client.admin().indices().delete(new DeleteIndexRequest(collectionName))
+	                    .actionGet();
+	        }	
 			return true;
 		}catch(Exception ex){
 			ex.printStackTrace();
@@ -135,5 +142,19 @@ public class MongoFileService {
     MongoCollRepository mongoCollRepository;
     @Resource
     FileInMongoRepository fileInMongoRepository;
+    
+    public static void main(String[] args) {
+    	String collectionName="683e29ac95b27502229168ef318cb3ad";
+    	Client  client = ElasticSearchManager.getClient();
+    	
+    	IndicesExistsResponse indicesExistsResponse = client.admin().indices()
+                .exists(new IndicesExistsRequest(new String[] { collectionName }))
+                .actionGet();
+        if (indicesExistsResponse.isExists()) {
+            client.admin().indices().delete(new DeleteIndexRequest(collectionName))
+                    .actionGet();
+        }	
+    	
+	}
 	
 }
