@@ -2,6 +2,7 @@ package com.xxx.admin.service;
 
 import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.client.Client;
@@ -43,8 +45,9 @@ public class SolrImportService {
 	 * 此处底层用的是es
 	 * @param t
 	 * @return
+	 * @throws IOException 
 	 */
-	public boolean saveMongoToSolr(SolrTask task) {		
+	public boolean saveMongoToSolr(SolrTask task) throws IOException {		
 		System.out.println("SolrImportService-> save mongo to solr!! ===success");
 		String uid = task.getUid();
 		String[] key = new String[]{"taskStatus","startDate","endDate"};
@@ -81,14 +84,30 @@ public class SolrImportService {
 	}
 	
 	
-	public void batchImport(String taskId,String tags,String indexName,String indexAliasName,SolrTask task ){
+	public void batchImport(String taskId,String tags,String indexName,String indexAliasName,SolrTask task ) throws IOException{
 		long start =System.currentTimeMillis();
 		String[] fieldNames = task.getColumnName();
 		Client client = new TransportClient()
 						.addTransportAddress(
 						new InetSocketTransportAddress("localhost", 9300)
 						);
-		BulkRequestBuilder bulkRequest = client.prepareBulk();   
+		
+		     final CreateIndexRequestBuilder createIndexRequestBuilder = client.admin().indices().prepareCreate(indexName);
+
+	        // MAPPING GOES HERE
+            String documentType ="tuser";
+	        final XContentBuilder mappingBuilder = jsonBuilder().startObject().startObject(documentType)
+	                .startObject("_all").field("analyzer", "ik_max_word").field("search_analyzer", "ik_max_word")
+	                .field("term_vector", "no").field("store", "false")
+	                .endObject().endObject()
+	                .endObject();
+	        System.out.println(mappingBuilder.string());
+	        createIndexRequestBuilder.addMapping(documentType, mappingBuilder);
+
+	        // MAPPING DONE
+	        createIndexRequestBuilder.execute().actionGet();
+	        
+	        BulkRequestBuilder bulkRequest = client.prepareBulk(); 
 				try{
 				    String collectionName = indexName;
 					if(StringUtils.isNotBlank(collectionName)){
@@ -116,10 +135,12 @@ public class SolrImportService {
 								for(String fieldName:fieldNames){
 									xcb.field(fieldName,currentData.get(fieldName));
 								}
-								xcb.endObject();
+								xcb.endObject();									
+								
 								bulkRequest.add(client.prepareIndex(indexName, "tuser", i+"")
 										.setSource(xcb)
 										);
+								
 								
 								if(i%100==0 || i==totalCount){
 									batchNo++;
