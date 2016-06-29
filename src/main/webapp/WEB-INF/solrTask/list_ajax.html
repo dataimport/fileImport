@@ -8,7 +8,7 @@
 									  <th>计划时间</th>
 									  <th>启动时间</th>
 									  <th>执行时长</th>
-									  <th>进度/数据条目</th>
+									  <th>百分比/处理数量</th>
 									  <th>数据总条目</th>
 									 
 								  </tr>
@@ -50,7 +50,9 @@
 									<td class="center">${task.timeUse!}毫秒									
 									</td> 
 									<td class="center">
-									<#if (task.totalCount??&&task.totalCount!=0)&&(task.runNum??&&task.runNum>0)>
+									<#if task.taskStatus==2>
+										<font color="green">100%</font>
+									<#elseif (task.totalCount??&&task.totalCount!=0)&&(task.runNum??&&task.runNum>0)>
 	   
 									   <#assign percent = ((task.runNum!/task.totalCount!)*100)?string("0.##")>
 									   <#if percent=="100">
