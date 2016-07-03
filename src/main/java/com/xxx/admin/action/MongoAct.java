@@ -122,6 +122,7 @@ public class MongoAct {
 		model.put("task", allFileInfo);
 		
 		model.put("tableNameAlias", tableNameAlias);
+		model.put("tableNameAlias_succ", tableNameAlias.replace("_fali", ""));
 		return "mongo/failCollectionValues";
 	}
 	

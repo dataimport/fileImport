@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBliC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml">
+<HEAD>
+<TITLE>查看导入失败的数据</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=utf-8">
+<script src="../static_bootstrap/js/jquery-1.9.1.min.js"></script>
+<script src="../static_bootstrap/js/jquery-migrate-1.0.0.min.js"></script>
+<link href="../static_bootstrap/css/bootstrap-3.3.5.min.css" rel="stylesheet">
+<link href="../static_bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+<link id="base-style-responsive" href="../static_bootstrap/css/style-responsive.css" rel="stylesheet">
+<link href="../static_bootstrap/css/my.css" type=text/css rel=stylesheet>
+<script src="../static_bootstrap/js/bootstrap-paginator.js"></script>
+</HEAD>
+<BODY>
+<div id="wrap" style="width:800px;">  
+
+<div id="container" style="width:100%;margin:0px 0px 0px 0px">  
+
+<div id="content" style="width:100%;margin:0px 0px 0px 0px">    
+<p><label>表名：</label> ${task.tableName!}</p>
+<p><label>来源：</label> ${task.origin!}</p>
+<p><label>标签组：</label> ${task.tags!}</p>
+<p><label>入库信息：</label></p>
+
+	<table class="table table-bordered table-striped" style="width:100%;">
+	<tr>
+	<th>原始文件</th><th>分隔符</th><th>导入时间</th><th>数据日期</th><th>成功条数</th><th>总数</th><th>来源</th>
+	</tr>
+	<tr>
+		 <td>
+		${task.filePath!}
+		</td>
+		 <td>
+		${task.separator}
+		</td>
+		<td>
+		${task.runTime!}
+		</td>
+	   	<td>
+		${task.dataTime!}
+		</td>
+	   <td>
+		${task.runNum!}
+		</td>
+		 <td>
+		${task.totalCount!}
+		</td>
+		 <td>
+		${task.origin!}
+		</td>
+	</tr>
+
+	</table>
+	<p><label>出错信息：</label></p>
+	<table class="table table-bordered table-striped" style="width:100%;">
+	<tr>
+	<th>序号</th><th>出错行号</th><th>出错数据内容</th>
+	</tr>
+	
+	<#list list as task>
+	<tr>
+	   <td>
+		 ${task_index+1}
+		</td>
+		 <td>
+		${task.num!}
+		</td>
+		<td>
+		${task.value!}
+		</td>
+	</tr>
+</#list>
+	</table>
+	</br></br>
+
+<div style="margin: 0 auto;text-align: center; width: 100%;"><ul id="page"></ul></div>
+	   
+<button type="button" class="btn btn-primary" onclick= "history.go(-1) ">返回 </button> 
+<button type="button" class="btn btn-primary" onclick= "showValues('${task.uid!}','${tableNameAlias_succ!}')">查看正确数据 </button> 
+	
+</div>  
+      
+    </div>  
+<#if (page.totalPage>1)> 
+	<script src="../static_bootstrap/js/bootstrap-paginator.js"></script>
+	<div style="margin: 0 auto;text-align: center; width: 100%;"><ul id="page"></ul></div>
+	<script type="text/javascript">
+	var element = jQuery('#page');
+	
+	var options = {
+	    bootstrapMajorVersion:3,//这个不用改
+	    currentPage: ${page.pageNo},
+	    numberOfPages: 10,
+	    totalPages:${page.totalPage},
+	
+	    itemTexts: function (type, page, current) {
+	      switch (type) {
+	        case "first":
+	          return "首页";
+	        case "prev":
+	          return "上一页";
+	        case "next":
+	          return "下一页";
+	        case "last":
+	          return "末页";
+	        case "page":
+	          return page;
+	      }
+	    },
+	    onPageClicked: function (event, originalEvent, type, page) {
+	        location.href="failCollection.htm?uid=${task.uid!}&tableNameAlias=${tableNameAlias!}&pageNo="+page+"&pageSize=${page.pageSize}";
+	    }
+	}
+	element.bootstrapPaginator(options);
+	
+	</script>			 
+
+<#else>
+   
+</#if>
+
+<form id="showValues" action="tableValues.htm" method="post">
+<input type="hidden" name="pageSize" id="pageSize" value="20"/>
+<input type="hidden" name="uid" id="uid" value=""/>
+<input type="hidden" name="tableNameAlias" id="tableNameAlias" value=""/>
+</form>
+<script>
+
+function showValues(uid,tableNameAlias) {     	    
+	$("#uid").val(uid);
+	$("#tableNameAlias").val(tableNameAlias);
+	$("#showValues").submit();
+
+}
+
+</script>
+    
+
+
+</BODY>
+</HTML>
