@@ -84,18 +84,6 @@ public class MongoFileCollAct {
 		ResponseUtils.renderJson(response,jsonArray.toString());
 		return null;
 	}
-
-	@RequestMapping(value = "allCollections.htm")
-	public String allCollections(ModelMap model,HttpServletRequest request,HttpServletResponse response) {	
-		
-		try{
-		 List<NoRepeatColls>  list = mongoFileService.allCollectons();
-		 	model.put("list", list);		
-		}catch(Exception ex){
-			ex.printStackTrace();
-		}		
-		 return "mongo/collList";
-	}
 	
 	@Autowired
 	private MongoFileService mongoFileService;

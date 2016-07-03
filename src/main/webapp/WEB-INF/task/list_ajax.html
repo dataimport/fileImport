@@ -56,9 +56,12 @@
 									   </#if>
 									   /${task.runNum!}
 									   </td>
-									<td class="center" id="tdCount_${task.id}">${task.totalCount!}</td> 
+									<td class="center" id="tdCount_${task.id}">${task.runNum!}/${task.totalCount!}</td> 
 									<td class="center">
 										<button type="button" name="previewClick"  data-path="${task.filePath!}" class="btn btn-primary btn-xs">重新导入</button>
+										<#if task.totalCount??&&task.runNum!=task.totalCount!>
+								        <button type="button" name="failDataClick" data-path="${task.tableNameAlias!}" data-path2="${task.uid!}" class="btn btn-primary btn-xs">错误日志</button>
+								        </#if>
 								</td>                                     
 								</tr>
 								</#list>
@@ -111,5 +114,13 @@ $("button[name='previewClick'").click(function(){
 	var path= encodeURIComponent($(this).attr("data-path"));
 	$("#filePath").val(path);
 	$("#previewForm").submit();
+});
+$("button[name='failDataClick'").click(function(){
+	var path= encodeURIComponent($(this).attr("data-path"));
+	$("#tableNameAlias").val(path+"_fali");
+	var uid= encodeURIComponent($(this).attr("data-path2"));
+	$("#uid").val(uid);
+	
+	$("#failDataForm").submit();
 });
 </script>

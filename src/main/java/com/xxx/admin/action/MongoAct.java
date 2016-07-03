@@ -108,6 +108,24 @@ public class MongoAct {
 	}
 	
 	
+	//未完成，需要进一步写
+	@RequestMapping(value = "failCollection.htm")
+	public String failCollections(ModelMap model,String uid,String tableNameAlias,Integer pageNo, Integer pageSize,HttpServletRequest request,HttpServletResponse response) {
+		
+		Map<String,Object> map  = mongoFileService.getObjectsByCollectionName(pageNo, pageSize, tableNameAlias);	
+		model.put("list", (List<Map<String,String>>)map.get("value"));
+		model.put("page", (Pagination)map.get("page"));		
+		model.put("pageNo", ((Pagination)map.get("page")).getPageNo());
+		model.put("fields", (LinkedHashSet<String>)map.get("fields"));	
+		
+		AllFileInfo  allFileInfo = mongoFileService.getByUidFromAllFileInfo(uid);
+		model.put("task", allFileInfo);
+		
+		model.put("tableNameAlias", tableNameAlias);
+		return "mongo/failCollectionValues";
+	}
+	
+	
 	@RequestMapping(value = "deleTable.htm")
 	public void deleTable(ModelMap model,String uid,String tableNameAlia,HttpServletRequest request,HttpServletResponse response) {
 		 mongoFileService.deleteCollection(uid,tableNameAlia);
