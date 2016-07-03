@@ -10,7 +10,7 @@
 									  <th>启动时间</th>
 									  <th>执行时长</th>
 									  <th>百分比/处理数量</th>
-									  <th>数据总条目</th>
+									  <th>已导入/总条数</th>
 									  <th>操作</th>
 								  </tr>
 							  </thead>   
@@ -54,7 +54,7 @@
 									   <#else>
 									   		计算中
 									   </#if>
-									   /${task.runNum!}
+									   /${task.totalCount!}
 									   </td>
 									<td class="center" id="tdCount_${task.id}">${task.runNum!}/${task.totalCount!}</td> 
 									<td class="center">
