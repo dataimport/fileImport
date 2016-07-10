@@ -144,6 +144,28 @@ public class SolrTaskRepository implements BaseRepository<SolrTask> {
 		page.setList(mongoTemplate.find(query, SolrTask.class,AllCollectionName.SOLR_TASKINFO_COLLECTIONNAME));
 		return page;
 	}
+	
+	/**
+	 * 获取不同状态下，任务的数量信息
+	 * 
+	 * */
+	public long getObjectsByStatus(Integer status,String collectionName) {
+		Query query = new Query();
+		if(status!=null){
+			if(status==888){
+				//所有状态不是2的任务列表
+				//也就是所有运行中的任务状态
+				Criteria criteriaStatus = Criteria.where("taskStatus").ne(2);
+				query.addCriteria(criteriaStatus);
+			}else{
+				Criteria criteriaStatus = Criteria.where("taskStatus").is(status);
+				query.addCriteria(criteriaStatus);
+			}
+		}
+		long count = this.mongoTemplate.count(query, SolrTask.class,collectionName); 
+		return count;
+	}
+	
 
 	public SolrTask getObjectsByFilePath(String filePath) {
 		Query query = new Query();

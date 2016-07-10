@@ -28,6 +28,7 @@ import com.mongodb.CommandResult;
 import com.xxx.admin.bean.Folder;
 import com.xxx.admin.data.mongo.TaskRepository;
 import com.xxx.admin.service.FolderService;
+import com.xxx.elasticsearch.data.mongo.SolrTaskRepository;
 
 
 
@@ -46,7 +47,8 @@ public class indexAct {
 //		}
 		 CommandResult commandResult = taskRepository.getDBStats();		
 		 long totalCount= taskRepository.getFileTotalCount();
-		 String jsonReturn = "{\"collections\":"+0+",\"storageSize\":"+0+",\"totalCount\":"+0+",\"notImportFileCout\":"+0+",\"totalFile\":"+0+",\"totalFileLength\":"+0+"}";
+		 long notImportSolrCout=solrTaskRepository.getObjectsByStatus(888, "solrTaskInfo");
+		 String jsonReturn = "{\"collections\":"+0+",\"storageSize\":"+0+",\"totalCount\":"+0+",\"notImportFileCout\":"+0+",\"notImportSolrCout\":"+0+",\"totalFile\":"+0+",\"totalFileLength\":"+0+"}";
 		 long notImportFileCount = 0l;
 		 long totalFile = 0l;
 		 long totalFileLength=0l;
@@ -141,7 +143,7 @@ public class indexAct {
 		
 		 if(commandResult!=null){			
 			 jsonReturn = "{\"collections\":"+commandResult.get("collections")+",\"storageSize\":"+commandResult.get("storageSize")
-			 				+",\"totalCount\":"+totalCount+",\"notImportFileCout\":"+notImportFileCount+",\"totalFile\":"+totalFile+",\"totalFileLength\":"+totalFileLength+"}";	 
+			 				+",\"totalCount\":"+totalCount+",\"notImportFileCout\":"+notImportFileCount+",\"notImportSolrCout\":"+notImportSolrCout+",\"totalFile\":"+totalFile+",\"totalFileLength\":"+totalFileLength+"}";	 
 		 }			
 //		 request.getSession().setAttribute("indexAct_index", jsonReturn);
 //		 request.getSession().setMaxInactiveInterval(600);//缓存10分钟
@@ -314,6 +316,8 @@ public class indexAct {
 		
     @Resource(name = "task")
     TaskRepository taskRepository;
+    @Resource(name = "solrTask")
+    SolrTaskRepository solrTaskRepository;
 	@Autowired
 	private FolderService folderService;
 }

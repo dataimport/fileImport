@@ -68,7 +68,7 @@
 				<img alt="" src="resources/project_img/data.png" border="0">
 				<p class="label-success" id="totalFile">文件数量:加载中...</p>
 				<p class="label-warning" id="totalFileLength" >存储容量:加载中...</p>
-				<p class="label-info">路径注册</p>
+				<a href="data_frame.jsp?t=folder_list.htm"><p class="label-info">路径注册</p></a>
 			</div>
 			<div style="float:left;width:200px;margin-top: 60px;">
 				<p class="label label-important" id="notImportFile">未完成入库任务:加载中...</p>
@@ -82,7 +82,7 @@
 				<p class="label-info" id="mongo_storageSize" >存储容量:加载中...</p>
 			</div>
 			<div style="float:left;width:200px;margin-top: 60px;">
-				<p class="label label-important">未完成索引任务12345</p>
+				<p class="label label-important" id="notImportSolr">未完成索引任务:加载中...</p>
 				<p><img alt="" src="resources/project_img/jt.png" border="0" ></p>
 			</div>
 			<div style="float:left;width:200px;">
@@ -187,6 +187,7 @@ $.ajax(
 				 $("#mongo_storageSize").text("存储容量:"+storageSizeShow);
 				 $("#totalFile").text("文件数量:"+data.totalFile);
 				 $("#notImportFile").text("未完成入库任务:"+data.notImportFileCout);
+				 $("#notImportSolr").text("未完成索引任务:"+data.notImportSolrCout);
 				 
 				 var totalFileLength="0";
 				 if(data.totalFileLength>=1073741824){//GB
