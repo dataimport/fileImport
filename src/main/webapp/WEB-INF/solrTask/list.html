@@ -13,8 +13,8 @@
 <BODY>
 	<div class="container" style="width: 100%;">
 	    
-	    <#if status??&&(status==888 || status==0 || status==1 || status==-2)>
-	   <!--  <script language=javascript>setInterval("window.location.reload()",5000)</script> -->
+	   <!--  <#if status??&&(status==888 || status==0 || status==1 || status==-2)>
+	    <script language=javascript>setInterval("window.location.reload()",5000)</script>
 		<div class="row">
 			<h4 style="font-weight: bold;margin-top: 0px;">当前任务总数:&nbsp;&nbsp;${list?size}</h4>
 			<div class="progress">
@@ -24,7 +24,7 @@
 				<div class="label-default label-progress" style="width: 34%;"  onclick="showList(0)">未启动2/15%</div>
 			</div>
 		</div>
-		</#if>
+		</#if> -->
 		<div class="row" id="tableInfo">
 				<table class="table table-bordered" style="width:99%;margin-left:5px;">
 							  <thead>
@@ -142,7 +142,7 @@ element.bootstrapPaginator(options);
 
 <#else>
     <#if status??&&(status==888 || status==0 || status==1 || status==-2)>
-	    <button type="button" onclick="showList()" class="btn btn-primary" style="float:left;margin-top: 15px;">查看入库任务日志</button>
+	    <button type="button" onclick="showList()" class="btn btn-primary" style="float:left;margin-top: 15px;">查看索引任务日志</button>
 	</#if>
 </#if>
  
