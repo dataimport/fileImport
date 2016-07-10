@@ -20,6 +20,11 @@
 							<li><a href="elastic.jsp">&nbsp;|&nbsp;索引数据维护</a></li>
 							<li><a href="elastic.jsp?t=2">&nbsp;|&nbsp;索引状态管理</a></li>
 					</ul>
+					<ul class="nav nav-tabs nav-stacked nav-sidebar">
+						  <li class="active"><a href="https://222.161.210.86/searchweb/index/" target="_blank" style="cursor:pointer;" title="点击进入大数据搜索">>>>大数据搜索<<<</a></li>
+							
+					</ul>
+					
 					
 				</div>
 			</div>
