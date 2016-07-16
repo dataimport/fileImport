@@ -117,21 +117,30 @@
 <#list text as a>
 <#if a??&&a?trim!="">
    <tr  class="active">
-    <th>${a_index+1}</th>
- 		 	 
- 	  <#if separator=="">	  
-	 		<td>
-	 		 ${a?trim?replace('<', '&lt;' )?replace(">","&gt;")?replace('\n', '' )?replace('\\', '\\\\' )}
-	 		</td>	
-	  <#else>
-	     <#list a?split("${separator!}") as value>
-	     
-	 		<td>
-	 		 ${value?trim?replace('<', '&lt;' )?replace(">","&gt;")?replace('\n', '' )?replace('\\', '\\\\' )}
-	 		</td>	
-	
-	 	 </#list>
-    </#if> 
+    <th>${a_index+1}</th> 		 	 
+ 		 	  
+ 	<#if  (a?split(separator))?size==columnsSize>	
+ 		 	    <#if separator=="">	  
+				 		<td>
+				 		 ${a?trim?replace('<', '&lt;' )?replace(">","&gt;")?replace('\n', '' )?replace('\\', '\\\\' )}
+				 		</td>	
+				 	 <#else>
+				     <#list a?split("${separator!}") as value>
+				     
+				 		<td>
+				 		 ${value?trim?replace('<', '&lt;' )?replace(">","&gt;")?replace('\n', '' )?replace('\\', '\\\\' )}
+				 		</td>	
+				
+				 	 </#list>
+			    </#if>     
+     <#else> 
+ 		 	   
+ 		 	<td colspan="${columnsSize}">
+				${	a}
+			</td>	
+ 		 	   
+ </#if>  		 	   
+       
     
   </tr>  
 </#if>

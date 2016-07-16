@@ -121,7 +121,8 @@ public class TaskAct {
 				Matcher	m = p.matcher(lines[i]);				
 				returnList.add(m.replaceAll(" "));
 			}else{
-				message.append(i+1+",");				
+				message.append(i+1+",");	
+				returnList.add(lines[i]);
 			}			
 		}
 		
@@ -145,7 +146,7 @@ public class TaskAct {
 			model.put("firstLineIgnore", "false");
 		}		
 		if(message.length()>0){
-			model.put("errorMessage", "提醒：此文件的 第： "+message.toString()+" ...... 行的列数与第一行的列数不相等，显示的时候已经忽略，如果勾选了不相等的列，导入数据的时候也会被忽略");
+			model.put("errorMessage", "提醒：此文件的 第： "+message.toString()+" ...... 行的列数与第一行的列数不相等，如果勾选了不相等的列，导入数据的时候也会被忽略");
 		}
 		model.put("fileCode", fileCode);
 		return "task/task_view";
