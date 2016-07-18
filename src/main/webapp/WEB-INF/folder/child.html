@@ -176,7 +176,8 @@
 					  <#else>
 					      <li class="list-group-item">源文件名称:${folderChild[task_index].name}</li>
 					      <li class="list-group-item">修改时间：${(folderChild[task_index].lastModified())?number_to_datetime?string('yyyy-MM-dd HH:mm:ss')}</li>
-						  <li class="list-group-item"><a name="previewClick" data-path="${folderChild[task_index].path!}" href="#" style="color:#FFF;"><span class="label label-warning">未添加到计划任务中</span></a></li>
+					       <li class="list-group-item">选择文件类型:<input type="radio" name="fileExt" checked>txt<input type="radio" name="fileExt" disabled>xls<input type="radio" name="fileExt" disabled>sql<input type="radio" name="fileExt" disabled>mdb</li>
+						  <li class="list-group-item"><a name="previewClick" data-path="${folderChild[task_index].path!}" href="#" style="color:#FFF;"><span class="label label-warning">添加到入库任务</span></a></li>
 					    </#if>
 					</ul>
 				</#if>  
@@ -263,6 +264,7 @@ function getFileTaskInfo(filePath){
 }
 
 $("a[name='previewClick'").click(function(){
+	
 	var path= encodeURIComponent($(this).attr("data-path"));
 	$("#filePath").val(path);
 	$("#previewForm").submit();
