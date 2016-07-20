@@ -169,14 +169,25 @@
 						  <li href="#" class="list-group-item">记录数：${task.runNum!} &nbsp;&nbsp;&nbsp;&nbsp;<button onclick="showValues('${task.uid!}','${task.tableNameAlias!}')" class="btn btn-primary  btn-xs" type="button">浏览</button></li>
 						  <li class="list-group-item">入库时间：${task.startDate!}</li>
 						  <li class="list-group-item">完成时间：${task.endDate!}</li>
-						  <li class="list-group-item">来源:${task.origin!}</li>
-						  <li class="list-group-item">源文件名称:${task.filePath!}</li>
+						  <li class="list-group-item">来源：${task.origin!}</li>
+						  <li class="list-group-item">源文件名称：${task.filePath!}</li>
 						  <li class="list-group-item">数据时间：${task.dataTime!}</li>
 						  <li class="list-group-item">标签组：${task.tags!}</li>
 					  <#else>
-					      <li class="list-group-item">源文件名称:${folderChild[task_index].name}</li>
+					      <li class="list-group-item">源文件名称：${folderChild[task_index].name}</li>
 					      <li class="list-group-item">修改时间：${(folderChild[task_index].lastModified())?number_to_datetime?string('yyyy-MM-dd HH:mm:ss')}</li>
-					       <li class="list-group-item">选择文件类型:<input type="radio" name="fileExt" checked>txt<input type="radio" name="fileExt" disabled>xls<input type="radio" name="fileExt" disabled>sql<input type="radio" name="fileExt" disabled>mdb</li>
+					      <li class="list-group-item">选择文件类型：<br>
+					      <font color="red">演示版本仅支持文件格式</font><br>
+					      <input type="radio" name="fileExt" checked>文本/CSV<br>
+					      <input type="radio" name="fileExt" disabled>EXCEL<br>
+					      <input type="radio" name="fileExt" disabled>SQL脚本<br>
+					      <input type="radio" name="fileExt" disabled>HTML<br>
+					      <input type="radio" name="fileExt" disabled>ACCESS<br>
+					      <input type="radio" name="fileExt" disabled>MYSQL<br>
+					      <input type="radio" name="fileExt" disabled>SQLSERVER<br>
+					      <input type="radio" name="fileExt" disabled>ORACLE<br>
+					      <input type="radio" name="fileExt" disabled>图片集<br>
+					      </li>
 						  <li class="list-group-item"><a name="previewClick" data-path="${folderChild[task_index].path!}" href="#" style="color:#FFF;"><span class="label label-warning">添加到入库任务</span></a></li>
 					    </#if>
 					</ul>
