@@ -16,15 +16,19 @@
 <table width="100%"  class="gridtable">
    <tr>
     <th>当前文件</th>    
- 	<td colspan="${cellTotalMax}" >
+ 	<td colspan="${cellTotalMax!}" >
  	 ${filePath!}
  	</td> 	
  	</tr>
  	
 <tr>
     <th>首行为表头</th>    
- 	<td colspan="${cellTotalMax}" >
- 	 <input  id="firstLineIgnore" value="" type="checkbox" <#if (firstLineIgnore='true')> checked="checked" </#if> disabled="disabled"></input>
+ 	<td colspan="${cellTotalMax!}" >
+ 	 <#if firstLineIgnore?? && firstLineIgnore == "true">
+	 	 <input  id="firstLineIgnore" value="" type="checkbox" checked="checked"  disabled="disabled"></input>
+ 	 <#else>
+ 	 	<input  id="firstLineIgnore" value="" type="checkbox" disabled="disabled"></input>
+ 	 </#if>
  	</td>
    </tr>
       
@@ -32,10 +36,14 @@
     <th>列名</th>
 	    <#list 0..(cellTotalMax-1) as t>
 		  	<td>
-		  	 <div align="center">  <input style="width:150px" name="columnName"  id="columnName_${(t+1)}"  
-		 	 <#if (firstLineIgnore=="true")> value="${list[0][t]!}" > <#else> value="" </#if> 	 
+		  	 <div align="center">  
+		 	 	<#if (firstLineIgnore=="true")>
+				  	 <input style="width:150px" name="columnName"  id="columnName_${(t+1)}" value="${list[0][t]!}"/>
+		 	 	<#else>
+		 	 		  <input style="width:150px" name="columnName"  id="columnName_${(t+1)}"/>
+		 	 	</#if> 	 
 		 	 </input>
-		 	 <input name="import" type="checkbox" id="isImport_${(t+1)}" checked=true  value="${(t+1)}">导入
+		 	 <input name="import" type="checkbox" id="isImport_${(t+1)}" checked=true  value="${(t+1)}"/>导入
 		 	 </div>		  		
 		  	</td>
 		</#list>
@@ -46,7 +54,7 @@
     <#list 0..(cellTotalMax-1) as t>
  	<td>
  	 <div align="center"> 
- 	  <input  style="width:150px" name="columnNameTag"  id="columnNameTag_${(t+1)}"   	 	 
+ 	  <input  style="width:150px" name="columnNameTag"  id="columnNameTag_${(t+1)}">	 	 
  	 </input>
  	  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  	 </div>

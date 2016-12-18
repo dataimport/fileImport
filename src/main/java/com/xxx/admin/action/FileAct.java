@@ -97,27 +97,35 @@ public class FileAct {
 			}else if("xlsx".equals(extension.toLowerCase())||"xls".equals(extension.toLowerCase())){
 				try{
 					Map<String,Object>   map =   fileService.previewExcelFile(java.net.URLDecoder.decode(filePath,"UTF-8"),10,extension.toLowerCase());
+					if(StringUtils.isBlank(fileCode)){
+						model.put("fileCode", "");
+					}else{
+						model.put("fileCode", fileCode);
+					}	
 					model.put("list", map.get("list"));
+					model.put("extension", extension);
+					model.put("filePath", filePath);
+					model.put("filePathShow",java.net.URLDecoder.decode(filePath,"UTF-8"));
 					model.put("cellTotalMax", map.get("cellTotalMax"));
 				}catch(Exception ex){
 					ex.printStackTrace();
 					model.put("list", "");
+					model.put("fileCode", fileCode);
+					model.put("extension", extension);
+					model.put("filePath", filePath);
+					model.put("filePathShow","");	
+					model.put("error","yes");	
 					model.put("cellTotalMax","");
 				}			
+				/*
+				 * 此处改为跳转到Excel专有的页面
+				 * 
+				 * */
+				return "file/preview_excel";
 			}else{
 				model.put("list", new ArrayList<Object>());
 			}
 			
-	//		List<String>  returnList = new ArrayList<String>();  
-	//		//多个空格替换成一个
-	//		Pattern p = Pattern.compile("\\s+");			
-	//		for(String lineStr:list){
-	//			Matcher	m = p.matcher(lineStr);
-	//			returnList.add(m.replaceAll(" "));
-	//		}
-	//		model.put("list", returnList);
-
-			return "file/preview";
 		}catch(Exception ex){
 			ex.printStackTrace();			
 		}

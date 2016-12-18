@@ -15,11 +15,11 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook; 
-import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -59,21 +59,41 @@ public class ExcelFileAnalysis  {
 	 */
 	public String getFileLineNum(String filePath){
 		String excelVersion  = filePath.substring(filePath.lastIndexOf(".")+1, filePath.length());
+		HSSFWorkbook wb = null;
+		XSSFWorkbook wbs = null;
 		try{
 			if("xls".equals(excelVersion.toLowerCase())){//2003
 				InputStream input = new FileInputStream(filePath);
 				POIFSFileSystem fs = new POIFSFileSystem(input);
-				HSSFWorkbook wb = new HSSFWorkbook(fs);
+				wb = new HSSFWorkbook(fs);
 				HSSFSheet sheet = wb.getSheetAt(0);
 				return String.valueOf(sheet.getLastRowNum());
 			}else{//2007
-				 XSSFWorkbook wbs = new XSSFWorkbook(new FileInputStream(filePath));
+				 wbs = new XSSFWorkbook(new FileInputStream(filePath));
 		         XSSFSheet sheet = wbs.getSheetAt(0);
 		         return String.valueOf(sheet.getLastRowNum());
 			}		
 		}catch(Exception ex){
 			ex.printStackTrace();
 			log.error("获取excel文件总行数异常： ",ex);
+		}finally{
+			if(wb!=null){
+				try {
+					wb.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			if(wbs!=null){
+				try {
+					wbs.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		
 		return "1";
