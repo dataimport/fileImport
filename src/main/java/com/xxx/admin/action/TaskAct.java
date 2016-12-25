@@ -185,7 +185,7 @@ public class TaskAct {
 		
 		
 
-		return "task/excelTask_view";
+		return "task/task_view_excel";
 	}	
 	
 	/**
