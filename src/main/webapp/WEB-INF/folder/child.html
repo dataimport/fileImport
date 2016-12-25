@@ -34,22 +34,23 @@
 				<div id="treeview1" class="treeview">
 			  <ul id="left_side" class="list-group">
 			    <li class="list-group-item active">文件夹</li>
-			    
-			    <#if (folderChild?size>0)>
-				    <#list folderChild as file>	  
-				      <#if (file.isDirectory()!)>
-				            <#assign absolutePath =file.absolutePath?replace('\\','\\\\' )]	
+			   
+			    <#if (subFolderList?size>0)>
+				    <#list subFolderList as subFolder>	  
+				     		<#assign absolutePath =subFolder.folderPath?replace('\\','\\\\' )]		
 				            <li onclick="getChild('${absolutePath!}')" class="list-group-item node-treeview1" data-nodeid="0" style="">
-						      ${file.name?trim}
+						      ${subFolder.folderName?trim}
 						    </li>
-				      </#if> 
-				    </#list> 
+				            
+				      
+				    </#list>
 			    
 			    <#else>
 			        <li class="list-group-item node-treeview1" data-nodeid="0">没有更多</li>
-			         <li class="list-group-item node-treeview1" data-nodeid="0"><button type="button" class="btn btn-primary btn-xs" onclick= "history.go(-1)">返回上级 </button></li>
 			    </#if>
-			     
+			    <#if (!isRoot)>
+		            <li class="list-group-item node-treeview1" data-nodeid="0"><button type="button" class="btn btn-primary btn-xs" onclick= "history.go(-1)">返回上级 </button></li>
+		      	</#if>
 			  </ul>
 			</div>
 			</div>

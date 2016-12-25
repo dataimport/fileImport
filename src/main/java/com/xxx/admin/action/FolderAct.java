@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;  
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.xxx.admin.bean.Folder;
+import com.xxx.admin.bean.SubFolder;
 import com.xxx.admin.bean.Task;
 import com.xxx.admin.service.FolderService;
 import com.xxx.admin.service.TaskService;
@@ -67,9 +68,11 @@ public class FolderAct {
 	@RequestMapping(value = "child.htm")
 	public String child(String folderPath,String folderId,Boolean append,Integer pageNo, Integer pageSize,ModelMap model,HttpServletRequest request,HttpServletResponse response)throws MongoDBException {
 		long start = System.currentTimeMillis();	
+		boolean isRoot =false;
 		List<Folder> folderList = folderService.list();	
 		log.debug(" 从mongodb中加载文件列表耗时："+(System.currentTimeMillis()-start)+" 毫秒");
 		String defaultPath = "";
+		Folder folder= new Folder();
 		if(StringUtils.isNotBlank(folderPath)){
 			defaultPath	= folderPath;
 		}else if(StringUtils.isNotBlank(folderId)){
@@ -79,10 +82,20 @@ public class FolderAct {
 			}
 			model.put("folderId",folderId);
 		}else if(folderList.size()>0){
-			defaultPath = folderList.get(0).getFolderPath();			
+			defaultPath = folderList.get(0).getFolderPath();
 		}		
 		model.put("folderList",folderList);
-		model.put("folderPath",defaultPath);		
+		model.put("folderPath",defaultPath);
+		/**
+		 * 处理是否是根目录的逻辑
+		 * contains方法需要在Folder对象中重写
+		 * 否则默认比较的是两个obj
+		 * 坑点详解：https://www.zhihu.com/question/26872848
+		 * */
+		folder.setFolderPath(defaultPath);
+		if(folderList.contains(folder)){
+			isRoot=true;
+		}
 		if(StringUtils.isNotBlank(defaultPath)){
 			List fileTaskInfo =  new ArrayList<File>();
 			long start2 = System.currentTimeMillis();	
@@ -134,10 +147,21 @@ public class FolderAct {
 			model.put("fileTaskList", fileTaskInfo);
 			//model.put("folderChild", childList);
 			model.put("folderChild", files);
+			List<SubFolder> subFolderList = new ArrayList<SubFolder>();
+			for(File file:files){
+				if(file!=null && file.isDirectory()){
+					SubFolder subFolder = new SubFolder(file.getName().trim(),file.getAbsolutePath());
+					subFolderList.add(subFolder);
+				}
+			}
+			model.put("subFolderList", subFolderList);
+			model.put("isRoot", isRoot);
 			model.put("page", page);
 		}else{
 			model.put("fileTaskList",new ArrayList<File>());
-			model.put("folderChild", new ArrayList<File>());	
+			model.put("folderChild",null);
+			model.put("subFolderList", null);
+			model.put("isRoot", isRoot);
 			model.put("files", new File[1]);	
 		}
 				

@@ -1,6 +1,7 @@
 package com.xxx.admin.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -14,10 +15,24 @@ public class Folder implements Serializable{
 	@Id  
 	private String id;
 	private String  folderId  ;       //目录的唯一id
-	private String  folderPath;    //目录的路径
+	protected String  folderPath;    //目录的路径
 	private String    createTime; //记录创建时间
 	private String    updateTime;//记录更新时间
 	private String  createUser;//目录的创建者
+	
+	
+	//重新equals方法，用于验证目录的path即可
+	@Override
+	public boolean equals(Object obj){
+		if(obj instanceof Folder){
+			Folder folder = (Folder) obj;
+			if(this.folderPath.equals(folder.getFolderPath())){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	
 	public String getId() {
 		return id;
@@ -70,7 +85,5 @@ public class Folder implements Serializable{
 	public Folder() {
 		
 	}
-	
-	
 		
 }
