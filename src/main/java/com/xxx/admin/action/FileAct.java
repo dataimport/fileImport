@@ -72,7 +72,7 @@ public class FileAct {
 		try{			
 			//System.out.println("########## "+java.net.URLDecoder.decode(filePath,"UTF-8"));
 			String extension  = filePath.substring(filePath.lastIndexOf(".")+1, filePath.length());
-			if("txt".equals(extension.toLowerCase())){
+			if("txt".equals(extension.toLowerCase()) || "csv".equals(extension.toLowerCase())){
 				try{
 					List<String>  list =   fileService.previewTxtFile(java.net.URLDecoder.decode(filePath,"UTF-8"),fileCode);
 					if(StringUtils.isBlank(fileCode)){

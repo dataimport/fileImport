@@ -13,7 +13,7 @@
 
 <div align="center">
 <br>
-<#if extension == "txt">
+<#if extension?? && extension == "txt" || extension == "csv">
 
 <table width="100%"  class="table table-bordered table-striped">
  <tr>

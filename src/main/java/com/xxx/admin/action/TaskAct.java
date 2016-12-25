@@ -149,6 +149,7 @@ public class TaskAct {
 			model.put("errorMessage", "提醒：此文件的 第： "+message.toString()+" ...... 行的列数与第一行的列数不相等，如果勾选了不相等的列，导入数据的时候也会被忽略");
 		}
 		model.put("fileCode", fileCode);
+		model.put("fileName", getFileName(filePath));
 		return "task/task_view";
 	}	
 	
@@ -169,6 +170,7 @@ public class TaskAct {
 				
 		try{
 			String extension  = filePath.substring(filePath.lastIndexOf(".")+1, filePath.length());	
+			
 			Map<String,Object>   map =   fileService.previewExcelFile(java.net.URLDecoder.decode(filePath,"UTF-8"),10,extension.toLowerCase());
 			if(firstLineIgnore){
 				model.put("firstLineIgnore", "true");	
@@ -178,6 +180,7 @@ public class TaskAct {
 			model.put("list", map.get("list"));
 			model.put("cellTotalMax", map.get("cellTotalMax"));
 			model.put("filePath", java.net.URLDecoder.decode(filePath,"UTF-8"));
+			model.put("fileName", getFileName(filePath));
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
@@ -298,6 +301,25 @@ public class TaskAct {
 			ex.printStackTrace();
 		}		
 		ResponseUtils.renderJson(response, "{\"code\":200,\"msg\":"+percent+"}");
+	}
+	
+	
+	public static String getFileName(String filePath){
+		try{
+			filePath=java.net.URLDecoder.decode(filePath,"UTF-8");
+			
+			int lastSlashIndex=filePath.lastIndexOf(File.separatorChar);				
+			
+			int lastDotIndex=filePath.lastIndexOf('.');
+			String fileName=filePath.substring(lastSlashIndex+1, lastDotIndex);
+			
+			if(fileName!=null){
+				return fileName;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
 	}
 		
 	@Autowired

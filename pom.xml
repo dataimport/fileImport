@@ -310,6 +310,12 @@
 			<artifactId>poi-examples</artifactId>
 			<version>3.11</version>
 		</dependency>
+		<!-- 增加csv的解析,暂时没用上，用了txt的解析模块 -->
+		<dependency>
+			 <groupId>net.sf.opencsv</groupId>
+			 <artifactId>opencsv</artifactId>
+			 <version>2.3</version>
+		</dependency>
 	<!-- 	
 		<dependency>
   		 	 <groupId>com.wangyin.3rd-jar</groupId>

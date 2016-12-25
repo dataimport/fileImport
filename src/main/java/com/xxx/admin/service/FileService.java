@@ -93,7 +93,7 @@ public class FileService {
 		  }
 		  
 		 String extension  = t.getFilePath().substring(filePath.lastIndexOf(".")+1, filePath.length());
-		 if("txt".equals(extension.toLowerCase())){//txt文件
+		 if("txt".equals(extension.toLowerCase())||"csv".equals(extension.toLowerCase())){//txt文件
 			 return  txtFileImport(file,t);
 		 }else if("xlsx".equals(extension.toLowerCase())||"xls".equals(extension.toLowerCase())){//excel
 			 try{
