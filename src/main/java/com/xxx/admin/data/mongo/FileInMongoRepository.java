@@ -191,7 +191,16 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 		if(task.getFirstLineIgnore()){
 			list.remove(0);
 		}		
-		int valuesSize = list.size();		
+		int valuesSize = list.size();
+		//增加数据条目总数的容错处理
+		if(task.getTotalCount()<valuesSize){
+			String[] keys = new String[]{"totalCount"};
+			Object[] values = new Object[]{valuesSize};
+			updateFileInfoByField(task.getUid(),keys,values);
+			updateFileInfoByField(task.getUid(),keys,values,AllCollectionName.TASKINFO_COLLECTIONNAME);
+		}
+		
+		
 		DBCollection dbColleciton =mongoTemplate.getCollection(task.getTableNameAlias()); 
 		DBObject data = new BasicDBObject();
 		String[] columns = task.getColumnName();
