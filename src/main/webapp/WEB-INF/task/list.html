@@ -12,8 +12,7 @@
 
 </HEAD>
 <BODY>
-	<div class="container" style="width: 100%;">
-	    
+	<div class="container" style="width: 100%;" id="taskInfo">
 	    <#if status??&&(status==888 || status==0 || status==1 || status==-2)>
 	   <!--  <script language=javascript>setInterval("window.location.reload()",5000)</script> -->
 		<div class="row">
@@ -189,15 +188,15 @@ $("button[name='failDataClick'").click(function(){
 	$("#failDataForm").submit();
 });
 
-//3s刷新 一次,最多执行 5分钟
+//1s刷新 一次,最多执行2分钟
 var sta= "${status!}";
 var runNum=0;
 if(sta==""){
 	runNum=10000;
 }
-$('body').everyTime('3s','C',function(){
+$('body').everyTime('1s','C',function(){
 	runNum++;	
-    if(runNum>100){
+    if(runNum>120){
     	$('body').stopTime();
     }else{
     	getPercent();	
@@ -226,7 +225,7 @@ function getPercent(){
                 },  
                 success:function(data)  
                 {  	                	
-                	$("#tableInfo").html(data);
+                	$("#taskInfo").html(data);
                 	/**
                 	 $.each(data, function (n, task) {
                 		 
