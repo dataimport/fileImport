@@ -200,8 +200,8 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 		
 		String[] lineSeparator;
 		int successNum=0;
-		String[] keys = new String[]{"runNum","timeUse"};
-		Object[] values = new Object[2];
+		String[] keys = new String[]{"runNum","timeUse","endDate","taskStatus"};
+		Object[] values = new Object[5];
 		String timeUse = "0 秒";
 		long l=0l;
 		boolean failCollectionRemoveOld = true;
@@ -217,7 +217,12 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 		
 		for(int i=0;i<valuesSize;i++){
 			runNum++;
+			task.setRunNum(runNum);
+			System.out.println("任务执行中:"+task.getTableName()+" line no:"+task.getRunNum());
 			try{//加上异常处理，这样个别数据有问题，不会影响整体数据的导入
+				//特意加上sleep，为了重现问题
+				//TODELETE
+				Thread.sleep(80);
 				data = new BasicDBObject(); 
 				
 				lineSeparator = list.get(i).trim().split(separator,-1);	
@@ -238,20 +243,19 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 						successNum++;
 						if(isBigFile!=null&&!isBigFile){//不是大文件 按行数更新		
 							//System.out.println("successNum: "+successNum +" valuesSize :"+valuesSize +" i: "+i );
-							if(i==valuesSize||successNum==valuesSize||successNum%10==0){//每10条更新一次任务表进度
+							if(runNum==valuesSize||runNum%10==0){//每10条更新一次任务表进度
 								l=System.currentTimeMillis()-start;
 								timeUse = getTimeUse(l);
-								values[0]=String.valueOf(successNum);
+								values[0]=String.valueOf(task.getRunNum());
 								values[1]=timeUse;					
-								//if(i==valuesSize||successNum==valuesSize){
-									 keys = new String[]{"runNum","timeUse","endDate","taskStatus"};
-									 values = new Object[5];
-									 values[0]=successNum;
-									 values[1]=timeUse;	
-									 values[2]=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-									 values[3]=2;
-									 //values[4]=valuesSize;
-								//}
+								values[2]=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+								//状态的处理，放到里面，因为异步执行
+								//action中写，会导致状态提前更新为了完成
+								if(runNum==valuesSize){
+									 values[3]=Task.TASK_STATUS_SUCCESS;
+								}else{
+									 values[3]=Task.TASK_STATUS_RUNNING;
+								}
 								updateFileInfoByField(task.getUid(),keys,values);
 								updateFileInfoByField(task.getUid(),keys,values,AllCollectionName.TASKINFO_COLLECTIONNAME);
 							}				
@@ -259,6 +263,7 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 						
 					//}			
 				}else{
+					//TODO 是否要记录有异常发生的情况？
 					//System.out.println(" run " +runNum +" ### "+  list.get(i).trim()	);
 					saveFailData(task,runNum, list.get(i),failCollectionRemoveOld);//没导入，记录到失败记录表里
 					failCollectionRemoveOld = false;

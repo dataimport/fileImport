@@ -237,11 +237,20 @@ public class FileService {
 		  }else{//小文件
 			  try{
 				  List<String> lines = txtFileAnalysis.readSmallFile(t.getFilePath(),txtFileAnalysis.getCharset(t.getFilePath(),t.getFileCode()));
-				  successNum = fmRepository.FilePushToMongo(t, lines,0,0);
+				  t.setRunNum(0);
+				  System.out.println("任务开始执行:"+t.getTableName());
+				  successNum = fmRepository.FilePushToMongo(t, lines,t.getRunNum(),0);
 				  
 				  //更新状态为导入完毕,再更新一次导入总数，修正上面方法由于各种不符合入库条件的数据提前跳出循环造成的数据不准确问题
 				  String[] keys = new String[]{"taskStatus","runNum"};
-				  Object[] values = new Object[]{BaseTask.TASK_STATUS_SUCCESS,successNum};			
+				  Object[] values =null;
+				  if(t.getRunNum()==lines.size()){
+					  System.out.println("任务执行完毕:"+t.getTableName());
+					  values = new Object[]{BaseTask.TASK_STATUS_SUCCESS,successNum};	
+				  }else{
+					  values = new Object[]{BaseTask.TASK_STATUS_FAILED,successNum};			
+				  }
+				  
 				  fmRepository.updateFileInfoByField(t.getUid(), keys, values);
 				  fmRepository.updateFileInfoByField(t.getUid(), keys, values,AllCollectionName.TASKINFO_COLLECTIONNAME);
 					

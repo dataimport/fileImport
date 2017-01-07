@@ -137,6 +137,7 @@ public class TaskService {
 	 */
 	public void taskQuartz() {
 		try{
+			System.out.println("mongoTask - quartz");
 			List<Task> list = taskRepository.getObjectsByRunTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 			for(Task task:list){
 					taskUpdate(task, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()),null, 1);//更新状态为正在执行
