@@ -193,9 +193,15 @@ public class FileInMongoRepository implements BaseRepository<Task> {
 		}		
 		int valuesSize = list.size();
 		//增加数据条目总数的容错处理
-		if(task.getTotalCount()<valuesSize){
+		if(task.getTotalCount()<valuesSize || task.getTotalCount()<runNum ){
 			String[] keys = new String[]{"totalCount"};
-			Object[] values = new Object[]{valuesSize};
+			Object[] values = null;
+			if(valuesSize<runNum){
+				//针对大文件的情况，增加容错处理
+				values = new Object[]{runNum};
+			}else{
+				values = new Object[]{valuesSize};				
+			}
 			updateFileInfoByField(task.getUid(),keys,values);
 			updateFileInfoByField(task.getUid(),keys,values,AllCollectionName.TASKINFO_COLLECTIONNAME);
 		}
