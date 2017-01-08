@@ -28,6 +28,10 @@
 </head>
 <BODY>
 <#assign columnsSize=cellTotalMax!>
+<#assign columnsNameWidth="70%">
+<#if (columnsSize>6)>
+	<#assign columnsNameWidth="100px">
+</#if>
 <table width="100%"  class="table table-bordered">
    <#if errorMessage??&&errorMessage!="">
   <tr>
@@ -60,7 +64,7 @@
  	 <div> 
  	 	 <#if (firstLineIgnore=="true")>
  	 	 <form class="form-inline">
- 	 	  <input class="form-control"  name="columnName" style="width:70%;"  id="columnName_${(t+1)}" onblur="checkboxChange('columnName_${(t+1)}')"
+ 	 	  <input class="form-control"  name="columnName" style="width:${columnsNameWidth};"  id="columnName_${(t+1)}" onblur="checkboxChange('columnName_${(t+1)}')"
  			value="${list[0][t]!}" >
  		 </input>
  		 <div class="checkbox">
@@ -71,7 +75,7 @@
  		 </form>
  	 	 <#else>
  	 	 <form class="form-inline">
- 	 	 <input class="form-control"  id="columnName_${(t+1)}" name="columnName" style="width:70%;" id="columnName_${(t+1)}"  onblur="checkboxChange('columnName_${(t+1)}')"
+ 	 	 <input class="form-control"  id="columnName_${(t+1)}" name="columnName" style="width:${columnsNameWidth};" id="columnName_${(t+1)}"  onblur="checkboxChange('columnName_${(t+1)}')"
  			value="">
  	     <div class="checkbox">
          <label>
