@@ -7,7 +7,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</a>
-				<a class="brand" href="index.jsp"><img src="static_bootstrap/logo.png" width="32px;" /><span>天眼数据系统 Beta1.0</span></a>
+				<a class="brand" href="index.jsp" style="margin-left:-50px !important;"><img src="static_bootstrap/logo.png" width="32px;" /><span >天眼数据系统 Beta1.0</span></a>
 								
 				<!-- start: Header Menu -->
 				<div class="nav-no-collapse header-nav">
