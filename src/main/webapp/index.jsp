@@ -99,7 +99,7 @@
 	</div>
 
 	<footer style="position: fixed;bottom:0;left:0;width:100%;">
-			<div style="margin: 0 auto;text-align: center;">&copy; 2016   北京傲思信息技术有限公司</div>
+			<div style="margin: 0 auto;text-align: center;">&copy; 2016   信息技术有限公司</div>
 	</footer>
 	
 	<!-- start: JavaScript-->
